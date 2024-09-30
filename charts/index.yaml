@@ -7,7 +7,7 @@ entries:
           description: "Updated the _Metrics Server_ OCI image to [v0.7.1](https://github.com/kubernetes-sigs/metrics-server/releases/tag/v0.7.1)."
     apiVersion: v2
     appVersion: 0.7.1
-    created: "2024-09-30T17:25:35.287504-03:00"
+    created: "2024-09-30T17:30:48.918936-03:00"
     description: Metrics Server is a scalable, efficient source of container resource
       metrics for Kubernetes built-in autoscaling pipelines.
     digest: bed08344ab4b070db463ad63c5effb2ad23a158090ffdb2c1a960895110ee12e
@@ -29,12 +29,12 @@ entries:
     - https://github.com/kubernetes-sigs/metrics-server
     type: application
     urls:
-    - https://nullplatform.github.io/infrastructure-nullplatform-helm-charts/charts/metrics-server-3.12.1.tgz
+    - https://nullplatform.github.io/helm-charts/charts/metrics-server-3.12.1.tgz
     version: 3.12.1
   null-chart:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2024-09-30T17:25:35.289797-03:00"
+    created: "2024-09-30T17:30:48.922133-03:00"
     dependencies:
     - condition: metrics-server.enabled
       name: metrics-server
@@ -45,6 +45,6 @@ entries:
     name: null-chart
     type: application
     urls:
-    - https://nullplatform.github.io/infrastructure-nullplatform-helm-charts/charts/releases/null-chart-0.1.2.tgz
+    - https://nullplatform.github.io/helm-charts/charts/releases/null-chart-0.1.2.tgz
     version: 0.1.2
-generated: "2024-09-30T17:25:35.286321-03:00"
+generated: "2024-09-30T17:30:48.917873-03:00"
