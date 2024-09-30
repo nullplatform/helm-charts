@@ -1,0 +1,127 @@
+{{- if or (eq .Values.global.provider "aks") (eq .Values.global.provider "gke") (eq .Values.global.provider "oke") }}
+{{- if not (lookup "v1" "Namespace" "" .Values.namespaces.gateway) }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespaces.gateway }}
+{{- end }}
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.internal.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: 'true'
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    networking.gke.io/load-balancer-type: "Internal"
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: default
+    port: 443
+    protocol: HTTPS
+    tls:
+      certificateRefs:
+      - group: ''
+        kind: Secret
+        name: {{ .Values.tls.secretName }}
+    allowedRoutes:
+      namespaces:
+        from: All
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.public.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: 'false'
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: default
+    port: 443
+    protocol: HTTPS
+    tls:
+      certificateRefs:
+      - group: ''
+        kind: Secret
+        name: {{ .Values.tls.secretName }}
+    allowedRoutes:
+      namespaces:
+        from: All
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.gateway.public.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+spec:
+  # Match the generated Deployment by reference
+  # Note: Do not use `kind: Gateway`.
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.gateway.public.name }}-istio
+    namespace: {{ .Values.namespaces.gateway }}
+  minReplicas: {{ .Values.gateway.public.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.gateway.public.autoscaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.gateway.public.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+
+spec:
+  minAvailable: 1
+  selector:
+    # Match the generated Deployment by label
+    matchLabels:
+      istio.io/gateway-name: {{ .Values.gateway.public.name }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.gateway.internal.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+spec:
+  # Match the generated Deployment by reference
+  # Note: Do not use `kind: Gateway`.
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.gateway.internal.name }}-istio
+    namespace: {{ .Values.namespaces.gateway }}
+  minReplicas: {{ .Values.gateway.internal.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.gateway.internal.autoscaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.gateway.internal.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+
+spec:
+  minAvailable: 1
+  selector:
+    # Match the generated Deployment by label
+    matchLabels:
+      istio.io/gateway-name: {{ .Values.gateway.internal.name }}
+{{- end }}

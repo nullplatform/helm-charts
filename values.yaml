@@ -1,0 +1,65 @@
+# Global settings
+global:
+  # Kubernetes provider (options: "oks", "gke", "eks", "aks")
+  provider: "eks"
+  # AWS region (applicable for EKS provider)
+  awsRegion: "us-east-1"
+
+# Namespace configurations
+namespaces:
+  # Namespace for Null platform resources
+  nullplatform: "nullplatform"
+  # Namespace for gateway resources
+  gateway: "istio-ingress-system"
+
+# TLS configuration
+tls:
+  # Name of the TLS secret
+  secretName: ""
+
+# Gateway configurations
+gateway:
+  internal:
+    name: "gateway-private"
+    autoscaling:
+      minReplicas: 2
+      maxReplicas: 10
+  public:
+    name: "gateway-public"
+    autoscaling:
+      minReplicas: 2
+      maxReplicas: 10
+
+# Logging configurations
+logging:
+  controller:
+    image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
+  gelf:
+    enabled: false
+    host: ""
+    port: ""
+  loki:
+    enabled: false
+    host: ""
+    port: ""
+    user: ""
+    password: ""
+    bearerToken: ""
+    matchRegex: "container.*.application"
+  datadog:
+    enabled: false
+    apiKey: ""
+
+# CloudWatch configuration
+cloudwatch:
+  enabled: false
+
+# Metrics server configuration
+metrics-server:
+  enabled: true
+
+# Gateway API configuration
+gateway-api:
+  enabled: true
+  crds:
+    install: true

@@ -1,0 +1,46 @@
+{{- if not (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "nullplatform-pod-metadata-reader-binding") }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: nullplatform-pod-metadata-reader-binding
+subjects: 
+  - kind: ServiceAccount
+    name: nullplatform-pod-metadata-reader-sa
+    namespace: nullplatform-tools
+roleRef:
+  kind: ClusterRole
+  name: nullplatform-pod-metadata-reader
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+---
+{{- if not (lookup "rbac.authorization.k8s.io/v1" "ClusterRoleBinding" "" "nullplatform-leases-pod-metadata-reader-binding") }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: nullplatform-leases-pod-metadata-reader-binding
+subjects: 
+  - kind: ServiceAccount
+    name: nullplatform-pod-metadata-reader-sa
+    namespace: nullplatform-tools
+roleRef:
+  kind: ClusterRole
+  name: nullplatform-leases
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+---
+{{- if not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "np:pod-reader-role") }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: np:pod-reader
+  annotations:
+    description: "Binds the pod reader role to a group"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: np:pod-reader-role
+subjects:
+  - kind: Group
+    name: np:pod-reader
+    apiGroup: rbac.authorization.k8s.io
+{{- end }}

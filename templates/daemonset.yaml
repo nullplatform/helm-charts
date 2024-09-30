@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nullplatform-log-controller
+  namespace: nullplatform-tools
+spec:
+  selector:
+    matchLabels:
+      name: nullplatform-log-controller
+  template:
+    metadata:
+      labels:
+        name: nullplatform-log-controller
+    spec:
+      serviceAccountName: nullplatform-pod-metadata-reader-sa
+      containers:
+        - name: nullplatform-log-controller
+          image: {{ .Values.logging.controller.image }}
+          volumeMounts:
+            - mountPath: /var/log
+              name: host-logs
+            - mountPath: /etc/null-logs/dynamic
+              name: logs-config
+          env:
+            - name: NULL_LOGS_RELOAD_ENABLED
+              value: 'true'
+            {{- if .Values.logging.gelf.enabled }}
+            - name: GELF_LOGS_ENABLED
+              value: 'true'
+            - name: GELF_LOGS_HOST
+              value: {{ .Values.logging.gelf.host | quote }}
+            - name: GELF_LOGS_PORT
+              value: {{ .Values.logging.gelf.port | quote }}
+            {{- end }}
+            - name: LOG_RESERVE_DATA
+              value: 'False'
+            - name: LOG_KEY_NAME
+              value: message
+            {{- if .Values.logging.datadog.enabled }}
+            - name: DATADOG_LOGS_ENABLED
+              value: 'true'
+            - name: DATADOG_PERFORMANCE_METRICS_ENABLED
+              value: 'true'
+            - name: DATADOG_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: datadog-secret
+                  key: DATADOG_API_KEY
+            {{- end }}
+            {{- if .Values.cloudwatch.enabled }}
+            - name: CLOUDWATCH_RETENTION_DAYS
+              value: '7'
+            - name: CLOUDWATCH_REGION
+              value: {{ .Values.global.provider }}
+            - name: CLOUDWATCH_LOGS_ENABLED
+              value: 'true'
+            - name: CLOUDWATCH_PERFORMANCE_METRICS_ENABLED
+              value: 'true'
+            - name: CLOUDWATCH_CUSTOM_METRICS_ENABLED
+              value: 'true'
+            - name: CLOUDWATCH_ACCESS_LOGS_ENABLED
+              value: "false"
+            {{- end}}
+            {{- if .Values.logging.loki.enabled }}
+            - name: LOKI_LOGS_ENABLED
+              value: 'true'
+            - name: LOKI_HOST
+              value: {{ .Values.logging.loki.host }}
+            - name: LOKI_PORT
+              value: {{ .Values.logging.loki.port }}
+            - name: LOKI_MATCH_REGEX
+              value: {{ .Values.logging.loki.matchRegex }}
+            {{- if and .Values.logging.loki.user .Values.logging.loki.password }}
+            - name: LOKI_USER
+              valueFrom:
+                secretKeyRef:
+                  name: loki-secret
+                  key: LOKI_USER
+            - name: LOKI_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: loki-secret
+                  key: LOKI_PASSWORD
+            {{- end}}
+            {{- if .Values.logging.loki.bearerToken }}
+            - name: LOKI_BEARER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: loki-secret
+                  key: LOKI_BEARER_TOKEN
+            {{- end}}
+            {{- end}}
+      volumes:
+        - name: host-logs
+          hostPath:
+            path: /var/log
+        - name: logs-config
+          emptyDir: {}
