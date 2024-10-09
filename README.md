@@ -7,7 +7,7 @@
 ```bash
 helm dependency update
 helm package .
-helm install null-chart ./null-chart-0.1.2.tgz \
+helm install nullplatform-chart ./nullplatform-chart-x.x.x.tgz \
   --set tls.secretName=www-tls \
   --set global.provider="oks/gke/eks/aks"
 ```
@@ -15,7 +15,7 @@ helm install null-chart ./null-chart-0.1.2.tgz \
 ### If you use Datadog and Gelf
 
 ```bash
-helm install null-chart ./null-chart-0.1.2.tgz \
+helm install nullplatform-chart ./nullplatform-chart-x.x.x.tgz \
   --set tls.secretName=www-tls \
   --set global.provider="oks/gke/eks/aks" \
   --set logging.gelf.enabled=true \
@@ -28,7 +28,7 @@ helm install null-chart ./null-chart-0.1.2.tgz \
 ### If you are installing it in AWS EKS
 
 ```bash
-helm install null-chart ./null-chart-0.1.2.tgz \
+helm install nullplatform-chart ./nullplatform-chart-x.x.x.tgz \
   --set global.provider=eks \
   --set cloudwatch.enabled=true
 ```
@@ -36,7 +36,7 @@ helm install null-chart ./null-chart-0.1.2.tgz \
 ### If you are installing it in GCP GKE and using Loki
 
 ```bash
-helm install null-chart ./null-chart-0.1.2.tgz \
+helm install nullplatform-chart ./nullplatform-chart-x.x.x.tgz \
   --set tls.secretName=www-tls \
   --set global.provider=gke \
   --set logging.loki.enabled=true \
@@ -49,17 +49,23 @@ helm install null-chart ./null-chart-0.1.2.tgz \
 
 The following table lists the configurable parameters of the Null chart and their default values.
 
-| Parameter                 | Description                                               | Default       |
-| ------------------------- | --------------------------------------------------------- | ------------- |
-| `global.provider`         | Kubernetes provider (options: "oks", "gke", "eks", "aks") | `"eks"`       |
-| `global.awsRegion`        | AWS region (applicable for EKS provider)                  | `"us-east-1"` |
-| `tls.secretName`          | Name of the TLS secret                                    | `""`          |
-| `logging.gelf.enabled`    | Enable GELF logging                                       | `false`       |
-| `logging.loki.enabled`    | Enable Loki logging                                       | `false`       |
-| `logging.datadog.enabled` | Enable Datadog logging                                    | `false`       |
-| `cloudwatch.enabled`      | Enable CloudWatch                                         | `false`       |
-| `metrics-server.enabled`  | Enable metrics server                                     | `true`        |
-| `gateway-api.enabled`     | Enable Gateway API                                        | `true`        |
+| Parameter                   | Description                                               | Default                            |
+|-----------------------------| --------------------------------------------------------- |------------------------------------|
+| `global.provider`           | Kubernetes provider (options: "oks", "gke", "eks", "aks") | `"eks"`                            |
+| `global.awsRegion`          | AWS region (applicable for EKS provider)                  | `"us-east-1"`                      |
+| `tls.secretName`            | Name of the TLS secret                                    | `""`                               |
+| `logging.gelf.enabled`      | Enable GELF logging                                       | `false`                            |
+| `logging.loki.enabled`      | Enable Loki logging                                       | `false`                            |
+| `logging.datadog.enabled`   | Enable Datadog logging                                    | `false`                            |
+| `cloudwatch.enabled`        | Enable CloudWatch                                         | `false`                            |
+| `metricsServer.enabled`     | Enable metrics server                                     | `true`                             |
+| `gatewayAPI.enabled`        | Enable Gateway API                                        | `true`                             |
+| `istio.enabled`             | Enable Istio                                              | `false`                            |
+| `imagePullSecrets.enabled`  | Enable image pull secret                                  | `false`                            |
+| `imagePullSecrets.name`     | Name of the image pull secret                             | `"image-pull-secret-nullplatform"` |
+| `imagePullSecrets.registry` | Container registry URL for image pull secret              | `""`                               |
+| `imagePullSecrets.username` | Username for container registry                           | `""`                               |
+| `imagePullSecrets.password` | Password for container registry                           | `""`                               |
 
 For a complete list of configurable options, please refer to the `values.yaml` file.
 

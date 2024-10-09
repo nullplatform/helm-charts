@@ -58,4 +58,11 @@ gatewayAPI:
     install: true
 # Istio configuration
 istio:
-  enabled: true
+  enabled: false
+# Image pull secret configuration
+imagePullSecrets:
+  enabled: false
+  name: image-pull-secret-nullplatform
+  registry: ""
+  username: ""
+  password: ""
