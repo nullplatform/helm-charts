@@ -4,19 +4,16 @@ global:
   provider: "eks"
   # AWS region (applicable for EKS provider)
   awsRegion: "us-east-1"
-
 # Namespace configurations
 namespaces:
   # Namespace for Null platform resources
   nullplatform: "nullplatform"
   # Namespace for gateway resources
   gateway: "istio-ingress-system"
-
 # TLS configuration
 tls:
   # Name of the TLS secret
   secretName: ""
-
 # Gateway configurations
 gateway:
   internal:
@@ -29,7 +26,6 @@ gateway:
     autoscaling:
       minReplicas: 2
       maxReplicas: 10
-
 # Logging configurations
 logging:
   controller:
@@ -49,17 +45,17 @@ logging:
   datadog:
     enabled: false
     apiKey: ""
-
 # CloudWatch configuration
 cloudwatch:
   enabled: false
-
 # Metrics server configuration
-metrics-server:
+metricsServer:
   enabled: true
-
 # Gateway API configuration
-gateway-api:
+gatewayAPI:
   enabled: true
   crds:
     install: true
+# Istio configuration
+istio:
+  enabled: true

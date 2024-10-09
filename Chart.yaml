@@ -26,6 +26,18 @@ appVersion: "1.16.0"
 
 dependencies:
   - name: metrics-server
-    version: "^3.12.0"  # Use the appropriate version you need
-    repository: "https://kubernetes-sigs.github.io/metrics-server/"
-    condition: metrics-server.enabled
+    version: ^3.12.0 # Use the appropriate version you need
+    repository: https://kubernetes-sigs.github.io/metrics-server
+    condition: metricsServer.enabled
+  - name: base
+    version: 1.23.2 # Use the appropriate version you need
+    repository: https://istio-release.storage.googleapis.com/charts
+    condition: istio.enabled
+  - name: istiod
+    version: 1.23.2 # Use the appropriate version you need
+    repository: https://istio-release.storage.googleapis.com/charts
+    condition: istio.enabled
+  - name: gateway
+    version: 1.23.2 # Use the appropriate version you need
+    repository: https://istio-release.storage.googleapis.com/charts
+    condition: istio.enabled

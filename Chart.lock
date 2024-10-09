@@ -1,6 +1,15 @@
 dependencies:
 - name: metrics-server
-  repository: https://kubernetes-sigs.github.io/metrics-server/
-  version: 3.12.1
-digest: sha256:7a0a2a79c147392803195036dac717202e74c5e1c92f4e8eb09297367c37a2fa
-generated: "2024-09-30T17:20:44.949662-03:00"
+  repository: https://kubernetes-sigs.github.io/metrics-server
+  version: 3.12.2
+- name: base
+  repository: https://istio-release.storage.googleapis.com/charts
+  version: 1.23.2
+- name: istiod
+  repository: https://istio-release.storage.googleapis.com/charts
+  version: 1.23.2
+- name: gateway
+  repository: https://istio-release.storage.googleapis.com/charts
+  version: 1.23.2
+digest: sha256:b6e9bff77345354e3e2daba26a36e51c2ad7bbc797c8513d55e21ce744c8cd5d
+generated: "2024-10-09T18:28:52.001307-03:00"
