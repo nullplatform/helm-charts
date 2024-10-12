@@ -1,0 +1,36 @@
+name: ci-frontend-module
+on:
+  push:
+    branches:
+      - main
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Start Nullplatform CI
+        id: setup-ci
+        uses: nullplatform/github-action-setup-ci@v1
+        with:
+          api-key: ${{ secrets.NULLPLATFORM_API_KEY }}
+      - name: Create Nullplatform Asset
+        id: create-asset
+        uses: nullplatform/github-action-asset@v1
+        with:
+          action: create
+          build-id: ${{ steps.setup-ci.outputs.build-id }}
+          type: lambda
+          name: helm-charts
+          url: https://nullplatform.github.io/helm-charts/releases
+      - name: End Nullplatform CI
+        if: ${{ always() }}
+        id: end-setup-ci
+        uses: nullplatform/github-action-setup-ci@v1
+        with:
+          build-id: ${{ steps.setup-ci.outputs.build-id }}
+          status: ${{ (steps.push-asset.conclusion == 'failure' || steps.push-asset.conclusion == 'cancelled') && 'failed' || 'successful' }}
