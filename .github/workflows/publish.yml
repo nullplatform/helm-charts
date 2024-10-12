@@ -1,4 +1,4 @@
-name: Publish Helm Chart
+name: Publish Helm Charts
 on:
   release:
     types:
@@ -12,14 +12,14 @@ jobs:
       - name: Set up Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-      - name: Package Helm chart
-        run: helm package .
-      - name: Generate Helm repository index
-        run: helm repo index . --url https://nullplatform.github.io/helm-charts
-      - name: Push to GitHub
+      - name: Package Helm chart and output to releases directory
+        run: helm package ./charts/base --destination ./releases
+      - name: Generate Helm repository index in releases directory
+        run: helm repo index ./releases --url https://nullplatform.github.io/helm-charts
+      - name: Push changes to GitHub
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
-          git add .
+          git add ./releases
           git commit -m "Publish new chart version"
           git push origin main
