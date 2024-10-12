@@ -2,8 +2,35 @@ apiVersion: v1
 entries:
   nullplatform-chart:
   - apiVersion: v2
+    appVersion: 0.0.2
+    created: "2024-10-12T16:28:26.544481494Z"
+    dependencies:
+    - condition: metricsServer.enabled
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: ^3.12.0
+    - condition: global.provider != "eks"
+      name: base
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.23.2
+    - condition: global.provider != "eks"
+      name: istiod
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.23.2
+    - condition: global.provider != "eks"
+      name: gateway
+      repository: https://istio-release.storage.googleapis.com/charts
+      version: 1.23.2
+    description: A Helm chart for deploying the nullplatform applications using Kubernetes
+    digest: 60e14edae21a27542ddc51617348ae55a1756913173b9cf51a1c3e2716f2653d
+    name: nullplatform-chart
+    type: application
+    urls:
+    - https://nullplatform.github.io/helm-charts/nullplatform-chart-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-10-12T16:16:15.752972538Z"
+    created: "2024-10-12T16:28:26.537812229Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -28,4 +55,4 @@ entries:
     urls:
     - https://nullplatform.github.io/helm-charts/nullplatform-chart-0.0.1.tgz
     version: 0.0.1
-generated: "2024-10-12T16:16:15.745657278Z"
+generated: "2024-10-12T16:28:26.530822133Z"
