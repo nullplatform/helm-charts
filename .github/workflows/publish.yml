@@ -20,8 +20,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Helm
-        run: |
-          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+        run: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - name: Download chart dependencies
+        run: helm dependency update ./charts/base
       - name: Package Helm chart and output to releases directory
         run: helm package ./charts/base --destination ./releases
       - name: Generate Helm repository index in releases directory
