@@ -1,4 +1,4 @@
-name: publish-helm-charts
+name: build-helm-charts
 on:
   push:
     branches:
