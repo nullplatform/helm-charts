@@ -3,7 +3,7 @@ entries:
   base:
   - apiVersion: v2
     appVersion: 1.23.2
-    created: "2024-10-10T13:47:23.328463-03:00"
+    created: "2024-10-12T11:40:37.775661-03:00"
     description: Helm chart for deploying Istio cluster resources and CRDs
     digest: f79ac5991a58bd312a1bd760c795feae8dc43c707e9585145ad3ab4826bbfed1
     icon: https://istio.io/latest/favicons/android-192x192.png
@@ -18,7 +18,7 @@ entries:
   gateway:
   - apiVersion: v2
     appVersion: 1.23.2
-    created: "2024-10-10T13:47:23.32922-03:00"
+    created: "2024-10-12T11:40:37.776307-03:00"
     description: Helm chart for deploying Istio gateways
     digest: adf39286e34f71b57dd6f8bd3f05a0efd8dab9ea860a1a0ff9ad621a3b636ba2
     icon: https://istio.io/latest/favicons/android-192x192.png
@@ -35,7 +35,7 @@ entries:
   istiod:
   - apiVersion: v2
     appVersion: 1.23.2
-    created: "2024-10-10T13:47:23.330774-03:00"
+    created: "2024-10-12T11:40:37.777424-03:00"
     description: Helm chart for istio control plane
     digest: 8c5ff2cfe4c17fd89bfc964e6b8fe497a8576bd0ec20da5acf3748e79a05433f
     icon: https://istio.io/latest/favicons/android-192x192.png
@@ -62,7 +62,7 @@ entries:
           description: "Fixed nanny's RoleBinding which contained a hard-coded namespace instead of the Helm's release namespace."
     apiVersion: v2
     appVersion: 0.7.2
-    created: "2024-10-10T13:47:23.331594-03:00"
+    created: "2024-10-12T11:40:37.779961-03:00"
     description: Metrics Server is a scalable, efficient source of container resource
       metrics for Kubernetes built-in autoscaling pipelines.
     digest: e904ffa2fe33c429e12cac8aa013ba38f42d944e315d060e94230a53b98985cf
@@ -88,30 +88,30 @@ entries:
     version: 3.12.2
   nullplatform-chart:
   - apiVersion: v2
-    appVersion: 0.0.1
-    created: "2024-10-10T13:47:23.326149-03:00"
+    appVersion: 0.0.2
+    created: "2024-10-12T11:40:37.773483-03:00"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: ^3.12.0
-    - condition: istio.enabled
+    - condition: global.provider != "eks"
       name: base
       repository: https://istio-release.storage.googleapis.com/charts
       version: 1.23.2
-    - condition: istio.enabled
+    - condition: global.provider != "eks"
       name: istiod
       repository: https://istio-release.storage.googleapis.com/charts
       version: 1.23.2
-    - condition: istio.enabled
+    - condition: global.provider != "eks"
       name: gateway
       repository: https://istio-release.storage.googleapis.com/charts
       version: 1.23.2
     description: A Helm chart for deploying the nullplatform applications using Kubernetes
-    digest: 63ffbb742c64ead443ebbda9ceb9a63653173b6212658da019a63cc93696104e
+    digest: 083a8ac6dcc4cae40d6a5143cb8742c415772759f6b49ed068df42a318fe7a39
     name: nullplatform-chart
     type: application
     urls:
-    - https://nullplatform.github.io/helm-charts/nullplatform-chart-0.0.1.tgz
-    version: 0.0.1
-generated: "2024-10-10T13:47:23.318087-03:00"
+    - https://nullplatform.github.io/helm-charts/nullplatform-chart-0.0.2.tgz
+    version: 0.0.2
+generated: "2024-10-12T11:40:37.764807-03:00"

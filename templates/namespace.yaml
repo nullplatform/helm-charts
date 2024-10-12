@@ -1,33 +1,18 @@
+{{- if not (lookup "v1" "Namespace" "" .Values.namespaces.nullplatformTools) }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: nullplatform-tools
+  name: {{ .Values.namespaces.nullplatformTools }}
   labels:
-    name: nullplatform-tools
----
-{{- if not (lookup "v1" "Namespace" "" .Values.namespaces.nullplatform) }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.namespaces.nullplatform }}
-  labels:
-    name: {{ .Values.namespaces.nullplatform }}
+    name: {{ .Values.namespaces.nullplatformTools }}
 {{- end }}
 ---
-{{- if .Values.istio.enabled }}
+{{- if not (lookup "v1" "Namespace" "" .Values.namespaces.nullplatformApplications) }}
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: istio-system
+  name: {{ .Values.namespaces.nullplatformApplications }}
   labels:
-    name: istio-system
+    name: {{ .Values.namespaces.nullplatformApplications }}
+{{- end }}
 ---
-{{- if not (lookup "v1" "Namespace" "" .Values.namespaces.gateway) }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.namespaces.gateway }}
-  labels:
-    name: {{ .Values.namespaces.gateway }}
-{{- end }}
-{{- end }}

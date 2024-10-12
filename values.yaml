@@ -7,9 +7,9 @@ global:
 # Namespace configurations
 namespaces:
   # Namespace for Null platform resources
-  nullplatform: "nullplatform"
-  # Namespace for gateway resources
-  gateway: "istio-ingress-system"
+  nullplatformApplications: "nullplatform"
+  nullplatformTools: "nullplatform-tools"
+  gateway: "gateways"
 # TLS configuration
 tls:
   # Name of the TLS secret
@@ -56,9 +56,6 @@ gatewayAPI:
   enabled: true
   crds:
     install: true
-# Istio configuration
-istio:
-  enabled: false
 # Image pull secret configuration
 imagePullSecrets:
   enabled: false

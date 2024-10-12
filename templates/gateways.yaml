@@ -1,4 +1,5 @@
 {{- if or (eq .Values.global.provider "aks") (eq .Values.global.provider "gke") (eq .Values.global.provider "oke") }}
+{{- $secretName := required "The 'tls.secretName' field is required" .Values.tls.secretName }}
 {{- if not (lookup "v1" "Namespace" "" .Values.namespaces.gateway) }}
 apiVersion: v1
 kind: Namespace
@@ -25,7 +26,7 @@ spec:
       certificateRefs:
       - group: ''
         kind: Secret
-        name: {{ .Values.tls.secretName }}
+        name: {{ $secretName }}
     allowedRoutes:
       namespaces:
         from: All
@@ -48,7 +49,7 @@ spec:
       certificateRefs:
       - group: ''
         kind: Secret
-        name: {{ .Values.tls.secretName }}
+        name: {{ $secretName }}
     allowedRoutes:
       namespaces:
         from: All

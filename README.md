@@ -60,7 +60,6 @@ The following table lists the configurable parameters of the Null chart and thei
 | `cloudwatch.enabled`        | Enable CloudWatch                                         | `false`                            |
 | `metricsServer.enabled`     | Enable metrics server                                     | `true`                             |
 | `gatewayAPI.enabled`        | Enable Gateway API                                        | `true`                             |
-| `istio.enabled`             | Enable Istio                                              | `false`                            |
 | `imagePullSecrets.enabled`  | Enable image pull secret                                  | `false`                            |
 | `imagePullSecrets.name`     | Name of the image pull secret                             | `"image-pull-secret-nullplatform"` |
 | `imagePullSecrets.registry` | Container registry URL for image pull secret              | `""`                               |
