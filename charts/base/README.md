@@ -1,50 +1,23 @@
-# Nullplatform Helm Chart
+<h2 align="center">
+    <a href="https://httpie.io" target="blank_">
+        <img height="100" alt="nullplatform" src="https://nullplatform.com/favicon/android-chrome-192x192.png" />
+    </a>
+    <br>
+    <br>
+    Nullplatform Base Helm Chart
+    <br>
+</h2>
 
-## How to use it
-
-### Basic installation
-
-```bash
-helm dependency update
-helm package .
-helm install nullplatform-chart ./nullplatform-chart-x.x.x.tgz \
-  --set tls.secretName=www-tls \
-  --set global.provider="oks/gke/eks/aks"
-```
-
-### If you use Datadog and Gelf
+To install the nullplatform base helm chart with custom values, you can use the following `helm install` command with specific `--set` parameters:
 
 ```bash
-helm install nullplatform-chart ./nullplatform-chart-x.x.x.tgz \
-  --set tls.secretName=www-tls \
-  --set global.provider="oks/gke/eks/aks" \
-  --set logging.gelf.enabled=true \
-  --set logging.gelf.host=xxxx \
-  --set logging.gelf.port=xxxx \
-  --set logging.datadog.enabled=true \
-  --set logging.datadog.apiKey=xxxx
-```
-
-### If you are installing it in AWS EKS
-
-```bash
-helm install nullplatform-chart ./nullplatform-chart-x.x.x.tgz \
+helm install my-release nullplatform/base \
   --set global.provider=eks \
-  --set cloudwatch.enabled=true
+  --set global.awsRegion=us-east-1 \
+  --set tls.secretName=my-tls-secret \
+  --set logging.datadog.enabled=true \
+  --set logging.datadog.apiKey=my-datadog-api-key
 ```
-
-### If you are installing it in GCP GKE and using Loki
-
-```bash
-helm install nullplatform-chart ./nullplatform-chart-x.x.x.tgz \
-  --set tls.secretName=www-tls \
-  --set global.provider=gke \
-  --set logging.loki.enabled=true \
-  --set logging.loki.host=xxx \
-  --set logging.loki.port=xxx \
-  --set logging.loki.bearerToken=xxx
-```
-
 ## Configuration
 
 The following table lists the configurable parameters of the Null chart and their default values.
