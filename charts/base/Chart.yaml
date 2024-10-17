@@ -2,22 +2,10 @@ apiVersion: v2
 name: nullplatform-chart
 description: A Helm chart for deploying the nullplatform applications using Kubernetes
 type: application
-version: 0.0.2
-appVersion: "0.0.2"
+version: 0.0.3
+appVersion: "0.0.3"
 dependencies:
   - name: metrics-server
     version: ^3.12.0 # Use the appropriate version you need
     repository: https://kubernetes-sigs.github.io/metrics-server
     condition: metricsServer.enabled
-  - name: base
-    version: 1.23.2 # Use the appropriate version you need
-    repository: https://istio-release.storage.googleapis.com/charts
-    condition: global.provider != "eks"
-  - name: istiod
-    version: 1.23.2 # Use the appropriate version you need
-    repository: https://istio-release.storage.googleapis.com/charts
-    condition: global.provider != "eks"
-  - name: gateway
-    version: 1.23.2 # Use the appropriate version you need
-    repository: https://istio-release.storage.googleapis.com/charts
-    condition: global.provider != "eks"
