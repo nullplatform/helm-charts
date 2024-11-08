@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-{{ .Values.hostedZoneName | replace "." "-" }}
+  namespace: gateways  
+spec:
+  secretName: wildcard-{{ .Values.hostedZoneName | replace "." "-" }}-tls
+  issuerRef:
+    name: letsencrypt-azure
+    kind: ClusterIssuer
+  commonName: "*.{{ .Values.hostedZoneName }}"
+  dnsNames:
+  - "*.{{ .Values.hostedZoneName }}"
