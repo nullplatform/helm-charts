@@ -1,16 +1,26 @@
 apiVersion: v1
 entries:
+  nullplatform-cert-manager-config:
+  - apiVersion: v2
+    created: "2024-11-08T19:24:44.609729121Z"
+    description: A Helm chart for cert-manager configurations
+    digest: feb58b5ead8e18b4a4b0033706061901279f8ee6df95ad542d20960e169a1060
+    name: nullplatform-cert-manager-config
+    type: application
+    urls:
+    - https://nullplatform.github.io/helm-charts/nullplatform-cert-manager-config-1.0.3.tgz
+    version: 1.0.3
   nullplatform-chart:
   - apiVersion: v2
     appVersion: 0.0.3
-    created: "2024-10-17T15:33:35.12585382Z"
+    created: "2024-11-08T19:24:44.625740586Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: ^3.12.0
     description: A Helm chart for deploying the nullplatform applications using Kubernetes
-    digest: 12edc9f8401867136df5412922a47279a203b37c61128131c04645a623bf5fc1
+    digest: 1645c9ee9412c5b14afee401779677c07e58d3fe6262f57b925750dfeb9e025c
     name: nullplatform-chart
     type: application
     urls:
@@ -18,7 +28,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: 0.0.2
-    created: "2024-10-17T15:33:35.123239129Z"
+    created: "2024-11-08T19:24:44.623137193Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -45,7 +55,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-10-17T15:33:35.11642491Z"
+    created: "2024-11-08T19:24:44.616476741Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -70,4 +80,4 @@ entries:
     urls:
     - https://nullplatform.github.io/helm-charts/nullplatform-chart-0.0.1.tgz
     version: 0.0.1
-generated: "2024-10-17T15:33:35.109296508Z"
+generated: "2024-11-08T19:24:44.609432945Z"
