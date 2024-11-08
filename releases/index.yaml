@@ -3,9 +3,9 @@ entries:
   nullplatform-cert-manager-config:
   - apiVersion: v2
     appVersion: 0.0.4
-    created: "2024-11-08T19:28:04.052485864Z"
+    created: "2024-11-08T19:31:28.383607302Z"
     description: A Helm chart for cert-manager configurations
-    digest: f67f17c88199bb50388f6e45648d66c0ce06e7c2cbe853e91d5a898fb9202b68
+    digest: c7a1c91d3489a88200fd362c3e9115630d40498ab3dbaa53c8b23a4f541c8e20
     name: nullplatform-cert-manager-config
     type: application
     urls:
@@ -14,14 +14,14 @@ entries:
   nullplatform-chart:
   - apiVersion: v2
     appVersion: 0.0.4
-    created: "2024-11-08T19:28:04.072532338Z"
+    created: "2024-11-08T19:31:28.403999935Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
       repository: https://kubernetes-sigs.github.io/metrics-server
       version: ^3.12.0
     description: A Helm chart for deploying the nullplatform applications using Kubernetes
-    digest: a22e59671bde2031f879004fc17adeaacbdde4bfecb9669603dcf6913f2522c3
+    digest: 8186c51dfc762ad1f9a14c2c791d2d462c9d9303bd8c024436f85027687d2352
     name: nullplatform-chart
     type: application
     urls:
@@ -29,7 +29,7 @@ entries:
     version: 0.0.4
   - apiVersion: v2
     appVersion: 0.0.3
-    created: "2024-11-08T19:28:04.069938628Z"
+    created: "2024-11-08T19:31:28.401367449Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -44,7 +44,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: 0.0.2
-    created: "2024-11-08T19:28:04.067243599Z"
+    created: "2024-11-08T19:31:28.398761151Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -71,7 +71,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-11-08T19:28:04.059739381Z"
+    created: "2024-11-08T19:31:28.391331593Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -96,4 +96,4 @@ entries:
     urls:
     - https://nullplatform.github.io/helm-charts/nullplatform-chart-0.0.1.tgz
     version: 0.0.1
-generated: "2024-11-08T19:28:04.052190141Z"
+generated: "2024-11-08T19:31:28.383355714Z"
