@@ -11,9 +11,9 @@ spec:
     solvers:
     - dns01:
         azureDNS:
-          subscriptionID: {{ .Values.subscriptionId }}
-          resourceGroupName: {{ .Values.resourceGroupName }}
-          hostedZoneName: {{ .Values.hostedZoneName }}
+          subscriptionID: {{ .Values.azure.subscriptionId }}
+          resourceGroupName: {{ .Values.azure.resourceGroupName }}
+          hostedZoneName: {{ .Values.azure.hostedZoneName }}
           environment: AzurePublicCloud
           managedIdentity:
-            clientID: {{ .Values.clientId }}
+            clientID: {{ .Values.azure.clientId }}

@@ -15,8 +15,14 @@ helm install cert-manager-config nullplatform/cert-manager \
   --set azure.subscriptionId=1231234-1231-23 \
   --set azure.resourceGroupName=my-resource-group \
   --set azure.clientId=23432-23423-23423 \
-  --set hostedZoneName=my-poc.nullapps.io 
+  --set hostedZoneName=my-poc.nullapps.io \
+  --namespace cert-manager
 ```
+
+## Supported DNS providers
+
+- Azure
+
 ## Configuration
 
 The following table lists the configurable parameters of the Null chart and their default values.
