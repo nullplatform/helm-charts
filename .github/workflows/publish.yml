@@ -24,14 +24,11 @@ jobs:
           fetch-depth: 0
       - name: Set up Helm
         run: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-      - name: Download chart dependencies
-        run: helm dependency update ./charts/base
-      - name: Package Helm Charts and output to releases directory
+      - name: Download and package Helm Charts and output to releases directory
         run: |
           for dir in charts/*; do
-              if [ -d "$dir" ]; then
-                  helm package "$dir" -d ./releases
-              fi
+            helm dependency update "$dir"
+            helm package "$dir" -d ./releases
           done
       - name: Generate Helm repository index in releases directory
         run: helm repo index ./releases --url https://nullplatform.github.io/helm-charts
