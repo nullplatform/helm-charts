@@ -48,3 +48,4 @@ For a complete list of configurable options, please refer to the `values.yaml` f
 - For EKS installations, you may want to enable CloudWatch by setting `cloudwatch.enabled=true`.
 - Always provide a valid `tls.secretName` when configuring TLS.
 - The `metrics-server` and `gateway-api` are enabled by default. Set their `enabled` flag to `false` if you don't want to use them.
+- If you have `nullplatform` and/or `nullplatform-tools` already created run helm with `--no-hooks` option
