@@ -5,6 +5,10 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ .Values.namespaces.gateway }}
+  labels:
+    name: {{ .Values.namespaces.gateway }}
+  annotations:
+    "helm.sh/hook": pre-install
 {{- end }}
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1

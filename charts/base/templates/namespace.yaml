@@ -5,6 +5,8 @@ metadata:
   name: {{ .Values.namespaces.nullplatformTools }}
   labels:
     name: {{ .Values.namespaces.nullplatformTools }}
+  annotations:
+    "helm.sh/hook": pre-install
 {{- end }}
 ---
 {{- if not (lookup "v1" "Namespace" "" .Values.namespaces.nullplatformApplications) }}
@@ -14,5 +16,7 @@ metadata:
   name: {{ .Values.namespaces.nullplatformApplications }}
   labels:
     name: {{ .Values.namespaces.nullplatformApplications }}
+  annotations:
+    "helm.sh/hook": pre-install
 {{- end }}
 ---
