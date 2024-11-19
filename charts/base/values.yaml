@@ -45,6 +45,8 @@ logging:
   datadog:
     enabled: false
     apiKey: ""
+  metricsExporter:
+    image: "public.ecr.aws/nullplatform/k8s-metrics-exporter:latest"
 # CloudWatch configuration
 cloudwatch:
   enabled: false

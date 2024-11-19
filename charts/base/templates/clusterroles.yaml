@@ -1,4 +1,3 @@
-{{- if not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "nullplatform-pod-metadata-reader") }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -7,9 +6,7 @@ rules:
   - apiGroups: ["", "metrics.k8s.io"]
     resources: ["pods", "nodes", "configmaps"]
     verbs: ["get", "list", "watch"]
-{{- end }}
 ---
-{{- if not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "nullplatform-leases") }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -18,9 +15,7 @@ rules:
   - apiGroups: ["coordination.k8s.io"]
     resources: ["leases"]
     verbs: ["get", "list", "create", "patch"]
-{{- end }}
 ---
-{{- if not (lookup "rbac.authorization.k8s.io/v1" "ClusterRole" "" "np:pod-reader-role") }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -34,4 +29,3 @@ rules:
   - apiGroups: [""]
     resources: ["pods/log"]
     verbs: ["get"]
-{{- end }}
