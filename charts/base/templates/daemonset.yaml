@@ -13,6 +13,7 @@ spec:
         name: nullplatform-log-controller
     spec:
       serviceAccountName: nullplatform-pod-metadata-reader-sa
+      restartPolicy: Always
       containers:
         - name: nullplatform-log-controller
           image: {{ .Values.logging.controller.image }}
@@ -90,6 +91,8 @@ spec:
                   key: LOKI_BEARER_TOKEN
             {{- end}}
             {{- end}}
+        - name: nullplatform-logging-metrics-exporter
+          image: {{ .Values.logging.metricsExporter.image }}
       volumes:
         - name: host-logs
           hostPath:
