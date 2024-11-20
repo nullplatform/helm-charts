@@ -42,6 +42,10 @@ spec:
               value: 'true'
             - name: DATADOG_PERFORMANCE_METRICS_ENABLED
               value: 'true'
+            {{- if .Values.logging.datadog.region }}
+            - name: DATADOG_REGION
+              value: {{ .Values.logging.datadog.region | quote }}
+            {{- end }}
             - name: DATADOG_API_KEY
               valueFrom:
                 secretKeyRef:
