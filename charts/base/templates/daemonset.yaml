@@ -17,10 +17,11 @@ spec:
       containers:
         - name: nullplatform-log-controller
           image: {{ .Values.logging.controller.image }}
+          imagePullPolicy: Always
           volumeMounts:
             - mountPath: /var/log
               name: host-logs
-            - mountPath: /etc/nullplatform/logs/dynamic
+            - mountPath: /etc/null-logs/dynamic
               name: logs-config
           env:
             - name: NULL_LOGS_RELOAD_ENABLED
@@ -95,8 +96,6 @@ spec:
                   key: LOKI_BEARER_TOKEN
             {{- end}}
             {{- end}}
-        - name: nullplatform-logging-metrics-exporter
-          image: {{ .Values.logging.metricsExporter.image }}
         - name: nullplatform-controlplane-agent
           image: {{ .Values.logging.agent.image }}
           command:
