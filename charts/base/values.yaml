@@ -26,7 +26,14 @@ gateway:
     autoscaling:
       minReplicas: 2
       maxReplicas: 10
+# Nullplatform configurations
+nullplatform:
+  apiKey: ""
 # Logging configurations
+controlPlane:
+  enabled: false
+  agent:
+    image: "public.ecr.aws/nullplatform/controlplane-agent:latest"
 logging:
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
