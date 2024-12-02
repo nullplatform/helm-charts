@@ -30,9 +30,11 @@ gateway:
 nullplatform:
   apiKey: ""
 # Logging configurations
-logging:
+controlPlane:
+  enabled: false
   agent:
     image: "public.ecr.aws/nullplatform/controlplane-agent:latest"
+logging:
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
   gelf:

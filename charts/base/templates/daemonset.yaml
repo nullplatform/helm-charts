@@ -96,8 +96,9 @@ spec:
                   key: LOKI_BEARER_TOKEN
             {{- end}}
             {{- end}}
+        {{- if and .Values.controlPlane.enabled .Values.nullplatform.apiKey }}
         - name: nullplatform-controlplane-agent
-          image: {{ .Values.logging.agent.image }}
+          image: {{ .Values.controlPlane.agent.image }}
           command:
             - /app/k8s_launcher.sh
           env:
@@ -111,22 +112,12 @@ spec:
                 secretKeyRef:
                   key: NULLPLATFORM_APIKEY
                   name: nullplatform-secret
-            # Not sure if this is required, I'd leave this out for now 
-            # - name: AWS_STS_REGIONAL_ENDPOINTS
-            #   value: regional
-            # - name: AWS_DEFAULT_REGION
-            #   value: us-east-1
-            # - name: AWS_REGION
-            #   value: us-east-1
-            # - name: AWS_ROLE_ARN
-            #   value: arn:aws:iam::688720756067:role/null-instance-role
-            # - name: AWS_WEB_IDENTITY_TOKEN_FILE
-            #   value: /var/run/secrets/eks.amazonaws.com/serviceaccount/token
           image: public.ecr.aws/nullplatform/controlplane-agent:latest
           imagePullPolicy: Always
           volumeMounts:
           - mountPath: /etc/null-logs/dynamic
             name: logs-config
+        {{- end}}
       volumes:
         - name: host-logs
           hostPath:
