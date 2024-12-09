@@ -58,6 +58,7 @@ logging:
 # CloudWatch configuration
 cloudwatch:
   enabled: false
+  region: us-east-1
 # Metrics server configuration
 metricsServer:
   enabled: true
