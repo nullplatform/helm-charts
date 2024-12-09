@@ -57,7 +57,7 @@ spec:
             - name: CLOUDWATCH_RETENTION_DAYS
               value: '7'
             - name: CLOUDWATCH_REGION
-              value: {{ .Values.global.provider }}
+              value: {{ .Values.cloudwatch.region | quote }}
             - name: CLOUDWATCH_LOGS_ENABLED
               value: 'true'
             - name: CLOUDWATCH_PERFORMANCE_METRICS_ENABLED
