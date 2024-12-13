@@ -2,8 +2,8 @@ apiVersion: v2
 name: nullplatform-base
 description: A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 type: application
-version: 0.0.8
-appVersion: "0.0.8"
+version: 0.0.9
+appVersion: "0.0.9"
 dependencies:
   - name: metrics-server
     version: ^3.12.0 # Use the appropriate version you need
