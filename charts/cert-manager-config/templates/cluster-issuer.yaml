@@ -1,19 +1,30 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-azure
+  name: letsencrypt
+  namespace: cert-manager
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: it@nullplatform.io
     privateKeySecretRef:
-      name: letsencrypt-azure
+      name: letsencrypt
     solvers:
     - dns01:
+        {{- if .Values.gcp.enabled }}
+        cloudDNS:
+          project: "{{ .Values.gcp.projectId }}"
+          # The secret containing the service account key JSON with DNS permissions
+          serviceAccountSecretRef:
+            name: gcp-cloud-dns-service-account
+            key: key.json
+        {{- end }}
+        {{- if .Values.azure.enabled }}
         azureDNS:
           subscriptionID: {{ .Values.azure.subscriptionId }}
           resourceGroupName: {{ .Values.azure.resourceGroupName }}
-          hostedZoneName: {{ .Values.azure.hostedZoneName }}
+          hostedZoneName: {{ .Values.hostedZoneName }}
           environment: AzurePublicCloud
           managedIdentity:
             clientID: {{ .Values.azure.clientId }}
+        {{- end }}
