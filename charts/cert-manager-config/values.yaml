@@ -1,1 +1,11 @@
-# Reserved for future defaults
+hostedZoneName: ""
+nullPlatform:
+  accountSlug: ""
+gcp:
+  enabled: false
+  serviceAccountKey: ""
+azure:
+  enabled: false
+  subscriptionID: ""
+  resourceGroupName: ""
+  clientID: ""

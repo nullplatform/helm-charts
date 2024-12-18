@@ -11,10 +11,20 @@
 To ensure we have letsencrypt certificates provisioned by (cert-manager)[]
 
 ```bash
-helm install cert-manager-config nullplatform/cert-manager \
+helm install cert-manager-config nullplatform/cert-manager-config \
+  --set azure.enabled=true \
   --set azure.subscriptionId=1231234-1231-23 \
   --set azure.resourceGroupName=my-resource-group \
   --set azure.clientId=23432-23423-23423 \
+  --set hostedZoneName=my-poc.nullapps.io \
+  --namespace cert-manager
+```
+
+```bash
+helm install cert-manager-config nullplatform/cert-manager-config \
+  --set gcp.enabled=true \
+  --set gcp.projectId=my-project \
+  --set gcp.serviceAccountKey=my-key \
   --set hostedZoneName=my-poc.nullapps.io \
   --namespace cert-manager
 ```
@@ -29,9 +39,13 @@ The following table lists the configurable parameters of the Null chart and thei
 
 | Parameter                   | Description                                               | 
 |-----------------------------| --------------------------------------------------------- |
+| `azure.enabled`             | Enable Azure resolution                                   |
 | `azure.subscriptionId`      | Azure subscriptionId where the hostedzone exists          |
 | `azure.resourceGroupName`   | Azure resourceGroupName where the hostedzone exists       |
 | `azure.clientId`            | Azure Client id to operate the hostedZone                 |
+| `gcp.enabled`               | Enable GCP resolution                                     |
+| `gcp.projectId`             | GCP Project where the hostedZone lives                    |
+| `gcp.serviceAccountKey`     | GCP Service Account Key                                   |
 | `hostedZoneName`            | The domain name used to validate the certificate          |
 
 For a complete list of configurable options, please refer to the `values.yaml` file.

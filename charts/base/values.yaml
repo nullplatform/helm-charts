@@ -13,7 +13,7 @@ namespaces:
 # TLS configuration
 tls:
   # Name of the TLS secret
-  secretName: ""
+  secretName: "wildcard-tls"
 # Gateway configurations
 gateway:
   internal:
