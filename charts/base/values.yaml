@@ -49,6 +49,10 @@ logging:
     password: ""
     bearerToken: ""
     matchRegex: "container.*.application"
+  dynatrace:
+    enabled: false
+    apiKey: ""
+    environmentId: ""
   datadog:
     enabled: false
     apiKey: ""
