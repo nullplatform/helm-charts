@@ -23,6 +23,11 @@ spec:
               name: host-logs
             - mountPath: /etc/null-logs/dynamic
               name: logs-config
+          {{- if .Values.logging.dynatrace.enabled }}
+          envFrom:
+            - secretRef:
+                name: dynatrace-secret
+          {{- end }}
           env:
             - name: NULL_LOGS_RELOAD_ENABLED
               value: 'true'
@@ -33,6 +38,12 @@ spec:
               value: {{ .Values.logging.gelf.host | quote }}
             - name: GELF_LOGS_PORT
               value: {{ .Values.logging.gelf.port | quote }}
+            {{- end }}
+            {{- if .Values.logging.dynatrace.enabled }}
+            - name: DYNATRACE_LOGS_ENABLED
+              value: 'true'
+            - name: DYNATRACE_PERFORMANCE_METRICS_ENABLED
+              value: 'true'
             {{- end }}
             - name: LOG_RESERVE_DATA
               value: 'False'
