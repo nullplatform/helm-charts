@@ -35,6 +35,7 @@ controlPlane:
   agent:
     image: "public.ecr.aws/nullplatform/controlplane-agent:latest"
 logging:
+  enabled: true
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
   gelf:
