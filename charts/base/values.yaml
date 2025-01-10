@@ -38,6 +38,8 @@ logging:
   enabled: true
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
+  prometheus:
+    enabled: false
   gelf:
     enabled: false
     host: ""
