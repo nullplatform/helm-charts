@@ -19,6 +19,13 @@ spec:
         - name: nullplatform-log-controller
           image: {{ .Values.logging.controller.image }}
           imagePullPolicy: Always
+          {{- if .Values.logging.prometheus.enabled }}
+          ports:
+          - containerPort: 2021
+            hostPort: 2021
+            name: prometheus
+            protocol: TCP
+          {{- end }}
           volumeMounts:
             - mountPath: /var/log
               name: host-logs
@@ -107,6 +114,10 @@ spec:
                   name: loki-secret
                   key: LOKI_BEARER_TOKEN
             {{- end}}
+            {{- end}}
+            {{- if .Values.logging.prometheus.enabled }}
+            - name: PROMETHEUS_PERFORMANCE_METRICS_ENABLED
+              value: 'true'
             {{- end}}
         {{- if and .Values.controlPlane.enabled .Values.nullplatform.apiKey }}
         - name: nullplatform-controlplane-agent
