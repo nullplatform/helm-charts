@@ -40,6 +40,7 @@ logging:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
   prometheus:
     enabled: false
+    exporterPort: 2021
   gelf:
     enabled: false
     host: ""

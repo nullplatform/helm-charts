@@ -21,8 +21,8 @@ spec:
           imagePullPolicy: Always
           {{- if .Values.logging.prometheus.enabled }}
           ports:
-          - containerPort: 2021
-            hostPort: 2021
+          - containerPort: {{ .Values.logging.prometheus.exporterPort }} 
+            hostPort: {{ .Values.logging.prometheus.exporterPort }} 
             name: prometheus
             protocol: TCP
           {{- end }}
@@ -116,6 +116,8 @@ spec:
             {{- end}}
             {{- end}}
             {{- if .Values.logging.prometheus.enabled }}
+            - name: PROMETHEUS_PERFORMANCE_METRICS_EXPORTER_PORT
+              value: {{ .Values.logging.prometheus.exporterPort | quote }}
             - name: PROMETHEUS_PERFORMANCE_METRICS_ENABLED
               value: 'true'
             {{- end}}
