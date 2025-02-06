@@ -1,4 +1,5 @@
-#This envoy filters is create to override a behavior in envoy where if you send x-request-id and x-forwarded-for, the request id is not keept
+{{- if .Values.envoy.filters.preserveExternalRequestId.enabled }}
+#This envoy filters is create to override a behavior in envoy where if you send x-request-id and x-forwarded-for, the request id is not kept
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
@@ -21,3 +22,4 @@ spec:
           preserve_external_request_id: true
           use_remote_address: false
           skip_xff_append: false
+{{- end }}
