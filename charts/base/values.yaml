@@ -82,3 +82,7 @@ imagePullSecrets:
   registry: ""
   username: ""
   password: ""
+envoy:
+  filters:
+    preserveExternalRequestId:
+      enabled: false
