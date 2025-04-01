@@ -21,8 +21,8 @@ spec:
           imagePullPolicy: Always
           {{- if .Values.logging.prometheus.enabled }}
           ports:
-          - containerPort: {{ .Values.logging.prometheus.exporterPort }} 
-            hostPort: {{ .Values.logging.prometheus.exporterPort }} 
+          - containerPort: {{ .Values.logging.prometheus.exporterPort }}
+            hostPort: {{ .Values.logging.prometheus.exporterPort }}
             name: prometheus
             protocol: TCP
           {{- end }}
@@ -71,6 +71,18 @@ spec:
                 secretKeyRef:
                   name: datadog-secret
                   key: DATADOG_API_KEY
+            {{- end }}
+            {{- if .Values.logging.newrelic.enabled }}
+            - name: NEWRELIC_LOGS_ENABLED
+              value: "true"
+            - name: NEWRELIC_PERFORMANCE_METRICS_ENABLED
+              value: "true"
+            - name: NEWRELIC_LICENSE_KEY
+              value: {{ .Values.logging.newrelic.licenseKey | quote }}
+            {{- if .Values.logging.newrelic.region }}
+            - name: NEWRELIC_REGION
+              value: {{ .Values.logging.newrelic.region | quote }}
+            {{- end }}
             {{- end }}
             {{- if .Values.cloudwatch.enabled }}
             - name: CLOUDWATCH_RETENTION_DAYS

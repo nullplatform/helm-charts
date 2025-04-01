@@ -61,6 +61,10 @@ logging:
     enabled: false
     apiKey: ""
     region: ""
+  newrelic:
+    enabled: false
+    licenseKey: ""
+    region: ""
   metricsExporter:
     image: "public.ecr.aws/nullplatform/k8s-metrics-exporter:latest"
 # CloudWatch configuration
