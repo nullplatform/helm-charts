@@ -65,8 +65,6 @@ logging:
     enabled: false
     licenseKey: ""
     region: ""
-  metricsExporter:
-    image: "public.ecr.aws/nullplatform/k8s-metrics-exporter:latest"
 # CloudWatch configuration
 cloudwatch:
   enabled: false
