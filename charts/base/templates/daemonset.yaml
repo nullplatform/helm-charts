@@ -59,9 +59,9 @@ spec:
               value: message
             {{- if .Values.logging.datadog.enabled }}
             - name: DATADOG_LOGS_ENABLED
-              value: 'true'
+              value: {{ .Values.logging.datadog.logs.enabled | quote }}
             - name: DATADOG_PERFORMANCE_METRICS_ENABLED
-              value: 'true'
+              value: {{ .Values.logging.datadog.metrics.enabled | quote }}
             {{- if .Values.logging.datadog.region }}
             - name: DATADOG_REGION
               value: {{ .Values.logging.datadog.region | quote }}

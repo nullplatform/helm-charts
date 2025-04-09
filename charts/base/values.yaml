@@ -59,6 +59,10 @@ logging:
     environmentId: ""
   datadog:
     enabled: false
+    metrics:
+      enabled: true
+    logs:
+      enabled: true
     apiKey: ""
     region: ""
   newrelic:
