@@ -59,14 +59,16 @@ logging:
     environmentId: ""
   datadog:
     enabled: false
+    metrics:
+      enabled: true
+    logs:
+      enabled: true
     apiKey: ""
     region: ""
   newrelic:
     enabled: false
     licenseKey: ""
     region: ""
-  metricsExporter:
-    image: "public.ecr.aws/nullplatform/k8s-metrics-exporter:latest"
 # CloudWatch configuration
 cloudwatch:
   enabled: false
