@@ -96,7 +96,7 @@ spec:
             - name: CLOUDWATCH_CUSTOM_METRICS_ENABLED
               value: 'true'
             - name: CLOUDWATCH_ACCESS_LOGS_ENABLED
-              value: "false"
+              value:  {{ .Values.cloudwatch.accessLogs.enabled | quote }}
             {{- end}}
             {{- if .Values.logging.loki.enabled }}
             - name: LOKI_LOGS_ENABLED
