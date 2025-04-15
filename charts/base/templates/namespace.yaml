@@ -3,10 +3,14 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ .Values.namespaces.nullplatformTools }}
+  finalizers:
+    - nullplatform.io/protect-deletion
+    - nullplatform.io/require-approval
   labels:
     name: {{ .Values.namespaces.nullplatformTools }}
   annotations:
     "helm.sh/hook": pre-install
+    nullplatform.io/protection-message: "This namespace is protected by Nullplatform. Please contact the Nullplatform team to delete it."
 {{- end }}
 ---
 {{- if not (lookup "v1" "Namespace" "" .Values.namespaces.nullplatformApplications) }}
@@ -14,9 +18,13 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ .Values.namespaces.nullplatformApplications }}
+  finalizers:
+    - nullplatform.io/protect-deletion
+    - nullplatform.io/require-approval
   labels:
     name: {{ .Values.namespaces.nullplatformApplications }}
   annotations:
     "helm.sh/hook": pre-install
+    nullplatform.io/protection-message: "This namespace is protected by Nullplatform. Please contact the Nullplatform team to delete it."
 {{- end }}
 ---
