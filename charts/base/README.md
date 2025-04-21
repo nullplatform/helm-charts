@@ -41,6 +41,14 @@ The following table lists the configurable parameters of the Null chart and thei
 
 For a complete list of configurable options, please refer to the `values.yaml` file.
 
+## Uninstalling the chart
+
+This Helm chart includes a protection mechanism that prevents deletion of the release. The protection works by using a pre-delete hook that runs indefinitely, blocking the Helm uninstall process. This protection is permanent - Once deployed, the Helm release cannot be deleted through normal Helm commands
+This is by design to prevent unauthorized deletion of critical infrastructure
+Only the Nullplatform team can safely remove this chart
+When users attempt to run helm uninstall, they must check the job logs to see the message.
+
+
 ## Notes
 
 - When using specific logging solutions (GELF, Loki, Datadog), make sure to set their respective `enabled` flag to `true` and provide the necessary configuration details.
