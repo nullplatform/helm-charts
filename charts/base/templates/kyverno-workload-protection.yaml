@@ -28,7 +28,7 @@ spec:
                     values: ["enabled"]
       preconditions:
         all:
-          - key: "{{ request.operation }}"
+          - key: {{ `"{{ request.operation }}"` }}
             operator: Equal
             value: DELETE
       validate:
@@ -36,7 +36,7 @@ spec:
         deny:
           conditions:
             any:
-              - key: "{{ request.object.spec.replicas }}"
+              - key: {{ `"{{ request.object.spec.replicas }}"` }}
                 operator: NotEquals
                 value: 0
 
@@ -54,7 +54,7 @@ spec:
                     values: ["enabled"]
       preconditions:
         all:
-          - key: "{{ request.operation }}"
+          - key: {{ `"{{ request.operation }}"` }}
             operator: Equal
             value: DELETE
       validate:
@@ -62,7 +62,7 @@ spec:
         deny:
           conditions:
             any:
-              - key: "{{ request.object.spec.replicas }}"
+              - key: {{ `"{{ request.object.spec.replicas }}"` }}
                 operator: NotEquals
                 value: 0
 
@@ -80,7 +80,7 @@ spec:
                     values: ["enabled"]
       preconditions:
         all:
-          - key: "{{ request.operation }}"
+          - key: {{ `"{{ request.operation }}"` }}
             operator: Equal
             value: DELETE
       validate:
@@ -88,7 +88,7 @@ spec:
         deny:
           conditions:
             any:
-              - key: "{{ request.object.spec.parallelism }}"
+              - key: {{ `"{{ request.object.spec.parallelism }}"` }}
                 operator: NotEquals
                 value: 0
 
@@ -106,7 +106,7 @@ spec:
                     values: ["enabled"]
       preconditions:
         all:
-          - key: "{{ request.operation }}"
+          - key: {{ `"{{ request.operation }}"` }}
             operator: Equal
             value: DELETE
       validate:

@@ -71,6 +71,14 @@ cloudwatch:
   region: us-east-1
   accessLogs:
     enabled: false
+kyverno:
+  enabled: false
+  namespaceOverride: kyverno
+  crds:
+    install: true
+    groups:
+      kyverno:
+        clusterpolicies: false
 # Metrics server configuration
 metricsServer:
   enabled: true
