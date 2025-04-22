@@ -2,8 +2,8 @@ apiVersion: v2
 name: nullplatform-base
 description: A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 type: application
-version: 0.0.21
-appVersion: "0.0.21"
+version: 0.0.22
+appVersion: "0.0.22"
 dependencies:
   - name: metrics-server
     version: ^3.12.0 # Use the appropriate version you need
@@ -12,4 +12,4 @@ dependencies:
   - name: kyverno
     version: ^3.3.7
     repository: https://kyverno.github.io/kyverno
-    condition: kyverno.enabled
+    condition: kyverno.install

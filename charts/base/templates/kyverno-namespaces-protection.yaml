@@ -1,0 +1,26 @@
+{{- if .Values.kyverno.policy.create }}
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: nullplatform-protect-namespace
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: prevent-namespace-deletion
+      match:
+        resources:
+          kinds:
+            - Namespace
+          names:
+            {{- range $key, $value := .Values.namespaces }}
+            - {{ $value }}
+            {{- end }}
+      validate:
+        message: "Deletion of the critical namespaces is prohibited."
+        deny:
+          conditions:
+            - key: {{ `"{{ request.operation }}"` }}
+              operator: Equals
+              value: DELETE
+{{- end }}

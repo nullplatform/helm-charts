@@ -72,7 +72,9 @@ cloudwatch:
   accessLogs:
     enabled: false
 kyverno:
-  enabled: false
+  install: false
+  policy:
+    create: false
   namespaceOverride: kyverno
   crds:
     install: true
