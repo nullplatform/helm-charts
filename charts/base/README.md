@@ -18,6 +18,18 @@ helm install my-release nullplatform/base \
   --set logging.datadog.enabled=true \
   --set logging.datadog.apiKey=my-datadog-api-key
 ```
+
+## Prerequisites
+
+Note: This is an optional but recommended setup. To avoid deleting our namespaces we have put in place as part of the chart a policy to explicitly deny any deletion over our namespaces. 
+This enforcement is made with Kyverno, once it is installed will prevent any attempt to delete the namespaces created by this chart
+
+```bash
+helm repo add kyverno https://kyverno.github.io/kyverno/
+helm repo update
+helm install kyverno kyverno/kyverno -n kyverno --create-namespace
+```
+
 ## Configuration
 
 The following table lists the configurable parameters of the Null chart and their default values.

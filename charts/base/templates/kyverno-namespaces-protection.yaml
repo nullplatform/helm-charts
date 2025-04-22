@@ -3,6 +3,8 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: nullplatform-protect-namespace
+  annotations:
+    "helm.sh/hook": pre-install
 spec:
   validationFailureAction: Enforce
   background: false

@@ -19,15 +19,4 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install
 {{- end }}
----
-{{- if not (lookup "v1" "Namespace" "" .Values.kyverno.namespaceOverride) }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.kyverno.namespaceOverride }}
-  labels:
-    name: {{ .Values.kyverno.namespaceOverride }}
-  annotations:
-    "helm.sh/hook": pre-install
-{{- end }}
----
+

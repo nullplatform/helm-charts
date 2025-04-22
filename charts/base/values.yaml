@@ -72,15 +72,8 @@ cloudwatch:
   accessLogs:
     enabled: false
 kyverno:
-  install: false
   policy:
-    create: false
-  namespaceOverride: kyverno
-  crds:
-    install: true
-    groups:
-      kyverno:
-        clusterpolicies: false
+    create: true
 # Metrics server configuration
 metricsServer:
   enabled: true

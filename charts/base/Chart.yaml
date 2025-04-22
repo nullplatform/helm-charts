@@ -9,7 +9,3 @@ dependencies:
     version: ^3.12.0 # Use the appropriate version you need
     repository: https://kubernetes-sigs.github.io/metrics-server
     condition: metricsServer.enabled
-  - name: kyverno
-    version: ^3.3.7
-    repository: https://kyverno.github.io/kyverno
-    condition: kyverno.install
