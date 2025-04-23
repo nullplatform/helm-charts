@@ -1,3 +1,10 @@
+## [0.0.25](https://github.com/nullplatform/helm-charts/compare/0.0.24...0.0.25) (2025-04-23)
+
+
+### Bug Fixes
+
+* **config:** BAC-1276 testing one more ([14f4771](https://github.com/nullplatform/helm-charts/commit/14f47717bc2d708279c9b70f1fb6d78fc9dfd693))
+
 ## [0.0.24](https://github.com/nullplatform/helm-charts/compare/0.0.23...0.0.24) (2025-04-23)
 
 
