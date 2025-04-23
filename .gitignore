@@ -5,3 +5,10 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Chart locks
+**/Chart.lock
+charts/**/charts/*
+
+# Js
+node_modules/

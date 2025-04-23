@@ -1,0 +1,164 @@
+name: Validate Commits and Predict Version
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!main'
+      - '!master'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate commit messages
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha || 'HEAD~10' }} --to ${{ github.sha }} --verbose
+
+      - name: Create version prediction script
+        run: |
+          cat > predict-version.js << 'EOL'
+          const { execSync } = require('child_process');
+          const semver = require('semver');
+          const fs = require('fs');
+          const path = require('path');
+          const yaml = require('js-yaml');
+
+          // Find current version from first chart
+          const chartsDir = path.join(process.cwd(), 'charts');
+          const chartDirs = fs.readdirSync(chartsDir, { withFileTypes: true })
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name);
+          
+          let currentVersion = '0.1.0'; // Default if no charts found
+          
+          if (chartDirs.length > 0) {
+            const chartYamlPath = path.join(chartsDir, chartDirs[0], 'Chart.yaml');
+            if (fs.existsSync(chartYamlPath)) {
+              const chartYaml = yaml.load(fs.readFileSync(chartYamlPath, 'utf8'));
+              currentVersion = chartYaml.version || currentVersion;
+            }
+          }
+
+          // Get detailed commit info including body text
+          const gitLogCommand = "git log -50 --format='%H'";
+          let commitHashes;
+          try {
+            commitHashes = execSync(gitLogCommand, { shell: '/bin/bash' }).toString().split('\n').filter(Boolean);
+          } catch (error) {
+            commitHashes = [];
+          }
+
+          // Track the bump type (major, minor, patch, none)
+          let bumpType = 'none';
+
+          // Process each commit to determine the bump type
+          console.log('Analyzing commits for version bump:');
+          for (const hash of commitHashes) {
+            // Get the full commit message with body
+            const commitCommand = `git show -s --format="%B" ${hash}`;
+            let commitMsg;
+          
+            try {
+              commitMsg = execSync(commitCommand, { shell: '/bin/bash' }).toString();
+              console.log('---\nCommit:', hash.substring(0, 8));
+              console.log(commitMsg);
+            } catch (error) {
+              continue;
+            }
+
+            // Skip merge commits and release commits
+            if (commitMsg.startsWith('Merge ') || commitMsg.includes('chore(release)')) {
+              continue;
+            }
+
+            // Check for explicit breaking changes
+            const hasBreakingChangeMarker = commitMsg.includes('BREAKING CHANGE:') || 
+                                          commitMsg.includes('BREAKING CHANGE ') || 
+                                          commitMsg.includes('BREAKING-CHANGE:');
+
+            // Check for feat! syntax
+            const hasFeatureBangSyntax = /^feat!(\(.+\))?:/.test(commitMsg.split('\n')[0]);
+
+            // If either breaking change indicator is found, it's a major bump
+            if (hasBreakingChangeMarker || hasFeatureBangSyntax) {
+              console.log('Found breaking change! Major bump required.');
+              bumpType = 'major';
+              break;
+            } 
+            // Check for feature (minor bump)
+            else if (/^feat(\(.+\))?:/.test(commitMsg.split('\n')[0]) && bumpType !== 'major') {
+              console.log('Found feature. Minor bump required.');
+              bumpType = 'minor';
+            } 
+            // Check for fixes and other changes (patch bump)
+            else if (/^(fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?:/.test(commitMsg.split('\n')[0]) &&
+                    bumpType !== 'major' && bumpType !== 'minor') {
+              console.log('Found fix/chore/etc. Patch bump required if no higher priority changes.');
+              bumpType = 'patch';
+            }
+          }
+
+          let nextVersion = currentVersion;
+          if (bumpType !== 'none') {
+            nextVersion = semver.inc(currentVersion, bumpType);
+            console.log(`\nBased on commits, next version would be: ${nextVersion} (${bumpType} bump from ${currentVersion})`);
+          } else {
+            console.log(`\nNo version change needed, current version: ${currentVersion}`);
+          }
+          
+          // Set output for GitHub Actions
+          const github_output = process.env.GITHUB_OUTPUT;
+          if (github_output) {
+            fs.appendFileSync(github_output, `version=${nextVersion}\n`);
+            fs.appendFileSync(github_output, `type=${bumpType}\n`);
+            fs.appendFileSync(github_output, `current=${currentVersion}\n`);
+          }
+          EOL
+
+      - name: Install version prediction dependencies
+        run: npm install semver js-yaml
+
+      - name: Predict next version
+        id: predict
+        run: node predict-version.js
+
+      - name: Comment on PR with Version Prediction
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const version = '${{ steps.predict.outputs.version }}';
+            const currentVersion = '${{ steps.predict.outputs.current }}';
+            const bumpType = '${{ steps.predict.outputs.type }}';
+            
+            let message = '';
+            if (bumpType === 'none') {
+              message = `📦 **No version change needed**\n\nThe commits in this PR don't trigger a version change. Current version: ${currentVersion}`;
+            } else {
+              message = `📦 **Next version will be: ${version}**\n\nBased on the commits in this PR, when merged to main this will trigger a new release with a **${bumpType}** version bump from ${currentVersion} to ${version}.`;
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
