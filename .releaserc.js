@@ -1,8 +1,8 @@
  module.exports = {
    branches: [
-     {name: "main"},
-     {name: "master"},
-     {name: "release", prerelease: false}
+     {name: "main", channel: "latest"},
+     {name: "master", channel: "latest"},
+     {name: "release", channel: "latest"}
   ],
   prerelease: false,
   tagFormat: '${version}',
