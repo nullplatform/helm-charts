@@ -1,10 +1,9 @@
  module.exports = {
    branches: [
-     {name: "main", channel: "latest"},
-     {name: "master", channel: "latest"},
-     {name: "release", channel: "latest"}
+     {name: "main", channel: "latest", prerelease: false},
+     {name: "master", channel: "latest", prerelease: false},
+     {name: "release", channel: "latest", prerelease: false}
   ],
-  prerelease: false,
   tagFormat: '${version}',
   plugins: [
     "@semantic-release/commit-analyzer",
@@ -32,14 +31,10 @@
     [
       "@semantic-release/github",
       {
-        // Add "Release" prefix to title
-        releasedLabels: false,
         releaseNameTemplate: "Release <%= nextRelease.version %>",
-        // Make it a full release, not prerelease
         successComment: false,
         failTitle: false,
         failComment: false,
-        // Force the release to be a full release
         prerelease: false
       }
     ]
