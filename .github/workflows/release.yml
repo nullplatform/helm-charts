@@ -1,0 +1,66 @@
+name: Release Charts
+
+on:
+  push:
+    branches:
+      - feature/semver
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+      pages: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Create Git Identity
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+      - name: Release Process (Dry Run)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Running semantic-release"
+          npx semantic-release
+      - name: Set up Helm
+        run: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - name: Download and package Helm Charts and output to releases directory
+        run: |
+          for dir in charts/*; do
+            helm dependency update "$dir"
+            helm package "$dir" -d ./releases
+          done
+      - name: Generate Helm repository index in releases directory
+        run: helm repo index ./releases --url https://nullplatform.github.io/helm-charts
+      - name: Push changes to GitHub
+        run: |
+          git add ./releases
+          git commit -m "ci: GIT-0000 Publish new chart version [ci skip]"
+          git push origin ${GITHUB_REF#refs/heads/}
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './releases'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
