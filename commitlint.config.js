@@ -1,11 +1,7 @@
 module.exports = {
     extends: ['@commitlint/config-conventional'],
     rules: {
-        // Turn off rules that would conflict with our ticket number format
-        'subject-case': [0], // Disable case checking for subject
-        'header-max-length': [2, 'always', 100], // Allow longer headers to accommodate ticket numbers
-
-        // Core rules we want to keep
+        'subject-case': [0, 'always', ['lower-case']], // Disable case checking for subject
         'subject-empty': [2, 'never'],
         'type-empty': [2, 'never'],
         'subject-full-stop': [2, 'never', '.'],
@@ -25,12 +21,11 @@ module.exports = {
                 'chore',
                 'revert'
             ]
-        ]
+        ],
+        'body-max-line-length': [0] // Setting to 0 disables the rule
     },
-    // Use a custom parser to extract the ticket number correctly
     parserPreset: {
         parserOpts: {
-            // Updated to match: chore(config): BAC-1234 this is a test
             headerPattern: /^(\w*)(?:\(([a-z0-9-]*)\))?: ([A-Z]+-[0-9]+) (.*)$/,
             headerCorrespondence: ['type', 'scope', 'ticket', 'subject']
         }
