@@ -2,7 +2,7 @@
    branches: [
      {name: "main"},
      {name: "master"},
-     {name: "feature/semver", prerelease: false}  // Explicitly set this branch to NOT be a prerelease
+     {name: "feature/semver", prerelease: false}
   ],
   prerelease: false,
   tagFormat: '${version}',
