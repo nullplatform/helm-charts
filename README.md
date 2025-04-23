@@ -12,6 +12,8 @@ Welcome to the Helm Charts repository for nullplatform. This repository hosts pa
 
 ## How to Use This Repository
 
+Install node dependencies
+
 ### 1. Add Helm Repository
 
 To add this Helm repository to your Helm client, use the following command:
