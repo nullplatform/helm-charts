@@ -42,7 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Running semantic-release"
-          OUTPUT=$(npx semantic-release)
+          OUTPUT=$(npx semantic-release --debug)
           echo "$OUTPUT"
           if echo "$OUTPUT" | grep -q "There are no relevant changes, so no new version is released."; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
