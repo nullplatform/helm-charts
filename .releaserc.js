@@ -1,11 +1,15 @@
-module.exports = {
-  branches: ["main", "master", "feature/semver"],
+ module.exports = {
+   branches: [
+     {name: "main"},
+     {name: "master"},
+     {name: "feature/semver", prerelease: false}  // Explicitly set this branch to NOT be a prerelease
+  ],
+  prerelease: false,
   tagFormat: '${version}',
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
-    // Each plugin needs its own array entry
     [
       "semantic-release-helm",
       {
@@ -25,6 +29,19 @@ module.exports = {
         message: "chore(release): GIT-0000 ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],
-    "@semantic-release/github"
+    [
+      "@semantic-release/github",
+      {
+        // Add "Release" prefix to title
+        releasedLabels: false,
+        releaseNameTemplate: "Release <%= nextRelease.version %>",
+        // Make it a full release, not prerelease
+        successComment: false,
+        failTitle: false,
+        failComment: false,
+        // Force the release to be a full release
+        prerelease: false
+      }
+    ]
   ]
 }
