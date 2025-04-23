@@ -1,3 +1,10 @@
+## [0.0.26](https://github.com/nullplatform/helm-charts/compare/0.0.25...0.0.26) (2025-04-23)
+
+
+### Bug Fixes
+
+* **config:** BAC-1276 added channel ([3091247](https://github.com/nullplatform/helm-charts/commit/309124761f7750a6a56ec02c0ba37be7712f20f6))
+
 ## [0.0.25](https://github.com/nullplatform/helm-charts/compare/0.0.24...0.0.25) (2025-04-23)
 
 
