@@ -2,7 +2,7 @@
    branches: [
      {name: "main"},
      {name: "master"},
-     {name: "feature/semver", prerelease: false}
+     {name: "release", prerelease: false}
   ],
   prerelease: false,
   tagFormat: '${version}',
