@@ -23,6 +23,8 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pull latest changes
+        run: git pull origin ${GITHUB_REF#refs/heads/}
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
