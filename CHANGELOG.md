@@ -18,6 +18,21 @@
 
 ### Bug Fixes
 
+* **config:** BAC-1276 added channel ([6342736](https://github.com/nullplatform/helm-charts/commit/634273673f7a2796347e7598db1b102911e7ab6d))
+* **config:** BAC-1276 added channel ([17299cf](https://github.com/nullplatform/helm-charts/commit/17299cffa49925470b211dd9d8fa62811e00b792))
+* **config:** BAC-1276 adding validations for releasing chart versions ([e4049b4](https://github.com/nullplatform/helm-charts/commit/e4049b401fbdad920a55b4e1b1f6c46e7b1eddc1))
+* **config:** BAC-1276 change release title and state ([b96ad9f](https://github.com/nullplatform/helm-charts/commit/b96ad9f240c12495288603239092b5d5152f3baf))
+* **config:** BAC-1276 removed comment ([e183270](https://github.com/nullplatform/helm-charts/commit/e18327093f9a928229e48ff09979ff8f8583ab75))
+* **config:** BAC-1276 testing a fix so that bumps charts ([320414d](https://github.com/nullplatform/helm-charts/commit/320414dc3430a6cb0ffeb1691c72ee2add2a2a64))
+* **config:** BAC-1276 testing one more ([1c266f9](https://github.com/nullplatform/helm-charts/commit/1c266f925665211627d77293d48707f0f9c251c1))
+* **config:** BAC-1276 testing prerelease ([6328845](https://github.com/nullplatform/helm-charts/commit/6328845ee47dd33b6d8ef8ea9997d3332485ab88))
+* **config:** BAC-1276 update branch ([b3cc601](https://github.com/nullplatform/helm-charts/commit/b3cc601bf27d4ad39c0242e1f12f288becb49676))
+
+## [0.0.22](https://github.com/nullplatform/helm-charts/compare/0.0.21...0.0.22) (2025-04-25)
+
+
+### Bug Fixes
+
 * **config:** BAC-1276 added channel ([e8bfa0c](https://github.com/nullplatform/helm-charts/commit/e8bfa0c5088d8413b3c4a3dc9e5b0b0b580729d0))
 * **config:** BAC-1276 added channel ([2d6538d](https://github.com/nullplatform/helm-charts/commit/2d6538d4203752f975fe00b0c2459098ccbe38c5))
 * **config:** BAC-1276 adding validations for releasing chart versions ([d6b5904](https://github.com/nullplatform/helm-charts/commit/d6b5904ffb0063a9b53ca178cc7d16c41d29f628))
