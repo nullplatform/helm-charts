@@ -3,15 +3,15 @@
   "version": "0.0.0-not-used",
   "private": true,
   "devDependencies": {
-    "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.7.0",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "commitizen": "^4.3.0",
+    "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
-    "cz-customizable": "^7.0.0",
-    "husky": "^8.0.3",
-    "semantic-release": "^21.0.9",
+    "cz-customizable": "^7.4.0",
+    "husky": "^9.1.7",
+    "semantic-release": "^24.2.3",
     "semantic-release-helm": "^2.2.0"
   },
   "scripts": {
