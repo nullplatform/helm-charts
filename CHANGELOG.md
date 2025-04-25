@@ -1,3 +1,15 @@
+# [1.0.0](https://github.com/nullplatform/helm-charts/compare/0.0.22...1.0.0) (2025-04-25)
+
+
+### Features
+
+* **base:** BAC-1276 semantic versioning enabled ([3848265](https://github.com/nullplatform/helm-charts/commit/3848265368d93299230d70682a2976d573ec9c92))
+
+
+### BREAKING CHANGES
+
+* **base:** We bump to major version
+
 ## [0.0.22](https://github.com/nullplatform/helm-charts/compare/0.0.21...0.0.22) (2025-04-25)
 
 
