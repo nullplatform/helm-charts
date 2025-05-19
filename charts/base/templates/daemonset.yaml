@@ -133,7 +133,7 @@ spec:
             - name: PROMETHEUS_PERFORMANCE_METRICS_ENABLED
               value: 'true'
             {{- end}}
-        {{- if and .Values.controlPlane.enabled .Values.nullplatform.apiKey }}
+        {{- if and .Values.controlPlane.enabled (or .Values.nullplatform.apiKey .Values.nullplatform.secretName) }}
         - name: nullplatform-controlplane-agent
           image: {{ .Values.controlPlane.agent.image }}
           command:
@@ -148,7 +148,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: NULLPLATFORM_APIKEY
-                  name: nullplatform-secret
+                  name: {{ if .Values.nullplatform.secretName }}{{ .Values.nullplatform.secretName }}{{ else }}nullplatform-secret{{ end }}
           image: public.ecr.aws/nullplatform/controlplane-agent:latest
           imagePullPolicy: Always
           volumeMounts:
