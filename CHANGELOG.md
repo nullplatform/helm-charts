@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/nullplatform/helm-charts/compare/1.0.0...1.1.0) (2025-05-20)
+
+
+### Features
+
+* **base:** NULL-147 use nullplatform apikey or provide a secret with the value inside ([30acb5c](https://github.com/nullplatform/helm-charts/commit/30acb5ce29ad03a909dd828525869a6087ae41c8))
+
 # [1.0.0](https://github.com/nullplatform/helm-charts/compare/0.0.22...1.0.0) (2025-04-25)
 
 
