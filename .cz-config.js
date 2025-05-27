@@ -15,6 +15,7 @@ module.exports = {
 
     // Updated project-specific scopes
     scopes: [
+        { name: 'agent' },
         { name: 'base' },
         { name: 'cert-manager-config' },
         { name: 'config' }
