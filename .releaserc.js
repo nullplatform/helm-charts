@@ -22,6 +22,12 @@
       }
     ],
     [
+      "semantic-release-helm",
+      {
+        chartPath: "./charts/agent"
+      }
+    ]
+    [
       "@semantic-release/git",
       {
         assets: ["charts/**/Chart.yaml", "CHANGELOG.md"],

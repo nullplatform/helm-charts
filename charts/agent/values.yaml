@@ -1,0 +1,110 @@
+replicaCount: 1
+
+namespace: nullplatform-tools
+
+args:
+  - "--tags=$(TAGS)"
+  - "--apikey=$(NP_API_KEY)"
+  - "--runtime=host"
+  - "--command-executor-env=NP_API_KEY=$(NP_API_KEY)"
+  - "--command-executor-debug"
+  - "--webserver-enabled"
+  - "--command-executor-git-command-repos https://$(GITHUB_TOKEN)@$(GITHUB_REPO)#$(GITHUB_BRANCH)"
+
+configuration:
+  create: true
+  secretName: nullplatform-agent-secret
+  values:
+    TAGS: ""
+    NP_LOG_LEVEL: DEBUG
+    NP_API_KEY: ""
+    GITHUB_USER: ""
+    GITHUB_TOKEN: ""
+    GITHUB_REPO: ""
+    GITHUB_BRANCH: main
+
+image:
+  repository: public.ecr.aws/nullplatform/controlplane-agent
+  pullPolicy: Never
+  tag: beta
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: nullplatform-agent
+  role:
+    rules:
+      - apiGroups:
+          - '*'
+          - ""
+        resources:
+          - '*'
+        verbs:
+          - '*'
+
+podAnnotations:
+  name: nullplatform-agent
+podLabels:
+  name: nullplatform-agent
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations:
+  - key: "node.kubernetes.io/not-ready"
+    operator: "Exists"
+    effect: "NoExecute"
+    tolerationSeconds: 300
+  - key: "node.kubernetes.io/unreachable"
+    operator: "Exists"
+    effect: "NoExecute"
+    tolerationSeconds: 300
+
+affinity: {}
+
+volumes:
+  - name: repos
+    emptyDir: {}
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts:
+  - name: repos
+    mountPath: /root/.np
