@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/nullplatform/helm-charts/compare/1.2.0...1.2.1) (2025-05-29)
+
+
+### Bug Fixes
+
+* **agent:** BAC-1406 rename agents chart ([c6187c6](https://github.com/nullplatform/helm-charts/commit/c6187c64ef7e2fdf779733427736b7b42ae96dff))
+
 # [1.2.0](https://github.com/nullplatform/helm-charts/compare/1.1.0...1.2.0) (2025-05-29)
 
 
