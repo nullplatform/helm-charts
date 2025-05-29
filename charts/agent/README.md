@@ -14,7 +14,7 @@ This chart installs the Nullplatform agent to operate on your behalf to operate 
 * Custom Actions
 
 ```bash
-helm install nullplatform-agent nullplatform/agent \
+helm install nullplatform-agent nullplatform/nullplatform-agent \
   --set configuration.values.NP_API_KEY=$NP_API_KEY \
   --set configuration.values.TAGS="$AGENT_TAGS" \
   --set configuration.values.GITHUB_TOKEN=$GITHUB_TOKEN \
