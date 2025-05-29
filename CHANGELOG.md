@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/nullplatform/helm-charts/compare/1.1.0...1.2.0) (2025-05-29)
+
+
+### Features
+
+* **agent:** BAC-1406 added agent chart ([e895501](https://github.com/nullplatform/helm-charts/commit/e895501535265579551da16c8d605eb7498782dd))
+
 # [1.1.0](https://github.com/nullplatform/helm-charts/compare/1.0.0...1.1.0) (2025-05-20)
 
 
