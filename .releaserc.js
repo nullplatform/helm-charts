@@ -26,7 +26,7 @@
       {
         chartPath: "./charts/agent"
       }
-    ]
+    ],
     [
       "@semantic-release/git",
       {
