@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/nullplatform/helm-charts/compare/1.2.1...1.2.2) (2025-06-04)
+
+
+### Bug Fixes
+
+* **base:** BAC-1446 keep gateways on chart deletion and prevent creation if they are already created ([2a1e5eb](https://github.com/nullplatform/helm-charts/commit/2a1e5ebabd8bd970649120f48f4a6881c81873c9))
+
 ## [1.2.1](https://github.com/nullplatform/helm-charts/compare/1.2.0...1.2.1) (2025-05-29)
 
 
