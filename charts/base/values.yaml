@@ -76,6 +76,8 @@ cloudwatch:
 metricsServer:
   enabled: true
 # Gateway API configuration
+gateways:
+  enabled: true
 gatewayAPI:
   enabled: true
   crds:
