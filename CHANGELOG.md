@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/nullplatform/helm-charts/compare/1.2.2...1.2.3) (2025-06-06)
+
+
+### Bug Fixes
+
+* **agent:** BAC-1458 imagePullPolicy set to always in the agent ([66b2ee5](https://github.com/nullplatform/helm-charts/commit/66b2ee5daf351f2c30ce01969578ff93c0205361))
+
 ## [1.2.2](https://github.com/nullplatform/helm-charts/compare/1.2.1...1.2.2) (2025-06-04)
 
 
