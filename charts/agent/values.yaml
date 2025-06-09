@@ -100,6 +100,17 @@ tolerations:
 
 affinity: {}
 
+# Init containers to run before the main container
+# Example:
+# initContainers:
+#   - name: install-dependencies
+#     image: busybox:1.36
+#     command: ['sh', '-c', 'echo "Installing dependencies..."']
+#     volumeMounts:
+#       - name: repos
+#         mountPath: /root/.np
+initContainers: []
+
 volumes:
   - name: repos
     emptyDir: {}
