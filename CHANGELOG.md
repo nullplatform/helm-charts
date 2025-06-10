@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/nullplatform/helm-charts/compare/1.2.3...1.3.0) (2025-06-10)
+
+
+### Features
+
+* **agent:** GIT-0000 add configurable initContainers ([6cd41e2](https://github.com/nullplatform/helm-charts/commit/6cd41e26986b5cc0acb628c1c0fa3b16c9a57909))
+
 ## [1.2.3](https://github.com/nullplatform/helm-charts/compare/1.2.2...1.2.3) (2025-06-06)
 
 
