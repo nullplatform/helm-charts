@@ -111,11 +111,25 @@ affinity: {}
 #         mountPath: /root/.np
 initContainers: []
 
+#Init script run any instructions before
+#Example:
+#  initScripts :
+#    - echo "Hello World"
+
+initScripts: []
+
 volumes:
   - name: repos
     emptyDir: {}
+  - name: init-scripts
+    mountPath: /app/init-scripts
+    readOnly: true
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
   - name: repos
     mountPath: /root/.np
+  - name: init-scripts
+    configMap:
+      name: initial-scripts-config
+      defaultMode: 0755
