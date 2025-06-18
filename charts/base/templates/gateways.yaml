@@ -25,6 +25,10 @@ metadata:
     "helm.sh/resource-policy": "keep"
 spec:
   gatewayClassName: istio
+  {{- with .Values.gateway.internal.addresses }}
+  addresses:
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
   listeners:
   - name: default
     port: 443
@@ -49,6 +53,10 @@ metadata:
     "helm.sh/resource-policy": "keep"
 spec:
   gatewayClassName: istio
+  {{- with .Values.gateway.public.addresses }}
+  addresses:
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
   listeners:
   - name: default
     port: 443
