@@ -133,3 +133,4 @@ volumeMounts:
   - name: init-scripts
     mountPath: /nullplatform.init.d
     readOnly: true
+    
