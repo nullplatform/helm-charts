@@ -18,11 +18,13 @@ tls:
 gateway:
   internal:
     name: "gateway-private"
+    addresses: {}
     autoscaling:
       minReplicas: 2
       maxReplicas: 10
   public:
     name: "gateway-public"
+    addresses: {}
     autoscaling:
       minReplicas: 2
       maxReplicas: 10
