@@ -122,14 +122,14 @@ volumes:
   - name: repos
     emptyDir: {}
   - name: init-scripts
-    mountPath: /app/init-scripts
-    readOnly: true
+    configMap:
+      name: init-scripts
+      defaultMode: 0755
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts:
   - name: repos
     mountPath: /root/.np
   - name: init-scripts
-    configMap:
-      name: initial-scripts-config
-      defaultMode: 0755
+    mountPath: /nullplatform.init.d
+    readOnly: true

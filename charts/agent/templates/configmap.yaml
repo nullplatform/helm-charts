@@ -8,6 +8,5 @@ metadata:
 data:
   {{- range $i, $cmd := .Values.initScripts }}
     {{ printf "%02d-script.sh" (add1 $i) }}: |
-      #!/bin/sh
       {{ $cmd }}
   {{- end }}
