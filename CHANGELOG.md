@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/nullplatform/helm-charts/compare/1.3.0...1.4.0) (2025-06-18)
+
+
+### Features
+
+* **agent:** BAC-1448 add initScript feature ([c2306a1](https://github.com/nullplatform/helm-charts/commit/c2306a138f460125a8aad79e6dc23de5eb200df0))
+* **agent:** BAC-1448 final commit ([78eeae1](https://github.com/nullplatform/helm-charts/commit/78eeae1a4c9ce44645b79e382dd1feabacd845ee))
+
 # [1.3.0](https://github.com/nullplatform/helm-charts/compare/1.2.3...1.3.0) (2025-06-10)
 
 
