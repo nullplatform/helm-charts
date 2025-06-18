@@ -3,7 +3,7 @@ entries:
   agent:
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2025-06-10T15:04:55.106252446Z"
+    created: "2025-06-18T20:59:19.730182237Z"
     description: Agent used to interact with services, scopes and telemetry inside
       a cluster
     digest: 72fb79283d8d4e0409cd1d0a6ab48d3faa8267c709957859e874c5f3be65e3b8
@@ -14,8 +14,19 @@ entries:
     version: 1.2.0
   nullplatform-agent:
   - apiVersion: v2
+    appVersion: 1.4.0
+    created: "2025-06-18T20:59:19.734703338Z"
+    description: Agent used to interact with services, scopes and telemetry inside
+      a cluster
+    digest: 144a29f0f39c11cf047b13e810e84dc4a5e91fd8d8488e5ee39479a1fd2e03e5
+    name: nullplatform-agent
+    type: application
+    urls:
+    - https://nullplatform.github.io/helm-charts/nullplatform-agent-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v2
     appVersion: 1.3.0
-    created: "2025-06-10T15:04:55.10814906Z"
+    created: "2025-06-18T20:59:19.733573378Z"
     description: Agent used to interact with services, scopes and telemetry inside
       a cluster
     digest: 8443260fa030c85ad5549e59671839153ce59c15388feea5e8e94eee5592abe9
@@ -26,7 +37,7 @@ entries:
     version: 1.3.0
   - apiVersion: v2
     appVersion: 1.2.3
-    created: "2025-06-10T15:04:55.107673438Z"
+    created: "2025-06-18T20:59:19.732775121Z"
     description: Agent used to interact with services, scopes and telemetry inside
       a cluster
     digest: e75cca62eb9fd76d4e77309c0a87760cf09d882b2f303013f35df65f0c254fab
@@ -37,7 +48,7 @@ entries:
     version: 1.2.3
   - apiVersion: v2
     appVersion: 1.2.2
-    created: "2025-06-10T15:04:55.107225459Z"
+    created: "2025-06-18T20:59:19.731888909Z"
     description: Agent used to interact with services, scopes and telemetry inside
       a cluster
     digest: d4b7d2581051d9622694b3a04b7e4ef3bedd789346cb38dc3cba1351636cd20d
@@ -48,7 +59,7 @@ entries:
     version: 1.2.2
   - apiVersion: v2
     appVersion: 1.2.1
-    created: "2025-06-10T15:04:55.106699353Z"
+    created: "2025-06-18T20:59:19.731051297Z"
     description: Agent used to interact with services, scopes and telemetry inside
       a cluster
     digest: 9ef338fed592c2db5fd52c2f632ce6329fc3f21a83c6955f6c4b62977c62d2b0
@@ -59,8 +70,24 @@ entries:
     version: 1.2.1
   nullplatform-base:
   - apiVersion: v2
+    appVersion: 1.4.0
+    created: "2025-06-18T20:59:19.823521734Z"
+    dependencies:
+    - condition: metricsServer.enabled
+      name: metrics-server
+      repository: https://kubernetes-sigs.github.io/metrics-server
+      version: ^3.12.0
+    description: A Helm chart for deploying the nullplatform base dependencies applications
+      using Kubernetes
+    digest: e40debc64ed096dc52cfae4f8eb8bf3d40df431f3585868739ea3470f034173e
+    name: nullplatform-base
+    type: application
+    urls:
+    - https://nullplatform.github.io/helm-charts/nullplatform-base-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v2
     appVersion: 1.3.0
-    created: "2025-06-10T15:04:55.195181478Z"
+    created: "2025-06-18T20:59:19.819525356Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -76,7 +103,7 @@ entries:
     version: 1.3.0
   - apiVersion: v2
     appVersion: 1.2.3
-    created: "2025-06-10T15:04:55.191403462Z"
+    created: "2025-06-18T20:59:19.816537811Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -92,7 +119,7 @@ entries:
     version: 1.2.3
   - apiVersion: v2
     appVersion: 1.2.2
-    created: "2025-06-10T15:04:55.18855193Z"
+    created: "2025-06-18T20:59:19.812396439Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -108,7 +135,7 @@ entries:
     version: 1.2.2
   - apiVersion: v2
     appVersion: 1.2.1
-    created: "2025-06-10T15:04:55.184706335Z"
+    created: "2025-06-18T20:59:19.809680213Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -124,7 +151,7 @@ entries:
     version: 1.2.1
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2025-06-10T15:04:55.181841587Z"
+    created: "2025-06-18T20:59:19.807006067Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -140,7 +167,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2025-06-10T15:04:55.17783871Z"
+    created: "2025-06-18T20:59:19.803715555Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -156,7 +183,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-06-10T15:04:55.17502069Z"
+    created: "2025-06-18T20:59:19.801012796Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -172,7 +199,7 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: 0.0.27
-    created: "2025-06-10T15:04:55.155343531Z"
+    created: "2025-06-18T20:59:19.783094837Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -188,7 +215,7 @@ entries:
     version: 0.0.27
   - apiVersion: v2
     appVersion: 0.0.26
-    created: "2025-06-10T15:04:55.152549275Z"
+    created: "2025-06-18T20:59:19.77945041Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -204,7 +231,7 @@ entries:
     version: 0.0.26
   - apiVersion: v2
     appVersion: 0.0.25
-    created: "2025-06-10T15:04:55.148669929Z"
+    created: "2025-06-18T20:59:19.77680614Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -220,7 +247,7 @@ entries:
     version: 0.0.25
   - apiVersion: v2
     appVersion: 0.0.24
-    created: "2025-06-10T15:04:55.145923654Z"
+    created: "2025-06-18T20:59:19.773373176Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -236,7 +263,7 @@ entries:
     version: 0.0.24
   - apiVersion: v2
     appVersion: 0.0.23
-    created: "2025-06-10T15:04:55.142208892Z"
+    created: "2025-06-18T20:59:19.770657963Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -252,7 +279,7 @@ entries:
     version: 0.0.23
   - apiVersion: v2
     appVersion: 0.0.22
-    created: "2025-06-10T15:04:55.139482444Z"
+    created: "2025-06-18T20:59:19.767285671Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -268,7 +295,7 @@ entries:
     version: 0.0.22
   - apiVersion: v2
     appVersion: 0.0.21
-    created: "2025-06-10T15:04:55.136665977Z"
+    created: "2025-06-18T20:59:19.764360424Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -284,7 +311,7 @@ entries:
     version: 0.0.21
   - apiVersion: v2
     appVersion: 0.0.17
-    created: "2025-06-10T15:04:55.133084003Z"
+    created: "2025-06-18T20:59:19.761453757Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -300,7 +327,7 @@ entries:
     version: 0.0.17
   - apiVersion: v2
     appVersion: 0.0.16
-    created: "2025-06-10T15:04:55.130029994Z"
+    created: "2025-06-18T20:59:19.758131481Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -316,7 +343,7 @@ entries:
     version: 0.0.16
   - apiVersion: v2
     appVersion: 0.0.15
-    created: "2025-06-10T15:04:55.126643779Z"
+    created: "2025-06-18T20:59:19.754765752Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -332,7 +359,7 @@ entries:
     version: 0.0.15
   - apiVersion: v2
     appVersion: 0.0.14
-    created: "2025-06-10T15:04:55.124035763Z"
+    created: "2025-06-18T20:59:19.751389008Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -348,7 +375,7 @@ entries:
     version: 0.0.14
   - apiVersion: v2
     appVersion: 0.0.13
-    created: "2025-06-10T15:04:55.120668544Z"
+    created: "2025-06-18T20:59:19.748245441Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -364,7 +391,7 @@ entries:
     version: 0.0.13
   - apiVersion: v2
     appVersion: 0.0.12
-    created: "2025-06-10T15:04:55.117956824Z"
+    created: "2025-06-18T20:59:19.74472137Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -380,7 +407,7 @@ entries:
     version: 0.0.12
   - apiVersion: v2
     appVersion: 0.0.11
-    created: "2025-06-10T15:04:55.114435959Z"
+    created: "2025-06-18T20:59:19.742011616Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -396,7 +423,7 @@ entries:
     version: 0.0.11
   - apiVersion: v2
     appVersion: 0.0.10
-    created: "2025-06-10T15:04:55.111746369Z"
+    created: "2025-06-18T20:59:19.738229496Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -412,7 +439,7 @@ entries:
     version: 0.0.10
   - apiVersion: v2
     appVersion: 0.0.9
-    created: "2025-06-10T15:04:55.171280991Z"
+    created: "2025-06-18T20:59:19.797726927Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -428,7 +455,7 @@ entries:
     version: 0.0.9
   - apiVersion: v2
     appVersion: 0.0.8
-    created: "2025-06-10T15:04:55.16859066Z"
+    created: "2025-06-18T20:59:19.795111911Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -444,7 +471,7 @@ entries:
     version: 0.0.8
   - apiVersion: v2
     appVersion: 0.0.7
-    created: "2025-06-10T15:04:55.164383355Z"
+    created: "2025-06-18T20:59:19.79189649Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -460,7 +487,7 @@ entries:
     version: 0.0.7
   - apiVersion: v2
     appVersion: 0.0.6
-    created: "2025-06-10T15:04:55.161689818Z"
+    created: "2025-06-18T20:59:19.789168492Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -476,7 +503,7 @@ entries:
     version: 0.0.6
   - apiVersion: v2
     appVersion: 0.0.5
-    created: "2025-06-10T15:04:55.158751035Z"
+    created: "2025-06-18T20:59:19.785994556Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -492,8 +519,18 @@ entries:
     version: 0.0.5
   nullplatform-cert-manager-config:
   - apiVersion: v2
+    appVersion: 1.4.0
+    created: "2025-06-18T20:59:19.82801898Z"
+    description: A Helm chart for cert-manager configurations
+    digest: 3b6246b5481be4d9e1dc8ef42e9573ccc39c86e58a42fe5132307d23412ff1dc
+    name: nullplatform-cert-manager-config
+    type: application
+    urls:
+    - https://nullplatform.github.io/helm-charts/nullplatform-cert-manager-config-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v2
     appVersion: 1.3.0
-    created: "2025-06-10T15:04:55.200393814Z"
+    created: "2025-06-18T20:59:19.827844824Z"
     description: A Helm chart for cert-manager configurations
     digest: 7165234dab6a3f043aa633adda9a2ecc90356583cb8458b0c226f61b5161a6c8
     name: nullplatform-cert-manager-config
@@ -503,7 +540,7 @@ entries:
     version: 1.3.0
   - apiVersion: v2
     appVersion: 1.2.3
-    created: "2025-06-10T15:04:55.199704713Z"
+    created: "2025-06-18T20:59:19.827687509Z"
     description: A Helm chart for cert-manager configurations
     digest: ee759a7618dc9f208c2a07a9b1f97f758dc306b366f314b6cebe6773acc85957
     name: nullplatform-cert-manager-config
@@ -513,7 +550,7 @@ entries:
     version: 1.2.3
   - apiVersion: v2
     appVersion: 1.2.2
-    created: "2025-06-10T15:04:55.199481054Z"
+    created: "2025-06-18T20:59:19.827535704Z"
     description: A Helm chart for cert-manager configurations
     digest: 926a642f50ecbeba6d64301ce2737a415ade2e470af26a7edeba26eecd54c8e7
     name: nullplatform-cert-manager-config
@@ -523,7 +560,7 @@ entries:
     version: 1.2.2
   - apiVersion: v2
     appVersion: 1.2.1
-    created: "2025-06-10T15:04:55.199277773Z"
+    created: "2025-06-18T20:59:19.827369863Z"
     description: A Helm chart for cert-manager configurations
     digest: aeedcb532fc4b2819d75b05b9ece000a175397cfad8aeaa5040ae9bfcd008783
     name: nullplatform-cert-manager-config
@@ -533,7 +570,7 @@ entries:
     version: 1.2.1
   - apiVersion: v2
     appVersion: 1.2.0
-    created: "2025-06-10T15:04:55.199070334Z"
+    created: "2025-06-18T20:59:19.827189805Z"
     description: A Helm chart for cert-manager configurations
     digest: 7c285abda254c53e783e0d0bad504b6d2ffd0da7784677fcdc17c8bcc0ac0479
     name: nullplatform-cert-manager-config
@@ -543,7 +580,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: 1.1.0
-    created: "2025-06-10T15:04:55.19882789Z"
+    created: "2025-06-18T20:59:19.82702211Z"
     description: A Helm chart for cert-manager configurations
     digest: ee528cfb53cf623d3652662c51dc64899846407e184078986abcace374fa09d2
     name: nullplatform-cert-manager-config
@@ -553,7 +590,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2025-06-10T15:04:55.198606585Z"
+    created: "2025-06-18T20:59:19.826791829Z"
     description: A Helm chart for cert-manager configurations
     digest: 731a9fefab75b9b5ede409c4de0a962dea57eb7d409e39d5900f3846cf13696c
     name: nullplatform-cert-manager-config
@@ -563,7 +600,7 @@ entries:
     version: 1.0.0
   - apiVersion: v2
     appVersion: 0.0.27
-    created: "2025-06-10T15:04:55.19751455Z"
+    created: "2025-06-18T20:59:19.825859379Z"
     description: A Helm chart for cert-manager configurations
     digest: 687d425bea519878784c31e1be731a467761a8962551a2d66dc1e3bfcd73212d
     name: nullplatform-cert-manager-config
@@ -573,7 +610,7 @@ entries:
     version: 0.0.27
   - apiVersion: v2
     appVersion: 0.0.26
-    created: "2025-06-10T15:04:55.197353478Z"
+    created: "2025-06-18T20:59:19.825705932Z"
     description: A Helm chart for cert-manager configurations
     digest: 59da5189722229eb0af1b190a524a509634e81a80ecbca942d1db1cd9d637320
     name: nullplatform-cert-manager-config
@@ -583,7 +620,7 @@ entries:
     version: 0.0.26
   - apiVersion: v2
     appVersion: 0.0.25
-    created: "2025-06-10T15:04:55.197199689Z"
+    created: "2025-06-18T20:59:19.825558685Z"
     description: A Helm chart for cert-manager configurations
     digest: 744ee8ccb9946355fb6e7c3d9a5cebd4a94da28c4c7792a31bc59560abdfbfc9
     name: nullplatform-cert-manager-config
@@ -593,7 +630,7 @@ entries:
     version: 0.0.25
   - apiVersion: v2
     appVersion: 0.0.24
-    created: "2025-06-10T15:04:55.197047665Z"
+    created: "2025-06-18T20:59:19.825404306Z"
     description: A Helm chart for cert-manager configurations
     digest: 1a88043aab743bb9fa6e9348f50dfbdd9a8d2a52fc32faf805ec573928228342
     name: nullplatform-cert-manager-config
@@ -603,7 +640,7 @@ entries:
     version: 0.0.24
   - apiVersion: v2
     appVersion: 0.0.23
-    created: "2025-06-10T15:04:55.196873989Z"
+    created: "2025-06-18T20:59:19.825207497Z"
     description: A Helm chart for cert-manager configurations
     digest: 826af28faf7735119662e391cabafe41bc8ab43a7e7ae6b0e1965be3113547f0
     name: nullplatform-cert-manager-config
@@ -613,7 +650,7 @@ entries:
     version: 0.0.23
   - apiVersion: v2
     appVersion: 0.0.22
-    created: "2025-06-10T15:04:55.196721173Z"
+    created: "2025-06-18T20:59:19.825060541Z"
     description: A Helm chart for cert-manager configurations
     digest: a3a620c33802d78c8e8bfff2869bca716dc02d1d06a751e711e84c6838be095f
     name: nullplatform-cert-manager-config
@@ -623,7 +660,7 @@ entries:
     version: 0.0.22
   - apiVersion: v2
     appVersion: 0.0.21
-    created: "2025-06-10T15:04:55.196567685Z"
+    created: "2025-06-18T20:59:19.824900651Z"
     description: A Helm chart for cert-manager configurations
     digest: aef437e6510b24fbc1c1aeea932134d328bb040b05dbbedb5917e466e05cee01
     name: nullplatform-cert-manager-config
@@ -633,7 +670,7 @@ entries:
     version: 0.0.21
   - apiVersion: v2
     appVersion: 0.0.17
-    created: "2025-06-10T15:04:55.196407235Z"
+    created: "2025-06-18T20:59:19.824748846Z"
     description: A Helm chart for cert-manager configurations
     digest: 3e97884ed1cd8aa51bce23d6810b996188dc685f81d336b2db29bc1bb629ad7b
     name: nullplatform-cert-manager-config
@@ -643,7 +680,7 @@ entries:
     version: 0.0.17
   - apiVersion: v2
     appVersion: 0.0.16
-    created: "2025-06-10T15:04:55.196256052Z"
+    created: "2025-06-18T20:59:19.824573778Z"
     description: A Helm chart for cert-manager configurations
     digest: 3cc09824b667bb8f6ce3a4984cc7c734896db54f09a75ba2a8481fedba3dbb30
     name: nullplatform-cert-manager-config
@@ -653,7 +690,7 @@ entries:
     version: 0.0.16
   - apiVersion: v2
     appVersion: 0.0.14
-    created: "2025-06-10T15:04:55.19610069Z"
+    created: "2025-06-18T20:59:19.824419729Z"
     description: A Helm chart for cert-manager configurations
     digest: 4c1fc3c723a14adc452ef49c4e6c93adeadcc128559757f6a8bf63f7bab3c5fe
     name: nullplatform-cert-manager-config
@@ -663,7 +700,7 @@ entries:
     version: 0.0.14
   - apiVersion: v2
     appVersion: 0.0.13
-    created: "2025-06-10T15:04:55.195914712Z"
+    created: "2025-06-18T20:59:19.824204515Z"
     description: A Helm chart for cert-manager configurations
     digest: 4cdf6d921ffb59e365aff376c61b943fbe29b1fc4eea3e4eb5d97e095de70b1d
     name: nullplatform-cert-manager-config
@@ -673,7 +710,7 @@ entries:
     version: 0.0.13
   - apiVersion: v2
     appVersion: 0.0.12
-    created: "2025-06-10T15:04:55.19575341Z"
+    created: "2025-06-18T20:59:19.824049654Z"
     description: A Helm chart for cert-manager configurations
     digest: 4b9538e784fb366f07bc4a698fca3a23801294d03b2b05d6dbe83bb77f2abdfa
     name: nullplatform-cert-manager-config
@@ -683,7 +720,7 @@ entries:
     version: 0.0.12
   - apiVersion: v2
     appVersion: 0.0.11
-    created: "2025-06-10T15:04:55.195591186Z"
+    created: "2025-06-18T20:59:19.823865519Z"
     description: A Helm chart for cert-manager configurations
     digest: 0990e289174b64903e7dedb50299813a4f0e29fb790138467730eba90acdb0f1
     name: nullplatform-cert-manager-config
@@ -693,7 +730,7 @@ entries:
     version: 0.0.11
   - apiVersion: v2
     appVersion: 0.0.10
-    created: "2025-06-10T15:04:55.195404105Z"
+    created: "2025-06-18T20:59:19.823708515Z"
     description: A Helm chart for cert-manager configurations
     digest: 33d565125010c789ddf5d729151f280638dbd5cf182ff753a240983573d73c65
     name: nullplatform-cert-manager-config
@@ -703,7 +740,7 @@ entries:
     version: 0.0.10
   - apiVersion: v2
     appVersion: 0.0.9
-    created: "2025-06-10T15:04:55.198408514Z"
+    created: "2025-06-18T20:59:19.826607363Z"
     description: A Helm chart for cert-manager configurations
     digest: b90963998fad29c29512443c6d2c7a6014f6fe23ea710239dbffda1a14ec23c4
     name: nullplatform-cert-manager-config
@@ -713,7 +750,7 @@ entries:
     version: 0.0.9
   - apiVersion: v2
     appVersion: 0.0.8
-    created: "2025-06-10T15:04:55.198243505Z"
+    created: "2025-06-18T20:59:19.826486636Z"
     description: A Helm chart for cert-manager configurations
     digest: 91920c65d8a2f3e06ca34f9a94baea6a44e4759bd38ab65fbdc0973bc916f6db
     name: nullplatform-cert-manager-config
@@ -723,7 +760,7 @@ entries:
     version: 0.0.8
   - apiVersion: v2
     appVersion: 0.0.7
-    created: "2025-06-10T15:04:55.198081021Z"
+    created: "2025-06-18T20:59:19.826356833Z"
     description: A Helm chart for cert-manager configurations
     digest: e79820f8fdbfc874d9e56ff72997c7fd4dee37f3ef59d78ccbea5b08e9462cb3
     name: nullplatform-cert-manager-config
@@ -733,7 +770,7 @@ entries:
     version: 0.0.7
   - apiVersion: v2
     appVersion: 0.0.6
-    created: "2025-06-10T15:04:55.197907796Z"
+    created: "2025-06-18T20:59:19.826223743Z"
     description: A Helm chart for cert-manager configurations
     digest: 164697d84e228c2da3a0eca020c0a73641a1d950456abd8abb0136738a89c65d
     name: nullplatform-cert-manager-config
@@ -743,7 +780,7 @@ entries:
     version: 0.0.6
   - apiVersion: v2
     appVersion: 0.0.5
-    created: "2025-06-10T15:04:55.197777612Z"
+    created: "2025-06-18T20:59:19.826096304Z"
     description: A Helm chart for cert-manager configurations
     digest: 155a36b8451d88e11677fc0f258234cc497bfb62317a574007402ed636127651
     name: nullplatform-cert-manager-config
@@ -753,7 +790,7 @@ entries:
     version: 0.0.5
   - apiVersion: v2
     appVersion: 0.0.4
-    created: "2025-06-10T15:04:55.197656516Z"
+    created: "2025-06-18T20:59:19.825981138Z"
     description: A Helm chart for cert-manager configurations
     digest: c7a1c91d3489a88200fd362c3e9115630d40498ab3dbaa53c8b23a4f541c8e20
     name: nullplatform-cert-manager-config
@@ -764,7 +801,7 @@ entries:
   nullplatform-chart:
   - apiVersion: v2
     appVersion: 0.0.4
-    created: "2025-06-10T15:04:55.22214678Z"
+    created: "2025-06-18T20:59:19.848321088Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -779,7 +816,7 @@ entries:
     version: 0.0.4
   - apiVersion: v2
     appVersion: 0.0.3
-    created: "2025-06-10T15:04:55.219544214Z"
+    created: "2025-06-18T20:59:19.84571549Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -794,7 +831,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: 0.0.2
-    created: "2025-06-10T15:04:55.216905881Z"
+    created: "2025-06-18T20:59:19.8426229Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -821,7 +858,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: 0.0.1
-    created: "2025-06-10T15:04:55.209620494Z"
+    created: "2025-06-18T20:59:19.835809614Z"
     dependencies:
     - condition: metricsServer.enabled
       name: metrics-server
@@ -846,4 +883,4 @@ entries:
     urls:
     - https://nullplatform.github.io/helm-charts/nullplatform-chart-0.0.1.tgz
     version: 0.0.1
-generated: "2025-06-10T15:04:55.105625201Z"
+generated: "2025-06-18T20:59:19.729269796Z"
