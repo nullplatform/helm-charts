@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/nullplatform/helm-charts/compare/1.4.0...2.0.0) (2025-06-19)
+
+
+### Features
+
+* **base:** NULL-168 added possibility to specify IPs to gateways ([dc022b5](https://github.com/nullplatform/helm-charts/commit/dc022b5a46ae8563978279880e32b4d5fae52b09))
+
+
+### BREAKING CHANGES
+
+* **base:** no
+
 # [1.4.0](https://github.com/nullplatform/helm-charts/compare/1.3.0...1.4.0) (2025-06-18)
 
 
