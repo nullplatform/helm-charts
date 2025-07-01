@@ -37,10 +37,24 @@ controlPlane:
   enabled: false
   agent:
     image: "public.ecr.aws/nullplatform/controlplane-agent:latest"
+    resources:
+      requests:
+        cpu: 50m
+        memory: 100Mi
+      limits:
+        cpu: 100m
+        memory: 150Mi
 logging:
   enabled: true
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 200Mi
+      limits:
+        cpu: 700m
+        memory: 300Mi
   prometheus:
     enabled: false
     exporterPort: 2021

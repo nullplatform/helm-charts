@@ -19,6 +19,8 @@ spec:
         - name: nullplatform-log-controller
           image: {{ .Values.logging.controller.image }}
           imagePullPolicy: Always
+          resources:
+            {{- toYaml .Values.logging.controller.resources | nindent 12 }}
           {{- if .Values.logging.prometheus.enabled }}
           ports:
           - containerPort: {{ .Values.logging.prometheus.exporterPort }}
@@ -136,6 +138,8 @@ spec:
         {{- if and .Values.controlPlane.enabled (or .Values.nullplatform.apiKey .Values.nullplatform.secretName) }}
         - name: nullplatform-controlplane-agent
           image: {{ .Values.controlPlane.agent.image }}
+          resources:
+            {{- toYaml .Values.controlPlane.agent.resources | nindent 12 }}
           command:
             - /app/k8s_launcher.sh
           env:
