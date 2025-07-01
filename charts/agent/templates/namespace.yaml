@@ -1,0 +1,12 @@
+{{- range .Values.additionalNamespaces }}
+{{- if .create }}
+{{- $existingNs := lookup "v1" "Namespace" "" .name }}
+{{- if not $existingNs }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .name }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -133,4 +133,8 @@ volumeMounts:
   - name: init-scripts
     mountPath: /nullplatform.init.d
     readOnly: true
-    
+
+additionalNamespaces:
+  - name: "nullplatform"
+    create: true
+    skipIfExists: true
