@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/nullplatform/helm-charts/compare/2.0.0...2.1.0) (2025-07-08)
+
+
+### Features
+
+* **base:** BAC-1546 include resource limits to logs controller containers ([bf6a85e](https://github.com/nullplatform/helm-charts/commit/bf6a85e84d27390e4923f6e0a261015209a9c4c1))
+
 # [2.0.0](https://github.com/nullplatform/helm-charts/compare/1.4.0...2.0.0) (2025-06-19)
 
 
