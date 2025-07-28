@@ -1,7 +1,7 @@
 replicaCount: 1
 
-namespace: nullplatform-tools
-
+namespace: default
+  
 args:
   - "--tags=$(TAGS)"
   - "--apikey=$(NP_API_KEY)"
@@ -9,7 +9,7 @@ args:
   - "--command-executor-env=NP_API_KEY=$(NP_API_KEY)"
   - "--command-executor-debug"
   - "--webserver-enabled"
-  - "--command-executor-git-command-repos https://$(GITHUB_TOKEN)@$(GITHUB_REPO)#$(GITHUB_BRANCH)"
+  - "--command-executor-git-command-repos=$(GITHUB_REPOS)"
 
 configuration:
   create: true
@@ -19,9 +19,8 @@ configuration:
     NP_LOG_LEVEL: DEBUG
     NP_API_KEY: ""
     GITHUB_USER: ""
-    GITHUB_TOKEN: ""
-    GITHUB_REPO: ""
-    GITHUB_BRANCH: main
+    GITHUB_REPOS: ""
+
 
 image:
   repository: public.ecr.aws/nullplatform/controlplane-agent
@@ -65,10 +64,10 @@ securityContext: {}
 resources:
   requests:
     cpu: 100m
-    memory: 64Mi
+    memory: 256Mi
   limits:
     cpu: 200m
-    memory: 128Mi
+    memory: 512Mi
 
 livenessProbe:
   httpGet:
