@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/nullplatform/helm-charts/compare/2.1.0...2.2.0) (2025-07-28)
+
+
+### Features
+
+* **agent:** BAC-1633 refactor command-git ([cc179e4](https://github.com/nullplatform/helm-charts/commit/cc179e4746a3ab77c57cd8b60f6dca60e28d3293))
+
 # [2.1.0](https://github.com/nullplatform/helm-charts/compare/2.0.0...2.1.0) (2025-07-08)
 
 
