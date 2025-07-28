@@ -25,7 +25,7 @@ configuration:
 image:
   repository: public.ecr.aws/nullplatform/controlplane-agent
   pullPolicy: Always
-  tag: rc
+  tag: beta
 
 nameOverride: ""
 fullnameOverride: ""
