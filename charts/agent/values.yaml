@@ -9,24 +9,21 @@ args:
   - "--command-executor-env=NP_API_KEY=$(NP_API_KEY)"
   - "--command-executor-debug"
   - "--webserver-enabled"
-  - "--command-executor-git-command-repos https://$(GITHUB_TOKEN)@$(GITHUB_REPO)#$(GITHUB_BRANCH)"
+  - "--command-executor-git-command-repos $(AGENT_REPO)"
 
 configuration:
   create: true
   secretName: nullplatform-agent-secret
   values:
-    TAGS: ""
+    TAGS: "my:tag"
     NP_LOG_LEVEL: DEBUG
-    NP_API_KEY: ""
-    GITHUB_USER: ""
-    GITHUB_TOKEN: ""
-    GITHUB_REPO: ""
-    GITHUB_BRANCH: main
+    NP_API_KEY: "my-api-key"
+    AGENT_REPO: "https://github.com/nullplatform/scopes.git#main,https://github.com/galicia-nullplataform/services-provisioner.git"
 
 image:
   repository: public.ecr.aws/nullplatform/controlplane-agent
   pullPolicy: Always
-  tag: beta
+  tag: rc
 
 nameOverride: ""
 fullnameOverride: ""
