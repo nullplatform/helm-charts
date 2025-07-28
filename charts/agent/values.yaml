@@ -9,7 +9,7 @@ args:
   - "--command-executor-env=NP_API_KEY=$(NP_API_KEY)"
   - "--command-executor-debug"
   - "--webserver-enabled"
-  - "--command-executor-git-command-repos https://$(GITHUB_TOKEN)@$(GITHUB_REPO)#$(GITHUB_BRANCH)"
+  - "--command-executor-git-command-repos $(AGENT_REPO)"
 
 configuration:
   create: true
@@ -18,10 +18,9 @@ configuration:
     TAGS: ""
     NP_LOG_LEVEL: DEBUG
     NP_API_KEY: ""
-    GITHUB_USER: ""
-    GITHUB_TOKEN: ""
-    GITHUB_REPO: ""
-    GITHUB_BRANCH: main
+      #example:
+    #AGENT_REPO: "https://reppo_01.gt#main,https://token@repo_01.git#main"
+    AGENT_REPO: ""
 
 image:
   repository: public.ecr.aws/nullplatform/controlplane-agent
