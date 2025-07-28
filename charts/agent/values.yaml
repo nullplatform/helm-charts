@@ -15,10 +15,12 @@ configuration:
   create: true
   secretName: nullplatform-agent-secret
   values:
-    TAGS: "my:tag"
+    TAGS: ""
     NP_LOG_LEVEL: DEBUG
-    NP_API_KEY: "my-api-key"
-    AGENT_REPO: "https://github.com/nullplatform/scopes.git#main,https://github.com/galicia-nullplataform/services-provisioner.git"
+    NP_API_KEY: ""
+    #example:
+      #AGENT_REPO: "https://reppo_01.gt#main,https://token@repo_01.git#main"
+    AGENT_REPO: ""
 
 image:
   repository: public.ecr.aws/nullplatform/controlplane-agent
