@@ -18,7 +18,6 @@ configuration:
     TAGS: ""
     NP_LOG_LEVEL: DEBUG
     NP_API_KEY: ""
-    GITHUB_USER: ""
     GITHUB_REPOS: ""
 
 
