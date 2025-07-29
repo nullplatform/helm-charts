@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/nullplatform/helm-charts/compare/2.2.0...2.3.0) (2025-07-29)
+
+
+### Features
+
+* **agent:** BAC-1633 increase request/limit ([eb37de7](https://github.com/nullplatform/helm-charts/commit/eb37de712dc4a3fc801f4852b5e017b0fb80f653))
+
 # [2.2.0](https://github.com/nullplatform/helm-charts/compare/2.1.0...2.2.0) (2025-07-28)
 
 
