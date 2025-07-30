@@ -55,6 +55,8 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Values.configuration.secretName }}
+          lifecycle:
+            {{- toYaml .Values.lifecycle | nindent 12 }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
