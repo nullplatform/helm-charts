@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/nullplatform/helm-charts/compare/2.3.0...2.4.0) (2025-07-30)
+
+
+### Features
+
+* **agent:** BAC-1651 add lifecycle ([7240503](https://github.com/nullplatform/helm-charts/commit/7240503a8720f4749f3900730fae033a72c2679a))
+
 # [2.3.0](https://github.com/nullplatform/helm-charts/compare/2.2.0...2.3.0) (2025-07-29)
 
 
