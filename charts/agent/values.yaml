@@ -132,4 +132,12 @@ volumeMounts:
   - name: init-scripts
     mountPath: /nullplatform.init.d
     readOnly: true
-    
+
+#Lifecycle preStop Hook for Graceful Agent Shutdown
+lifecycle:
+  preStop:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - 'pid=$(pgrep -f agent) && kill -15 $pid && sleep 30'
