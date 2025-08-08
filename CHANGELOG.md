@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/nullplatform/helm-charts/compare/2.4.0...2.5.0) (2025-08-08)
+
+
+### Features
+
+* **agent:** BAC-1707 update resources req/lim ([6daf2df](https://github.com/nullplatform/helm-charts/commit/6daf2df03c194dbbda3fd57bf04bfc97a3375236))
+
 # [2.4.0](https://github.com/nullplatform/helm-charts/compare/2.3.0...2.4.0) (2025-07-30)
 
 
