@@ -61,13 +61,7 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-resources:
-  requests:
-    cpu: 500m
-    memory: 256Mi
-  limits:
-    cpu: 1000m
-    memory: 512Mi
+resources: {}
 
 livenessProbe:
   httpGet:
