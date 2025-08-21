@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/nullplatform/helm-charts/compare/2.5.0...2.6.0) (2025-08-21)
+
+
+### Features
+
+* **agent:** BAC-1773 delete resources req/lim ([0b04906](https://github.com/nullplatform/helm-charts/commit/0b04906567cae50f3b06d0e21e9088699b5fc138))
+
 # [2.5.0](https://github.com/nullplatform/helm-charts/compare/2.4.0...2.5.0) (2025-08-08)
 
 
