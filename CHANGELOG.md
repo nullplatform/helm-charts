@@ -1,3 +1,11 @@
+# [2.7.0](https://github.com/nullplatform/helm-charts/compare/2.6.0...2.7.0) (2025-08-28)
+
+
+### Features
+
+* **nullplatform-agent:** BAC-1805 add nullplatform-agent ([8169add](https://github.com/nullplatform/helm-charts/commit/8169addbe37a65186bd582b5f2ef1817bcd369aa))
+* **nullplatform-agent:** BAC-1805 add nullplatform-agent ([259efe4](https://github.com/nullplatform/helm-charts/commit/259efe403c3d76156b6ca50a5e167e8102405a78))
+
 # [2.6.0](https://github.com/nullplatform/helm-charts/compare/2.5.0...2.6.0) (2025-08-21)
 
 
