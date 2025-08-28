@@ -5,6 +5,7 @@
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1
 
+namespace: nullplatform-tools
 
 # Configuration for the Null Platform Agent
 # This section defines the environment variables that will be stored in a Kubernetes Secret
