@@ -7,7 +7,6 @@ replicaCount: 1
 
 namespace: nullplatform-tools
 
-
 # Configuration for the Null Platform Agent
 # This section defines the environment variables that will be stored in a Kubernetes Secret
 # and made available to the agent container at runtime
