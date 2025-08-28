@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-scripts
+  labels:
+    {{- include "nullplatform-agent.labels" . | nindent 4 }}
+data:
+  {{- range $i, $cmd := .Values.initScripts }}
+    {{ printf "%02d-script.sh" (add1 $i) }}: |
+      {{ $cmd }}
+  {{- end }}
