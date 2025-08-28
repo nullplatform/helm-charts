@@ -5,14 +5,46 @@
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1
 
+
+# Configuration for the Null Platform Agent
+# This section defines the environment variables that will be stored in a Kubernetes Secret
+# and made available to the agent container at runtime
 configuration:
+  # Whether to create the configuration secret automatically
+  # Set to false if you want to manage the secret externally
   create: true
+
+  # Environment variables for the Null Platform Agent
+  # These values will be stored in a Kubernetes Secret and injected into the container
+  # More information about Kubernetes Secrets: https://kubernetes.io/docs/concepts/configuration/secret/
   values:
-    AGENT_TAGS: "sebastian:nullagent"
+    # Tags to identify and categorize this agent instance
+    # Used for filtering and organizing agents in the Null Platform dashboard
+    # Example: "environment:prod,team:backend,region:us-east-1"
+    AGENT_TAGS: ""
+
+    # Log level for the agent (DEBUG, INFO, WARN, ERROR)
+    # DEBUG provides verbose logging useful for troubleshooting
     NP_LOG_LEVEL: DEBUG
-    AGENT_ENV: "NP_API_KEY=MjExMjQ5ODI4Mg==.OHpaSjc3UnF5cXRvQEB1SDRhQC13Sis5b2JrSzdhU24=,AZURE_SECRET_ID=EpHWU44OFRmJEtGdUdaTEFKWTJPdmE="
-    AGENT_NP_API_KEY: "MjExMjQ5ODI4Mg==.OHpaSjc3UnF5cXRvQEB1SDRhQC13Sis5b2JrSzdhU24="
-    AGENT_AGENT_REPO: "https://github.com/nullplatform/scopes.git#main"
+
+    # Additional environment variables to be passed to command executors
+    # Format: "KEY1=value1,KEY2=value2"
+    # This is useful for passing secrets or configuration to executed commands
+    #example:
+    #AGENT_ENV: "NP_API_KEY=<my_api_key>,OTHER_NECESSARY_ENV=<other_necessary_key>"
+    AGENT_ENV: ""
+
+    # API Key for authenticating with the Null Platform
+    # This key is required for the agent to communicate with the platform
+    # Obtain this key from your Null Platform account settings
+    AGENT_NP_API_KEY: ""
+
+    # Git repositories containing scopes and configurations for the agent
+    # Format: "https://repo1.git#branch,https://token@repo2.git#branch"
+    # The agent will clone these repositories to execute commands and apply configurations
+    #example:
+    #AGENT_AGENT_REPO: "https://repo_01.git#main,https://token@repo_02.git#main"
+    AGENT_AGENT_REPO: ""
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
