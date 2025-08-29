@@ -1,3 +1,10 @@
+## [2.7.1](https://github.com/nullplatform/helm-charts/compare/2.7.0...2.7.1) (2025-08-29)
+
+
+### Bug Fixes
+
+* **nullplatform-agent:** BAC-1805 add namespace config ([a28d744](https://github.com/nullplatform/helm-charts/commit/a28d7443e5625a5ae3690e566ad6f0f783154d61))
+
 # [2.7.0](https://github.com/nullplatform/helm-charts/compare/2.6.0...2.7.0) (2025-08-28)
 
 
