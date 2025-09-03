@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: init-scripts
+  name: init-scripts-{{ .Release.Name }}
   namespace: {{ .Values.namespace }}
   labels:
     {{- include "nullplatform-agent.labels" . | nindent 4 }}

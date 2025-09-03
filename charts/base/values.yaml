@@ -86,6 +86,13 @@ logging:
 cloudwatch:
   enabled: false
   region: us-east-1
+  retentionDays: 7
+  logs:
+    enabled: true
+  performanceMetrics:
+    enabled: true
+  customMetrics:
+    enabled: true
   accessLogs:
     enabled: false
 # Metrics server configuration
