@@ -26,7 +26,7 @@ module.exports = {
     },
     parserPreset: {
         parserOpts: {
-            headerPattern: /^(\w*)(?:\(([a-z0-9-]*)\))?: ([A-Z]+-[0-9]+) (.*)$/,
+            headerPattern: /^(\w*)(?:\(([a-z0-9-]*)\))?: (?:([A-Z]+-[0-9]+) )?(.*)$/,            
             headerCorrespondence: ['type', 'scope', 'ticket', 'subject']
         }
     }
