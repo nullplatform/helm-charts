@@ -88,15 +88,15 @@ spec:
             {{- end }}
             {{- if .Values.cloudwatch.enabled }}
             - name: CLOUDWATCH_RETENTION_DAYS
-              value: '7'
+              value: {{ .Values.cloudwatch.retentionDays | quote }}
             - name: CLOUDWATCH_REGION
               value: {{ .Values.cloudwatch.region | quote }}
             - name: CLOUDWATCH_LOGS_ENABLED
-              value: 'true'
+              value: {{ .Values.cloudwatch.logs.enabled | quote }}
             - name: CLOUDWATCH_PERFORMANCE_METRICS_ENABLED
-              value: 'true'
+              value: {{ .Values.cloudwatch.performanceMetrics.enabled | quote }}
             - name: CLOUDWATCH_CUSTOM_METRICS_ENABLED
-              value: 'true'
+              value: {{ .Values.cloudwatch.customMetrics.enabled | quote }}
             - name: CLOUDWATCH_ACCESS_LOGS_ENABLED
               value:  {{ .Values.cloudwatch.accessLogs.enabled | quote }}
             {{- end}}
