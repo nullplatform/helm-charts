@@ -1,3 +1,10 @@
+# [2.8.0](https://github.com/nullplatform/helm-charts/compare/2.7.1...2.8.0) (2025-09-03)
+
+
+### Features
+
+* **config:** disable ticket request ([311bc11](https://github.com/nullplatform/helm-charts/commit/311bc117e6cfea74a4075d57a18be95e8d2d22e9))
+
 ## [2.7.1](https://github.com/nullplatform/helm-charts/compare/2.7.0...2.7.1) (2025-08-29)
 
 
