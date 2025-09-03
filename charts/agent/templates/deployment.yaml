@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nullplatform-agent
+  name: nullplatform-agent-{{ .Release.Name }}
   namespace: {{ .Values.namespace }}
   labels:
     {{- include "agent.labels" . | nindent 4 }}
@@ -26,7 +26,7 @@ spec:
         {{- end }}
       
     spec:
-      priorityClassName: nullplatform-critical
+      priorityClassName: nullplatform-critical-{{ .Release.Name }}
       serviceAccountName: {{ include "agent.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -56,7 +56,7 @@ spec:
           {{- end }}
           envFrom:
             - secretRef:
-                name: {{ .Values.configuration.secretName }}
+                name: {{ .Values.configuration.secretName }}-{{ .Release.Name }}
           lifecycle:
             {{- toYaml .Values.lifecycle | nindent 12 }}
       {{- with .Values.volumes }}
