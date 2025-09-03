@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "nullplatform-agent.fullname" . }}
+  name: {{ include "nullplatform-agent.fullname" . }}-{{ .Release.Name }}
   namespace: {{ .Values.namespace }}
   labels:
     {{ include "nullplatform-agent.labels" . | nindent 4 }}
