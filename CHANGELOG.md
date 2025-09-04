@@ -1,3 +1,19 @@
+# [2.9.0](https://github.com/nullplatform/helm-charts/compare/2.8.0...2.9.0) (2025-09-04)
+
+
+### Bug Fixes
+
+* **agnt:** fix conflicts ([6141285](https://github.com/nullplatform/helm-charts/commit/61412854ceb36ad8dcf4e91d4574a1df0e4f1e65))
+
+
+### Features
+
+* **agent:** [main] independent deployment ([36e50ef](https://github.com/nullplatform/helm-charts/commit/36e50ef57903ec55f9f13e36e25416dbf690a79d))
+* **agent:** [main] multiple agent installations ([11e8c62](https://github.com/nullplatform/helm-charts/commit/11e8c6249e79da5f7661f00e4170426a86842fbf))
+* **agent:** add init scripts ([9a9c679](https://github.com/nullplatform/helm-charts/commit/9a9c6790a22ae7c4bcd3729f236c31e9359ca92c))
+* **base:** add cloudwatch configurations ([1300104](https://github.com/nullplatform/helm-charts/commit/13001046bf3cf49586b1a7dad840a689f649ad4f))
+* **config:** disable ticket request ([f168721](https://github.com/nullplatform/helm-charts/commit/f1687214779a02d6b77c61b3ebf47e9107dbf046))
+
 # [2.8.0](https://github.com/nullplatform/helm-charts/compare/2.7.1...2.8.0) (2025-09-03)
 
 
