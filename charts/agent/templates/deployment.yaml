@@ -54,6 +54,11 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          env:
+            {{- if .Values.initScripts }}
+            - name: INIT_SCRIPTS_CONFIGMAP
+              value: "init-scripts-{{ .Release.Name }}"
+            {{- end }}
           envFrom:
             - secretRef:
                 name: {{ .Values.configuration.secretName }}-{{ .Release.Name }}
