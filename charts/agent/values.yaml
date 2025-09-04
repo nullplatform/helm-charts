@@ -104,28 +104,10 @@ affinity: {}
 #         mountPath: /root/.np
 initContainers: []
 
-#Init script run any instructions before
-#Example:
-#  initScripts :
-#    - echo "Hello World"
-
-initScripts: []
-
-volumes:
-  - name: repos
-    emptyDir: {}
-  - name: init-scripts
-    configMap:
-      name: init-scripts
-      defaultMode: 0755
+volumes: []
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts:
-  - name: repos
-    mountPath: /root/.np
-  - name: init-scripts
-    mountPath: /nullplatform.init.d
-    readOnly: true
+volumeMounts: []
 
 #Lifecycle preStop Hook for Graceful Agent Shutdown
 lifecycle:
