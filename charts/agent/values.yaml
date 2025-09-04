@@ -106,6 +106,8 @@ initContainers: []
 
 volumes: []
 
+initScripts: []
+
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: []
 
