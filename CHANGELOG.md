@@ -1,3 +1,10 @@
+# [2.10.0](https://github.com/nullplatform/helm-charts/compare/2.9.0...2.10.0) (2025-09-08)
+
+
+### Features
+
+* **agent:** add configmap to initScript ([6aa6c60](https://github.com/nullplatform/helm-charts/commit/6aa6c60d11ab9728f24df15264dc778608290053))
+
 # [2.9.0](https://github.com/nullplatform/helm-charts/compare/2.8.0...2.9.0) (2025-09-04)
 
 
