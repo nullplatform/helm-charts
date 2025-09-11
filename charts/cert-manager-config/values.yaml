@@ -9,3 +9,5 @@ azure:
   subscriptionID: ""
   resourceGroupName: ""
   clientID: ""
+  secretKey: "client-secret"
+  clientSecret: "" 
