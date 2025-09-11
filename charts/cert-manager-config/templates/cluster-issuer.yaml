@@ -20,15 +20,15 @@ spec:
             key: key.json
         {{- end }}
           {{- if .Values.azure.enabled }}
-            azureDNS:
-            subscriptionID: {{ required "azure.subscriptionID is required" .Values.azure.subscriptionID | quote }}
-            tenantID:       {{ required "azure.tenantID is required" .Values.azure.tenantID | quote }}
-            resourceGroupName: {{ required "azure.resourceGroupName is required" .Values.azure.resourceGroupName | quote }}
-            hostedZoneName:    {{ required "hostedZoneName is required" .Values.hostedZoneName | quote }}
-            environment: AzurePublicCloud
-            clientID: {{ required "azure.clientID is required" .Values.azure.clientID | quote }}
-            clientSecretSecretRef:
-              name: azuredns-config
-              key:  {{ .Values.azure.secretKey | default "client-secret" | quote }}
+        azureDNS:
+          subscriptionID: {{ required "azure.subscriptionID is required" .Values.azure.subscriptionID | quote }}
+          tenantID:       {{ required "azure.tenantID is required" .Values.azure.tenantID | quote }}
+          resourceGroupName: {{ required "azure.resourceGroupName is required" .Values.azure.resourceGroupName | quote }}
+          hostedZoneName:    {{ .Values.hostedZoneName  }}
+          environment: AzurePublicCloud
+          clientID: {{ required "azure.clientID is required" .Values.azure.clientID | quote }}
+          clientSecretSecretRef:
+            name: azuredns-config
+            key:  {{ .Values.azure.secretKey | default "client-secret" | quote }}
           {{- end }}
      
