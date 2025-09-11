@@ -19,12 +19,16 @@ spec:
             name: gcp-cloud-dns-service-account
             key: key.json
         {{- end }}
-        {{- if .Values.azure.enabled }}
-        azureDNS:
-          subscriptionID: {{ .Values.azure.subscriptionId }}
-          resourceGroupName: {{ .Values.azure.resourceGroupName }}
-          hostedZoneName: {{ .Values.hostedZoneName }}
-          environment: AzurePublicCloud
-          managedIdentity:
-            clientID: {{ .Values.azure.clientId }}
-        {{- end }}
+          {{- if .Values.azure.enabled }}
+            azureDNS:
+            subscriptionID: {{ required "azure.subscriptionID is required" .Values.azure.subscriptionID | quote }}
+            tenantID:       {{ required "azure.tenantID is required" .Values.azure.tenantID | quote }}
+            resourceGroupName: {{ required "azure.resourceGroupName is required" .Values.azure.resourceGroupName | quote }}
+            hostedZoneName:    {{ required "hostedZoneName is required" .Values.hostedZoneName | quote }}
+            environment: AzurePublicCloud
+            clientID: {{ required "azure.clientID is required" .Values.azure.clientID | quote }}
+            clientSecretSecretRef:
+              name: azuredns-config
+              key:  {{ .Values.azure.secretKey | default "client-secret" | quote }}
+          {{- end }}
+     
