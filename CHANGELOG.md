@@ -1,3 +1,11 @@
+# [2.11.0](https://github.com/nullplatform/helm-charts/compare/2.10.0...2.11.0) (2025-09-11)
+
+
+### Features
+
+* add secret and referent in clusterissuer ([fe6e6c7](https://github.com/nullplatform/helm-charts/commit/fe6e6c719562bd573d8609ae7974527914d6143e))
+* edit readme, values and secret for azure ([417761d](https://github.com/nullplatform/helm-charts/commit/417761daac198d8a1e102f35bf9bb59b6e9bd1da))
+
 # [2.10.0](https://github.com/nullplatform/helm-charts/compare/2.9.0...2.10.0) (2025-09-08)
 
 
