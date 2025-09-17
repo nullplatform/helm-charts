@@ -1,3 +1,4 @@
+{{- if .Values.global.installGatewayV2Crd }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -9,7 +10,7 @@ spec:
     spec:
       containers:
       - name: install-crds
-        image: bitnami/kubectl:latest
+        image: bitnamisecure/kubectl:latest
         command:
           - /bin/sh
           - -c
@@ -17,3 +18,4 @@ spec:
             kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null || \
             { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=444631bfe06f3bcca5d0eadf1857eac1d369421d" | kubectl apply -f -; }
       restartPolicy: OnFailure
+{{- end }}
