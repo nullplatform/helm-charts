@@ -1,5 +1,6 @@
 # Global settings
 global:
+  installGatewayV2Crd: true
   # Kubernetes provider (options: "oks", "gke", "eks", "aks")
   provider: "eks"
   # AWS region (applicable for EKS provider)
@@ -12,11 +13,15 @@ namespaces:
   gateway: "gateways"
 # TLS configuration
 tls:
+  required: true
   # Name of the TLS secret
   secretName: "wildcard-tls"
-# Gateway configurations
+  # Gateway configurations
 gateway:
+  http:
+    enabled: false
   internal:
+    enabled: true
     name: "gateway-private"
     addresses: {}
     autoscaling:

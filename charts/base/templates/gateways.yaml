@@ -1,5 +1,10 @@
 {{- if or (eq .Values.global.provider "aks") (eq .Values.global.provider "gke") (eq .Values.global.provider "oke") }}
-{{- $secretName := required "The 'tls.secretName' field is required" .Values.tls.secretName }}
+{{- $secretName := "" }}
+{{- if .Values.tls.required  }}
+{{- $secretName = required "The 'tls.secretName' field is required" .Values.tls.secretName }}
+{{- else }}
+{{- $secretName = .Values.tls.secretName | default "" }}
+{{- end }}
 {{- if not (lookup "v1" "Namespace" "" .Values.namespaces.gateway) }}
 apiVersion: v1
 kind: Namespace
@@ -12,7 +17,7 @@ metadata:
     "helm.sh/resource-policy": "keep"
 {{- end }}
 ---
-{{- if .Values.gateways.enabled }}
+{{- if and .Values.gateways.enabled .Values.gateway.internal.enabled }}
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
@@ -30,17 +35,29 @@ spec:
     {{- toYaml . | nindent 2 }}
   {{- end }}
   listeners:
-  - name: default
+  {{- if .Values.gateway.http.enabled }}
+  - name: http
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: All
+  {{- end }}
+  {{- if .Values.tls.required }}
+  - name: https
     port: 443
     protocol: HTTPS
+    {{- if $secretName }}
     tls:
       certificateRefs:
       - group: ''
         kind: Secret
         name: {{ $secretName }}
+    {{- end }}
     allowedRoutes:
       namespaces:
         from: All
+  {{- end }}
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
@@ -58,17 +75,29 @@ spec:
     {{- toYaml . | nindent 2 }}
   {{- end }}
   listeners:
-  - name: default
+  {{- if .Values.gateway.http.enabled }}
+  - name: http
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: All
+  {{- end }}
+  {{- if .Values.tls.required }}
+  - name: https
     port: 443
     protocol: HTTPS
+    {{- if $secretName }}
     tls:
       certificateRefs:
       - group: ''
         kind: Secret
         name: {{ $secretName }}
+    {{- end }}
     allowedRoutes:
       namespaces:
         from: All
+  {{- end }}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -106,6 +135,7 @@ spec:
     matchLabels:
       istio.io/gateway-name: {{ .Values.gateway.public.name }}
 ---
+{{- if .Values.gateway.internal.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -141,5 +171,6 @@ spec:
     # Match the generated Deployment by label
     matchLabels:
       istio.io/gateway-name: {{ .Values.gateway.internal.name }}
+{{- end }}
 {{- end }}
 {{- end }}
