@@ -5,7 +5,11 @@ gcp:
   enabled: false
   serviceAccountKey: ""
 azure:
-  enabled: false
+  enabled: true
   subscriptionID: ""
   resourceGroupName: ""
   clientID: ""
+  secretKey: "client-secret"
+  clientSecret: "" 
+  tenantID: ""
+  hostedZoneName: ""

@@ -17,6 +17,9 @@ helm install cert-manager-config nullplatform/cert-manager-config \
   --set azure.resourceGroupName=my-resource-group \
   --set azure.clientId=23432-23423-23423 \
   --set hostedZoneName=my-poc.nullapps.io \
+  --set azure.secretKey=client-secret \
+  --set azure.clientSecret="" \
+  --set azure.tenantID="" \
   --namespace cert-manager
 ```
 
