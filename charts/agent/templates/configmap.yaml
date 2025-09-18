@@ -1,4 +1,3 @@
-{{- if .Values.initScripts }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,4 +10,5 @@ data:
     {{ printf "%02d-script.sh" (add1 $i) }}: |
       {{ $cmd }}
   {{- end }}
-  {{ end }}
+{{- end }}
+
