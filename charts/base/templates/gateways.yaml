@@ -60,6 +60,42 @@ spec:
   {{- end }}
 
 ---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.gateway.internal.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+spec:
+  # Match the generated Deployment by reference
+  # Note: Do not use `kind: Gateway`.
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.gateway.internal.name }}-istio
+    namespace: {{ .Values.namespaces.gateway }}
+  minReplicas: {{ .Values.gateway.internal.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.gateway.internal.autoscaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.gateway.internal.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+
+spec:
+  minAvailable: 1
+  selector:
+    # Match the generated Deployment by label
+    matchLabels:
+      istio.io/gateway-name: {{ .Values.gateway.internal.name }}
+---
 {{- end }}
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
