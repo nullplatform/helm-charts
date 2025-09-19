@@ -1,3 +1,26 @@
+# [2.12.0](https://github.com/nullplatform/helm-charts/compare/2.11.0...2.12.0) (2025-09-19)
+
+
+### Features
+
+* add secret and referent in clusterissuer ([a9d5d10](https://github.com/nullplatform/helm-charts/commit/a9d5d105581ce980f20d24dd3818730d10fe2fc0))
+* **agent:** [main] add init scripts ([d649fe9](https://github.com/nullplatform/helm-charts/commit/d649fe932952054289e84f01a62aad699c1426b1))
+* **agent:** [main] independent deployment ([0695f5c](https://github.com/nullplatform/helm-charts/commit/0695f5c6e5ba0ad8d06b6478ee91dbf77b49da95))
+* **agent:** [main] independent deployment ([8d28618](https://github.com/nullplatform/helm-charts/commit/8d2861834a33006d12208597d155faed45448988))
+* **agent:** add configmap to initScript ([49e7942](https://github.com/nullplatform/helm-charts/commit/49e79423f6d5d99b6b9f491e873bb86f15a64b53))
+* **agent:** add init scripts ([cf4179e](https://github.com/nullplatform/helm-charts/commit/cf4179ed21f8e77039d55b7489eb9c4d918cc6b4))
+* **agent:** add init scripts ([21eb9cb](https://github.com/nullplatform/helm-charts/commit/21eb9cbe0b505666ec6e316744705e3e92291b79))
+* **agent:** resolve conflic ([b43e33c](https://github.com/nullplatform/helm-charts/commit/b43e33ca78f27cadd15a320029512b1418a202fb))
+* **agent:** resolve conflic ([a00fe85](https://github.com/nullplatform/helm-charts/commit/a00fe85f65a7c93327b4155ccd15d0d42bc66871))
+* **agent:** resolve conflic ([710fdbf](https://github.com/nullplatform/helm-charts/commit/710fdbfc3135aeb3fbf04338a2f9dbbf255a6116))
+* **agent:** resolve conflic ([d64fcb9](https://github.com/nullplatform/helm-charts/commit/d64fcb99f90a0bb35249323cbf454daa3f7799a9))
+* **config:** disable ticket request ([a2c120a](https://github.com/nullplatform/helm-charts/commit/a2c120ab57f432358d5ef8a91afb8307812d76b3))
+* **docs:** Improve docs and support install in k3s ([6fb9e58](https://github.com/nullplatform/helm-charts/commit/6fb9e5833a049313be6e138f1dbd71482d42220f))
+* **docs:** Improve docs and support install in k3s ([404d3ec](https://github.com/nullplatform/helm-charts/commit/404d3ec5956936fefa6deb92c4910123339605de))
+* **docs:** Improve docs and support install in k3s ([e1425f3](https://github.com/nullplatform/helm-charts/commit/e1425f3859522dd9e527a0ea8314da1eb47bc038))
+* **docs:** Improve docs and support install in k3s ([3a09c89](https://github.com/nullplatform/helm-charts/commit/3a09c8948c56f503bf4a3568b25231e6f8897d4d))
+* edit readme, values and secret for azure ([eb361fc](https://github.com/nullplatform/helm-charts/commit/eb361fc1316e7e4095bd90a21a0f20335c6eb5b1))
+
 # [2.11.0](https://github.com/nullplatform/helm-charts/compare/2.10.0...2.11.0) (2025-09-11)
 
 
