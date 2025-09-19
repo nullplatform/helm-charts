@@ -60,6 +60,7 @@ spec:
   {{- end }}
 
 ---
+{{- if .Values.gateway.internal.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -173,4 +174,3 @@ spec:
       istio.io/gateway-name: {{ .Values.gateway.public.name }}
 ---
 {{- end }}
-
