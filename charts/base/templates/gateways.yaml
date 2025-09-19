@@ -36,27 +36,27 @@ spec:
   {{- end }}
   listeners:
   {{- if .Values.gateway.http.enabled }}
-  - name: http
-    port: 80
-    protocol: HTTP
-    allowedRoutes:
-      namespaces:
-        from: All
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
   {{- end }}
   {{- if .Values.tls.required }}
-  - name: https
-    port: 443
-    protocol: HTTPS
+    - name: https
+      port: 443
+      protocol: HTTPS
     {{- if $secretName }}
-    tls:
-      certificateRefs:
-      - group: ''
-        kind: Secret
-        name: {{ $secretName }}
+      tls:
+        certificateRefs:
+          - group: ''
+            kind: Secret
+            name: {{ $secretName }}
     {{- end }}
-    allowedRoutes:
-      namespaces:
-        from: All
+      allowedRoutes:
+        namespaces:
+          from: All
   {{- end }}
 
 ---
@@ -76,12 +76,12 @@ spec:
   minReplicas: {{ .Values.gateway.internal.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.gateway.internal.autoscaling.maxReplicas }}
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 50
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -95,6 +95,7 @@ spec:
     # Match the generated Deployment by label
     matchLabels:
       istio.io/gateway-name: {{ .Values.gateway.internal.name }}
+---
 {{- end }}
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
@@ -113,27 +114,27 @@ spec:
   {{- end }}
   listeners:
   {{- if .Values.gateway.http.enabled }}
-  - name: http
-    port: 80
-    protocol: HTTP
-    allowedRoutes:
-      namespaces:
-        from: All
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
   {{- end }}
   {{- if .Values.tls.required }}
-  - name: https
-    port: 443
-    protocol: HTTPS
+    - name: https
+      port: 443
+      protocol: HTTPS
     {{- if $secretName }}
-    tls:
-      certificateRefs:
-      - group: ''
-        kind: Secret
-        name: {{ $secretName }}
+      tls:
+        certificateRefs:
+          - group: ''
+            kind: Secret
+            name: {{ $secretName }}
     {{- end }}
-    allowedRoutes:
-      namespaces:
-        from: All
+      allowedRoutes:
+        namespaces:
+          from: All
   {{- end }}
 ---
 apiVersion: autoscaling/v2
@@ -152,12 +153,12 @@ spec:
   minReplicas: {{ .Values.gateway.public.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.gateway.public.autoscaling.maxReplicas }}
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 50
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -173,4 +174,3 @@ spec:
       istio.io/gateway-name: {{ .Values.gateway.public.name }}
 ---
 {{- end }}
-
