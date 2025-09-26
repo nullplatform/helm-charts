@@ -5,7 +5,7 @@ namespace: nullplatform-tools
 args:
   - "--tags=$(TAGS)"
   - "--apikey=$(NP_API_KEY)"
-  - "--runtime=host"
+  - "--runtime=k8s"
   - "--command-executor-env=NP_API_KEY=$(NP_API_KEY)"
   - "--command-executor-debug"
   - "--webserver-enabled"
@@ -111,7 +111,13 @@ initScripts: []
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: []
 
-#Lifecycle preStop Hook for Graceful Agent Shutdown
+# Graceful shutdown configuration
+gracefulShutdown:
+  enabled: true
+  terminationGracePeriodSeconds: 900
+  preStopDelay: 2
+
+# Legacy lifecycle configuration (used when gracefulShutdown.enabled is false)
 lifecycle:
   preStop:
     exec:
