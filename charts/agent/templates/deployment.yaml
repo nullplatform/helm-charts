@@ -26,6 +26,9 @@ spec:
         {{- end }}
       
     spec:
+      {{- if .Values.gracefulShutdown.enabled }}
+      terminationGracePeriodSeconds: {{ .Values.gracefulShutdown.terminationGracePeriodSeconds }}
+      {{- end }}
       priorityClassName: nullplatform-critical-{{ .Release.Name }}
       serviceAccountName: {{ include "agent.serviceAccountName" . }}
       securityContext:
@@ -62,8 +65,20 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Values.configuration.secretName }}-{{ .Release.Name }}
+          {{- if .Values.gracefulShutdown.enabled }}
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "$(date): Initiating graceful shutdown..." >> /tmp/shutdown.log
+                  sleep {{ .Values.gracefulShutdown.preStopDelay }}
+          {{- else }}
           lifecycle:
             {{- toYaml .Values.lifecycle | nindent 12 }}
+          {{- end }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
