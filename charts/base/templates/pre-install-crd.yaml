@@ -8,6 +8,7 @@ metadata:
 spec:
   template:
     spec:
+      serviceAccountName: nullplatform-crd-installer-sa
       containers:
       - name: install-crds
         image: bitnamisecure/kubectl:latest
