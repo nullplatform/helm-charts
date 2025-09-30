@@ -31,4 +31,11 @@ spec:
             name: azuredns-config
             key:  {{ .Values.azure.secretKey | default "client-secret" | quote }}
           {{- end }}
+
+          {{- if .Values.cloudflare.enabled }}
+        cloudflare:
+          apiTokenSecretRef:
+            name: {{ .Values.cloudflare.secretName | default "cloudflare-api-token-secret" }}
+            key: api-token
+          {{- end }}
      

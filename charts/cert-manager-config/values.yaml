@@ -5,7 +5,7 @@ gcp:
   enabled: false
   serviceAccountKey: ""
 azure:
-  enabled: true
+  enabled: false
   subscriptionID: ""
   resourceGroupName: ""
   clientID: ""
@@ -13,3 +13,7 @@ azure:
   clientSecret: "" 
   tenantID: ""
   hostedZoneName: ""
+cloudflare:
+  enabled: true
+  secretName: cloudflare-api-token-secret
+  apiToken: "dfjdfjdfhjfhfg"                  
