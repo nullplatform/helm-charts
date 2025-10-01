@@ -1,3 +1,14 @@
+# [2.13.0](https://github.com/nullplatform/helm-charts/compare/2.12.0...2.13.0) (2025-10-01)
+
+
+### Features
+
+* add config for cloudflare ([bd6e62d](https://github.com/nullplatform/helm-charts/commit/bd6e62d8805631e2d967d7712d28a5419620a8a7))
+* **agent:** fix configMap ([74cfd95](https://github.com/nullplatform/helm-charts/commit/74cfd9531805a84ab1a2af587853c2f5ffe8e1e5))
+* **base:** GIT-0000 Improve service account configuration for hooks ([8f00eee](https://github.com/nullplatform/helm-charts/commit/8f00eeeefe8e90b236051e2a7b2a69e61c46e141))
+* edit values cert manager config ([330f3dd](https://github.com/nullplatform/helm-charts/commit/330f3dd7d7db2ad249c3ef03c142d7088f24d7d8))
+* **helm-charts:** add semantic-release ([e472317](https://github.com/nullplatform/helm-charts/commit/e4723170f09ba7d653ff155a90e571e82850f546))
+
 # [2.12.0](https://github.com/nullplatform/helm-charts/compare/2.11.0...2.12.0) (2025-09-19)
 
 
