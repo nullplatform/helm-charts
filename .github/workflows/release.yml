@@ -35,6 +35,19 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
+      - name: Release Process
+        id: semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Running semantic-release"
+          OUTPUT=$(npx semantic-release --debug)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "There are no relevant changes, so no new version is released."; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
       - name: Set up Helm
         run: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
       - name: Download and package Helm Charts and output to releases directory
