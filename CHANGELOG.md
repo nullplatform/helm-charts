@@ -1,3 +1,10 @@
+## [2.13.1](https://github.com/nullplatform/helm-charts/compare/2.13.0...2.13.1) (2025-10-01)
+
+
+### Bug Fixes
+
+* **base:** resolve installGatewayV2Crd serviceaccount timing issue ([c9d697f](https://github.com/nullplatform/helm-charts/commit/c9d697f52f766a01278d1fc9f8144d4fc3bf7a7d))
+
 # [2.13.0](https://github.com/nullplatform/helm-charts/compare/2.12.0...2.13.0) (2025-10-01)
 
 
