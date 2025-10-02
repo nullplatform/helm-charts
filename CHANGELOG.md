@@ -1,3 +1,10 @@
+# [2.14.0](https://github.com/nullplatform/helm-charts/compare/2.13.1...2.14.0) (2025-10-02)
+
+
+### Features
+
+* edit secret of cloudflare for cert-manager cluster issuer ([a62055d](https://github.com/nullplatform/helm-charts/commit/a62055dbc2447ac0fc3ff84323a4b769f191eb94))
+
 ## [2.13.1](https://github.com/nullplatform/helm-charts/compare/2.13.0...2.13.1) (2025-10-01)
 
 
