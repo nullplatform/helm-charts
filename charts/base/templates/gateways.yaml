@@ -24,9 +24,31 @@ metadata:
   name: {{ .Values.gateway.internal.name }}
   namespace: {{ .Values.namespaces.gateway }}
   annotations:
+    {{- if eq .Values.global.provider "aks" }}
+    {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
     service.beta.kubernetes.io/azure-load-balancer-internal: 'true'
+    {{- else }}
+    service.beta.kubernetes.io/azure-load-balancer-internal: 'false'
+    {{- end }}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- else if eq .Values.global.provider "gke" }}
+    {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
     networking.gke.io/load-balancer-type: "Internal"
+    {{- else }}
+    networking.gke.io/load-balancer-type: "External"
+    {{- end }}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- else if eq .Values.global.provider "oke" }}
+    {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/oci-load-balancer-internal: "true"
+    {{- else }}
+    service.beta.kubernetes.io/oci-load-balancer-internal: "false"
+    {{- end }}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- else }}
+    {{- /* Default annotations for other providers */ -}}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- end }}
     "helm.sh/resource-policy": "keep"
 spec:
   gatewayClassName: istio
@@ -103,8 +125,31 @@ metadata:
   name: {{ .Values.gateway.public.name }}
   namespace: {{ .Values.namespaces.gateway }}
   annotations:
+    {{- if eq .Values.global.provider "aks" }}
+    {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/azure-load-balancer-internal: 'true'
+    {{- else }}
     service.beta.kubernetes.io/azure-load-balancer-internal: 'false'
+    {{- end }}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- else if eq .Values.global.provider "gke" }}
+    {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
+    networking.gke.io/load-balancer-type: "Internal"
+    {{- else }}
+    networking.gke.io/load-balancer-type: "External"
+    {{- end }}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- else if eq .Values.global.provider "oke" }}
+    {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/oci-load-balancer-internal: "true"
+    {{- else }}
+    service.beta.kubernetes.io/oci-load-balancer-internal: "false"
+    {{- end }}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- else }}
+    {{- /* Default annotations for other providers */ -}}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- end }}
     "helm.sh/resource-policy": "keep"
 spec:
   gatewayClassName: istio
