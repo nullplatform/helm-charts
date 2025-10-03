@@ -27,12 +27,14 @@ gateway:
     autoscaling:
       minReplicas: 2
       maxReplicas: 10
+    loadBalancerType: "internal"  # internal, external
   public:
     name: "gateway-public"
     addresses: {}
     autoscaling:
       minReplicas: 2
       maxReplicas: 10
+    loadBalancerType: "external"  # internal, external
 # Nullplatform configurations
 nullplatform:
   apiKey: ""
