@@ -12,6 +12,12 @@ spec:
     metadata:
       labels:
         name: nullplatform-log-controller
+      {{- if .Values.logging.prometheus.enabled }}
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: '2021'
+        prometheus.io/scrape: 'true'
+      {{- end }}
     spec:
       serviceAccountName: nullplatform-pod-metadata-reader-sa
       restartPolicy: Always
