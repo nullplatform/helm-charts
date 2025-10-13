@@ -15,7 +15,7 @@ spec:
       {{- if .Values.logging.prometheus.enabled }}
       annotations:
         prometheus.io/path: /metrics
-        prometheus.io/port: '2021'
+        prometheus.io/port: {{ .Values.logging.prometheus.exporterPort | quote }}
         prometheus.io/scrape: 'true'
       {{- end }}
     spec:
