@@ -1,3 +1,11 @@
+# [2.16.0](https://github.com/nullplatform/helm-charts/compare/2.15.0...2.16.0) (2025-10-13)
+
+
+### Features
+
+* **base:** add annotations for prometheus auto discovery ([be18456](https://github.com/nullplatform/helm-charts/commit/be18456429275fcf84d51da239600aac617ccb1a))
+* **base:** make prometheus port annotation configurable ([a8ec8da](https://github.com/nullplatform/helm-charts/commit/a8ec8dad4cc83417bfe81c45cdedf779503b0638))
+
 # [2.15.0](https://github.com/nullplatform/helm-charts/compare/2.14.0...2.15.0) (2025-10-06)
 
 
