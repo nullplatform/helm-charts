@@ -1,3 +1,10 @@
+## [2.16.1](https://github.com/nullplatform/helm-charts/compare/2.16.0...2.16.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* **base:** Honour nullplatform tools ns configuration ([a6c8740](https://github.com/nullplatform/helm-charts/commit/a6c87405500a37d17613f445157ba060b3d70eea))
+
 # [2.16.0](https://github.com/nullplatform/helm-charts/compare/2.15.0...2.16.0) (2025-10-13)
 
 
