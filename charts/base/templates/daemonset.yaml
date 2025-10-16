@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: nullplatform-log-controller
-  namespace: nullplatform-tools
+  namespace: {{ .Values.namespaces.nullplatformTools }}
 spec:
   selector:
     matchLabels:
