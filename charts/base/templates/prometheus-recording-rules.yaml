@@ -1,0 +1,286 @@
+{{- if and .Values.logging.enabled (eq .Values.logging.mode "istio-metrics") }}
+---
+# ServiceAccount for the patch job
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-patch-job-sa
+  namespace: {{ .Values.logging.istioMetrics.prometheusNamespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": hook-succeeded
+---
+# ClusterRole for patching ConfigMaps
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-patch-job-role
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": hook-succeeded
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "patch"]
+---
+# ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-patch-job-binding
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": hook-succeeded
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-patch-job-role
+subjects:
+- kind: ServiceAccount
+  name: prometheus-patch-job-sa
+  namespace: {{ .Values.logging.istioMetrics.prometheusNamespace }}
+---
+# Job to patch Prometheus ConfigMap
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: patch-prometheus-recording-rules
+  namespace: {{ .Values.logging.istioMetrics.prometheusNamespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "2"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      serviceAccountName: prometheus-patch-job-sa
+      restartPolicy: Never
+      containers:
+      - name: kubectl-patch
+        image: bitnami/kubectl:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Patching prometheus-server ConfigMap with nullplatform recording rules..."
+          
+          # Check if ConfigMap exists
+          if ! kubectl get configmap prometheus-server -n {{ .Values.logging.istioMetrics.prometheusNamespace }} >/dev/null 2>&1; then
+            echo "ERROR: ConfigMap prometheus-server not found in namespace {{ .Values.logging.istioMetrics.prometheusNamespace }}"
+            echo "Please ensure Prometheus is installed and the ConfigMap name/namespace is correct"
+            exit 1
+          fi
+          
+          # Create the recording rules content
+          cat > /tmp/recording_rules.yml << 'EOF'
+          groups:
+          - name: istio_enriched_with_k8s_labels
+            interval: 15s
+            rules:
+            # Join Istio requests with K8s pod labels
+            - record: np_requests_total_enriched
+              expr: |
+                label_replace(
+                  istio_requests_total{source_workload=~"gateway-public-istio|gateway-private-istio"},
+                  "destination_pod_ip_clean", "$1", "destination_pod_ip", "(.*):.*"
+                )
+                * on(destination_pod_ip_clean, destination_workload_namespace) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod)
+                (
+                  max by (destination_pod_ip_clean, destination_workload_namespace, account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod) (
+                    label_replace(
+                      label_replace(
+                        label_replace(
+                          k8s_pod_labels_info{application_id!=""},
+                          "destination_workload_namespace", "$1", "namespace", "(.*)"
+                        ),
+                        "destination_pod_ip_clean", "$1", "pod_ip", "(.*)"
+                      ),
+                      "destination_pod", "$1", "pod", "(.*)"
+                    )
+                  )
+                )
+            
+            # Join Istio request duration buckets with K8s pod labels
+            - record: np_request_duration_milliseconds_bucket_enriched
+              expr: |
+                label_replace(
+                  istio_request_duration_milliseconds_bucket{source_workload=~"gateway-public-istio|gateway-private-istio"},
+                  "destination_pod_ip_clean", "$1", "destination_pod_ip", "(.*):.*"
+                )
+                * on(destination_pod_ip_clean, destination_workload_namespace) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod)
+                (
+                  max by (destination_pod_ip_clean, destination_workload_namespace, account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod) (
+                    label_replace(
+                      label_replace(
+                        label_replace(
+                          k8s_pod_labels_info{application_id!=""},
+                          "destination_workload_namespace", "$1", "namespace", "(.*)"
+                        ),
+                        "destination_pod_ip_clean", "$1", "pod_ip", "(.*)"
+                      ),
+                      "destination_pod", "$1", "pod", "(.*)"
+                    )
+                  )
+                )
+            
+            # Join Istio request duration sum with K8s pod labels
+            - record: np_request_duration_milliseconds_sum_enriched
+              expr: |
+                label_replace(
+                  istio_request_duration_milliseconds_sum{source_workload=~"gateway-public-istio|gateway-private-istio"},
+                  "destination_pod_ip_clean", "$1", "destination_pod_ip", "(.*):.*"
+                )
+                * on(destination_pod_ip_clean, destination_workload_namespace) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod)
+                (
+                  max by (destination_pod_ip_clean, destination_workload_namespace, account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod) (
+                    label_replace(
+                      label_replace(
+                        label_replace(
+                          k8s_pod_labels_info{application_id!=""},
+                          "destination_workload_namespace", "$1", "namespace", "(.*)"
+                        ),
+                        "destination_pod_ip_clean", "$1", "pod_ip", "(.*)"
+                      ),
+                      "destination_pod", "$1", "pod", "(.*)"
+                    )
+                  )
+                )
+            
+            # Join Istio request duration count with K8s pod labels
+            - record: np_request_duration_milliseconds_count_enriched
+              expr: |
+                label_replace(
+                  istio_request_duration_milliseconds_count{source_workload=~"gateway-public-istio|gateway-private-istio"},
+                  "destination_pod_ip_clean", "$1", "destination_pod_ip", "(.*):.*"
+                )
+                * on(destination_pod_ip_clean, destination_workload_namespace) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod)
+                (
+                  max by (destination_pod_ip_clean, destination_workload_namespace, account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod) (
+                    label_replace(
+                      label_replace(
+                        label_replace(
+                          k8s_pod_labels_info{application_id!=""},
+                          "destination_workload_namespace", "$1", "namespace", "(.*)"
+                        ),
+                        "destination_pod_ip_clean", "$1", "pod_ip", "(.*)"
+                      ),
+                      "destination_pod", "$1", "pod", "(.*)"
+                    )
+                  )
+                )
+
+          - name: container_resources_enriched_with_k8s_labels
+            interval: 15s
+            rules:
+            # CPU usage rate enriched with pod labels
+            - record: np_container_cpu_usage_rate_enriched
+              expr: |
+                rate(container_cpu_usage_seconds_total{container!="", container!="POD"}[5m])
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # CPU usage percentage (vs limits) enriched with pod labels
+            - record: np_container_cpu_usage_percent_enriched
+              expr: |
+                (
+                  rate(container_cpu_usage_seconds_total{container!="", container!="POD"}[5m])
+                  / on(namespace, pod, container) group_left() (max by(namespace, pod, container, resource, unit) (kube_pod_container_resource_limits{resource="cpu"}))
+                  * 100
+                )
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # Memory usage enriched with pod labels
+            - record: np_container_memory_usage_bytes_enriched
+              expr: |
+                container_memory_usage_bytes{container!="", container!="POD"}
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # Memory usage percentage (vs limits) enriched with pod labels
+            - record: np_container_memory_usage_percent_enriched
+              expr: |
+                (
+                  container_memory_usage_bytes{container!="", container!="POD"}
+                  / on(namespace, pod, container) group_left() (max by(namespace, pod, container, resource, unit) (kube_pod_container_resource_limits{resource="memory"}))
+                  * 100
+                )
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # Memory working set enriched with pod labels
+            - record: np_container_memory_working_set_bytes_enriched
+              expr: |
+                container_memory_working_set_bytes{container!="", container!="POD"}
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # Memory working set percentage (vs limits) enriched with pod labels
+            - record: np_container_memory_working_set_percent_enriched
+              expr: |
+                (
+                  container_memory_working_set_bytes{container!="", container!="POD"}
+                  / on(namespace, pod, container) group_left() (max by(namespace, pod, container, resource, unit) (kube_pod_container_resource_limits{resource="memory"}))
+                  * 100
+                )
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+          - name: pod_health_enriched_with_k8s_labels
+            interval: 15s
+            rules:
+            # Pod readiness status enriched with pod labels
+            - record: np_kube_pod_status_ready_enriched
+              expr: |
+                kube_pod_status_ready
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # Container ready status enriched with pod labels
+            - record: np_kube_pod_container_status_ready_enriched
+              expr: |
+                kube_pod_container_status_ready
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # Container restarts enriched with pod labels
+            - record: np_kube_pod_container_status_restarts_total_enriched
+              expr: |
+                kube_pod_container_status_restarts_total
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # Container running status enriched with pod labels
+            - record: np_kube_pod_container_status_running_enriched
+              expr: |
+                kube_pod_container_status_running
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # Container waiting status enriched with pod labels
+            - record: np_kube_pod_container_status_waiting_enriched
+              expr: |
+                kube_pod_container_status_waiting
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+
+            # Container terminated status enriched with pod labels
+            - record: np_kube_pod_container_status_terminated_enriched
+              expr: |
+                kube_pod_container_status_terminated
+                * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+                k8s_pod_labels_info
+          EOF
+          
+          # Convert YAML to base64-encoded JSON for kubectl patch
+          RECORDING_RULES_CONTENT=$(cat /tmp/recording_rules.yml | base64 -w 0)
+          
+          # Patch the ConfigMap
+          kubectl patch configmap prometheus-server -n {{ .Values.logging.istioMetrics.prometheusNamespace }} --type merge -p "{\"data\":{\"recording_rules.yml\":\"$(echo $RECORDING_RULES_CONTENT | base64 -d | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')\"}}"
+          
+          echo "Successfully patched prometheus-server ConfigMap with nullplatform recording rules"
+          echo "Prometheus will automatically reload the configuration"
+{{- end }}

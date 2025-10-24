@@ -53,6 +53,10 @@ controlPlane:
         memory: 150Mi
 logging:
   enabled: true
+  # Choose between 'controller' (default) or 'istio-metrics'
+  # - 'controller': Uses the traditional log controller DaemonSet
+  # - 'istio-metrics': Uses Istio gateway metrics with K8s labels enrichment (requires Istio and Prometheus)
+  mode: "controller"
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
     resources:
@@ -89,6 +93,23 @@ logging:
     enabled: false
     licenseKey: ""
     region: ""
+  # Configuration for istio-metrics mode
+  istioMetrics:
+    # Namespace where Prometheus is installed
+    prometheusNamespace: "prometheus"
+    # Namespace where Istio gateways are installed
+    gatewaysNamespace: "gateways"
+    # K8s labels exporter configuration
+    exporter:
+      image: "python:3.11-slim"
+      port: 9101
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
 # CloudWatch configuration
 cloudwatch:
   enabled: false
