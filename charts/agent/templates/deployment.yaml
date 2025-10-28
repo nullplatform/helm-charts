@@ -28,6 +28,10 @@ spec:
     spec:
       priorityClassName: nullplatform-critical-{{ .Release.Name }}
       serviceAccountName: {{ include "agent.serviceAccountName" . }}
+      {{- if .Values.imagePullSecret.name }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.name }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- with .Values.initContainers }}

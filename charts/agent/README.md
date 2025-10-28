@@ -51,6 +51,11 @@ This chart supports to extend the agent into a different registry and change the
 | **Container Image** | `image.repository` | `public.ecr.aws/nullplatform/controlplane-agent` | Container image repository |
 | | `image.pullPolicy` | `Never` | Never pull image (use local) |
 | | `image.tag` | `beta` | Image tag version |
+| **Image Pull Secret** | `imagePullSecret.create` | `false` | Create a new image pull secret (set to `true` and provide credentials) |
+| | `imagePullSecret.name` | `image-pull-secret-agent` | Name of the image pull secret (to create or reference existing) |
+| | `imagePullSecret.registry` | `""` | Container registry URL (required if `create: true`) |
+| | `imagePullSecret.username` | `""` | Username for registry authentication (required if `create: true`) |
+| | `imagePullSecret.password` | `""` | Password for registry authentication (required if `create: true`) |
 | **Service Account** | `serviceAccount.create` | `true` | Creates a service account |
 | | `serviceAccount.automount` | `true` | Auto-mounts service account token |
 | | `serviceAccount.name` | `nullplatform-agent` | Service account name |
