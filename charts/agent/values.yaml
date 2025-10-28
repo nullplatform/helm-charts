@@ -119,3 +119,15 @@ lifecycle:
         - /bin/sh
         - -c
         - 'pid=$(pgrep -f agent) && kill -15 $pid && sleep 30'
+
+# Image pull secret configuration
+imagePullSecret:
+  # Use an existing secret (recommended for production)
+  # Set 'name' to reference an existing secret, leave create: false
+  # OR
+  # Create a new secret by setting create: true and providing credentials
+  create: false
+  name: image-pull-secret-agent
+  registry: ""
+  username: ""
+  password: ""
