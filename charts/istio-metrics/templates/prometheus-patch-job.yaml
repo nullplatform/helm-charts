@@ -1,0 +1,160 @@
+{{- if .Values.recordingRules.patch.enabled }}
+---
+# ServiceAccount for the patch job
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-patch-job-sa
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+---
+# Role for patching ConfigMaps in the prometheus namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-patch-job-role
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "patch", "update", "create"]
+---
+# RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-patch-job-binding
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-patch-job-role
+subjects:
+- kind: ServiceAccount
+  name: prometheus-patch-job-sa
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+---
+# Job to patch Prometheus ConfigMap
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: patch-prometheus-recording-rules
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "2"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    spec:
+      serviceAccountName: prometheus-patch-job-sa
+      restartPolicy: Never
+      containers:
+      - name: kubectl-patch
+        image: bitnami/kubectl:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          set -e
+          
+          {{- if .Values.recordingRules.patch.mode }}
+          {{- if eq .Values.recordingRules.patch.mode "replace" }}
+          
+          echo "Mode: REPLACE - Creating/replacing entire Prometheus ConfigMap..."
+          
+          # Create the complete ConfigMap
+          cat > /tmp/configmap.yaml << 'EOF'
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: {{ .Values.recordingRules.patch.configMapName }}
+            namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+          data:
+            {{- if .Values.recordingRules.patch.fullConfigMap }}
+            {{- toYaml .Values.recordingRules.patch.fullConfigMap | nindent 12 }}
+            {{- else }}
+            prometheus.yml: |
+              {{ .Values.recordingRules.patch.prometheusConfig | nindent 14 }}
+            {{- if .Values.recordingRules.enabled }}
+            recording_rules.yml: |
+              {{- .Files.Get "files/recording_rules.yml" | nindent 14 }}
+            {{- end }}
+            {{- end }}
+          EOF
+          
+          kubectl apply -f /tmp/configmap.yaml
+          echo "ConfigMap replaced successfully"
+          
+          {{- else if eq .Values.recordingRules.patch.mode "merge" }}
+          
+          echo "Mode: MERGE - Patching existing Prometheus ConfigMap with recording rules..."
+          
+          # Check if ConfigMap exists
+          if ! kubectl get configmap {{ .Values.recordingRules.patch.configMapName }} -n {{ include "istio-metrics.prometheusNamespace" . }} >/dev/null 2>&1; then
+            echo "ERROR: ConfigMap {{ .Values.recordingRules.patch.configMapName }} not found in namespace {{ include "istio-metrics.prometheusNamespace" . }}"
+            echo "Please ensure Prometheus is installed and the ConfigMap name/namespace is correct"
+            exit 1
+          fi
+          
+          # Create the recording rules content
+          cat > /tmp/recording_rules.yml << 'EOF'
+          {{- .Files.Get "files/recording_rules.yml" | nindent 10 }}
+          EOF
+          
+          # Apply the patch to add/update the recording_rules.yml key
+          kubectl patch configmap {{ .Values.recordingRules.patch.configMapName }} \
+            -n {{ include "istio-metrics.prometheusNamespace" . }} \
+            --type strategic \
+            -p "{\"data\":{\"recording_rules.yml\":\"$(sed 's/"/\\"/g' /tmp/recording_rules.yml | awk '{printf "%s\\n", $0}')\"}}"
+          
+          echo "Recording rules patched successfully"
+          
+          # If prometheus.yml needs to include the recording rules file, patch it too
+          if {{ .Values.recordingRules.patch.updatePrometheusConfig }}; then
+            echo "Updating prometheus.yml to include recording rules..."
+            
+            # Get current prometheus.yml
+            kubectl get configmap {{ .Values.recordingRules.patch.configMapName }} \
+              -n {{ include "istio-metrics.prometheusNamespace" . }} \
+              -o jsonpath='{.data.prometheus\.yml}' > /tmp/current_prometheus.yml
+            
+            # Check if rule_files section exists and add if not
+            if ! grep -q "rule_files:" /tmp/current_prometheus.yml; then
+              echo "Adding rule_files section..."
+              # Add rule_files section after global section
+              sed -i '/^global:/a\
+\
+rule_files:\
+  - /etc/config/recording_rules.yml' /tmp/current_prometheus.yml
+            elif ! grep -q "recording_rules.yml" /tmp/current_prometheus.yml; then
+              echo "Adding recording_rules.yml to existing rule_files..."
+              sed -i '/^rule_files:/a\  - /etc/config/recording_rules.yml' /tmp/current_prometheus.yml
+            else
+              echo "recording_rules.yml already configured in prometheus.yml"
+            fi
+            
+            # Apply the updated prometheus.yml
+            kubectl patch configmap {{ .Values.recordingRules.patch.configMapName }} \
+              -n {{ include "istio-metrics.prometheusNamespace" . }} \
+              --type strategic \
+              -p "{\"data\":{\"prometheus.yml\":\"$(sed 's/"/\\"/g' /tmp/current_prometheus.yml | awk '{printf "%s\\n", $0}')\"}}"
+          fi
+          
+          {{- end }}
+          {{- end }}
+          
+          echo "Prometheus configuration updated successfully!"
+          echo "Note: You may need to reload or restart Prometheus for changes to take effect"
+{{- end }}

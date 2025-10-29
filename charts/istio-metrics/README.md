@@ -46,6 +46,32 @@ helm install my-istio-metrics nullplatform/istio-metrics \
   --set gatewaysNamespace=istio-system
 ```
 
+### Patching Existing Prometheus
+
+If you have Prometheus already installed and want to add the recording rules, the chart can patch your existing Prometheus ConfigMap using a Kubernetes Job that runs `kubectl patch`:
+
+```bash
+# Merge mode - uses kubectl patch to add recording_rules.yml to existing ConfigMap
+helm install my-istio-metrics nullplatform/istio-metrics \
+  --set recordingRules.patch.enabled=true \
+  --set recordingRules.patch.mode=merge \
+  --set recordingRules.patch.configMapName=my-prometheus-server
+
+# The merge mode will:
+# 1. Add recording_rules.yml to your Prometheus ConfigMap
+# 2. Update prometheus.yml to include the recording rules file in rule_files section
+# 3. Preserve all other existing configuration
+
+# Replace mode - uses kubectl apply to replace entire ConfigMap
+helm install my-istio-metrics nullplatform/istio-metrics \
+  --set recordingRules.patch.enabled=true \
+  --set recordingRules.patch.mode=replace \
+  --set recordingRules.patch.configMapName=my-prometheus-server \
+  --set-file recordingRules.patch.fullConfigMap=my-prometheus-config.yaml
+```
+
+**Note**: After patching, you'll need to reload or restart Prometheus for the changes to take effect.
+
 ## Configuration
 
 The following table lists the configurable parameters and their default values:
@@ -67,6 +93,11 @@ The following table lists the configurable parameters and their default values:
 | `exporter.resources` | Resources for the exporter | See values.yaml |
 | `recordingRules.enabled` | Enable Prometheus recording rules | `true` |
 | `recordingRules.prometheusConfigMap` | ConfigMap name for external Prometheus | `"prometheus-server"` |
+| `recordingRules.patch.enabled` | Enable patching of Prometheus ConfigMap | `false` |
+| `recordingRules.patch.mode` | Patch mode: "merge" or "replace" | `"merge"` |
+| `recordingRules.patch.configMapName` | Name of Prometheus ConfigMap to patch | `"prometheus-server"` |
+| `recordingRules.patch.updatePrometheusConfig` | Update prometheus.yml in merge mode | `true` |
+| `recordingRules.patch.fullConfigMap` | Full ConfigMap data for replace mode | `{}` |
 
 ## Enriched Metrics
 
