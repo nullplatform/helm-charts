@@ -21,11 +21,10 @@ Components deployed:
 - K8s labels exporter is running at: k8s-labels-exporter.{{ include "istio-metrics.prometheusNamespace" . }}:{{ .Values.exporter.port }}
 {{- end }}
 {{- if .Values.recordingRules.enabled }}
-- Prometheus recording rules ConfigMap created
-  {{- if .Values.recordingRules.patch.enabled }}
-  - Prometheus ConfigMap patching {{ if eq .Values.recordingRules.patch.mode "merge" }}(merge mode){{ else }}(replace mode){{ end }} is enabled
-  - Target ConfigMap: {{ .Values.recordingRules.patch.configMapName }}
-  {{- end }}
+- Prometheus recording rules ConfigMap created: {{ .Values.recordingRules.name }}
+{{- end }}
+{{- if .Values.prometheusConfig.create }}
+- Complete Prometheus ConfigMap created: {{ .Values.prometheusConfig.name }}
 {{- end }}
 - Istio Telemetry and EnvoyFilter resources created in namespace: {{ .Values.gatewaysNamespace }}
 

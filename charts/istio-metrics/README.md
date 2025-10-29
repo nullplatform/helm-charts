@@ -46,31 +46,48 @@ helm install my-istio-metrics nullplatform/istio-metrics \
   --set gatewaysNamespace=istio-system
 ```
 
-### Patching Existing Prometheus
+### Creating a Complete Prometheus ConfigMap
 
-If you have Prometheus already installed and want to add the recording rules, the chart can patch your existing Prometheus ConfigMap using a Kubernetes Job that runs `kubectl patch`:
+If you need to create a complete Prometheus ConfigMap with the recording rules included:
 
 ```bash
-# Merge mode - uses kubectl patch to add recording_rules.yml to existing ConfigMap
+# Create Prometheus ConfigMap with default configuration
 helm install my-istio-metrics nullplatform/istio-metrics \
-  --set recordingRules.patch.enabled=true \
-  --set recordingRules.patch.mode=merge \
-  --set recordingRules.patch.configMapName=my-prometheus-server
+  --set prometheusConfig.create=true \
+  --set prometheusConfig.name=my-prometheus-server
 
-# The merge mode will:
-# 1. Add recording_rules.yml to your Prometheus ConfigMap
-# 2. Update prometheus.yml to include the recording rules file in rule_files section
-# 3. Preserve all other existing configuration
+# Create Prometheus ConfigMap with custom configuration
+cat > my-prometheus-config.yaml <<EOF
+prometheus.yml: |
+  global:
+    scrape_interval: 15s
+  rule_files:
+    - /etc/config/recording_rules.yml
+  scrape_configs:
+    - job_name: 'prometheus'
+      static_configs:
+        - targets: ['localhost:9090']
+recording_rules.yml: |
+  # Your custom recording rules here
+EOF
 
-# Replace mode - uses kubectl apply to replace entire ConfigMap
 helm install my-istio-metrics nullplatform/istio-metrics \
-  --set recordingRules.patch.enabled=true \
-  --set recordingRules.patch.mode=replace \
-  --set recordingRules.patch.configMapName=my-prometheus-server \
-  --set-file recordingRules.patch.fullConfigMap=my-prometheus-config.yaml
+  --set prometheusConfig.create=true \
+  --set prometheusConfig.name=my-prometheus-server \
+  --set-file prometheusConfig.customConfig=my-prometheus-config.yaml
 ```
 
-**Note**: After patching, you'll need to reload or restart Prometheus for the changes to take effect.
+### Using Standalone Recording Rules
+
+By default, the chart creates a standalone ConfigMap with just the recording rules:
+
+```bash
+# The recording rules ConfigMap will be created as 'prometheus-recording-rules'
+# You can mount this in your existing Prometheus deployment
+
+helm install my-istio-metrics nullplatform/istio-metrics \
+  --set recordingRules.name=my-recording-rules
+```
 
 ## Configuration
 
@@ -91,13 +108,12 @@ The following table lists the configurable parameters and their default values:
 | `exporter.image` | Image for the exporter | `"python:3.11-slim"` |
 | `exporter.port` | Port for the exporter metrics | `9101` |
 | `exporter.resources` | Resources for the exporter | See values.yaml |
-| `recordingRules.enabled` | Enable Prometheus recording rules | `true` |
-| `recordingRules.prometheusConfigMap` | ConfigMap name for external Prometheus | `"prometheus-server"` |
-| `recordingRules.patch.enabled` | Enable patching of Prometheus ConfigMap | `false` |
-| `recordingRules.patch.mode` | Patch mode: "merge" or "replace" | `"merge"` |
-| `recordingRules.patch.configMapName` | Name of Prometheus ConfigMap to patch | `"prometheus-server"` |
-| `recordingRules.patch.updatePrometheusConfig` | Update prometheus.yml in merge mode | `true` |
-| `recordingRules.patch.fullConfigMap` | Full ConfigMap data for replace mode | `{}` |
+| `recordingRules.enabled` | Enable Prometheus recording rules ConfigMap | `true` |
+| `recordingRules.name` | Name of the recording rules ConfigMap | `"prometheus-recording-rules"` |
+| `prometheusConfig.create` | Create complete Prometheus ConfigMap | `false` |
+| `prometheusConfig.name` | Name of Prometheus ConfigMap to create | `"prometheus-server"` |
+| `prometheusConfig.customConfig` | Custom ConfigMap data (replaces default) | `{}` |
+| `prometheusConfig.additionalScrapeConfigs` | Additional scrape configs for default config | `""` |
 
 ## Enriched Metrics
 
