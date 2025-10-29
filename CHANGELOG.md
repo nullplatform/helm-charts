@@ -1,3 +1,11 @@
+# [2.17.0](https://github.com/nullplatform/helm-charts/compare/2.16.1...2.17.0) (2025-10-29)
+
+
+### Features
+
+* **agent:** Add image pull secret configuration ([4a5efe6](https://github.com/nullplatform/helm-charts/commit/4a5efe6e34c42b026057535ab65886c3f7bdc14f))
+* **agent:** Comment out image pull secret credential fields ([533228c](https://github.com/nullplatform/helm-charts/commit/533228c5ac1c09fe203e2627b9e102500616154c))
+
 ## [2.16.1](https://github.com/nullplatform/helm-charts/compare/2.16.0...2.16.1) (2025-10-16)
 
 
