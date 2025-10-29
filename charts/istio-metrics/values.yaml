@@ -65,3 +65,61 @@ recordingRules:
   prometheusConfigMap: "prometheus-server"
   # The key in the ConfigMap that contains the prometheus.yml configuration
   prometheusConfigKey: "prometheus.yml"
+  
+  # Configuration for patching existing Prometheus ConfigMap
+  # This uses a Kubernetes Job with kubectl to patch the ConfigMap after Helm install
+  patch:
+    # Enable/disable patching of Prometheus ConfigMap
+    # When enabled, a Job will run kubectl patch to modify the existing ConfigMap
+    enabled: false
+    
+    # Patching mode:
+    # - "merge": Uses kubectl patch to add/update recording_rules.yml in existing ConfigMap
+    # - "replace": Uses kubectl apply to replace entire ConfigMap with provided configuration
+    mode: "merge"
+    
+    # Name of the Prometheus ConfigMap to patch
+    configMapName: "prometheus-server"
+    
+    # For merge mode: Whether to also update prometheus.yml to include the recording rules
+    updatePrometheusConfig: true
+    
+    # For replace mode: Full ConfigMap data (if not provided, uses prometheusConfig below)
+    # Example:
+    # fullConfigMap:
+    #   prometheus.yml: |
+    #     global:
+    #       scrape_interval: 15s
+    #     rule_files:
+    #       - /etc/config/recording_rules.yml
+    #   recording_rules.yml: |
+    #     groups:
+    #       - name: custom_rules
+    #         rules: []
+    fullConfigMap: {}
+    
+    # For replace mode: Prometheus configuration (used if fullConfigMap is not provided)
+    prometheusConfig: |
+      global:
+        scrape_interval: 15s
+        evaluation_interval: 15s
+      
+      rule_files:
+        - /etc/config/recording_rules.yml
+      
+      scrape_configs:
+        - job_name: 'prometheus'
+          static_configs:
+            - targets: ['localhost:9090']
+        
+        - job_name: 'kubernetes-apiservers'
+          kubernetes_sd_configs:
+            - role: endpoints
+          scheme: https
+          tls_config:
+            ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+          relabel_configs:
+            - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+              action: keep
+              regex: default;kubernetes;https

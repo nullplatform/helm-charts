@@ -22,6 +22,10 @@ Components deployed:
 {{- end }}
 {{- if .Values.recordingRules.enabled }}
 - Prometheus recording rules ConfigMap created
+  {{- if .Values.recordingRules.patch.enabled }}
+  - Prometheus ConfigMap patching {{ if eq .Values.recordingRules.patch.mode "merge" }}(merge mode){{ else }}(replace mode){{ end }} is enabled
+  - Target ConfigMap: {{ .Values.recordingRules.patch.configMapName }}
+  {{- end }}
 {{- end }}
 - Istio Telemetry and EnvoyFilter resources created in namespace: {{ .Values.gatewaysNamespace }}
 
