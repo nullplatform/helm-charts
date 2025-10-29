@@ -127,7 +127,7 @@ imagePullSecret:
   # OR
   # Create a new secret by setting create: true and providing credentials
   create: false
-  name: image-pull-secret-agent
-  registry: ""
-  username: ""
-  password: ""
+  # name: image-pull-secret-agent
+  # registry: ""
+  # username: ""
+  # password: ""
