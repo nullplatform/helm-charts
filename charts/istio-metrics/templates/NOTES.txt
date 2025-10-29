@@ -1,0 +1,49 @@
+1. Nullplatform Istio Metrics has been installed successfully!
+
+{{- if .Values.prometheus.enabled }}
+
+Prometheus has been deployed as part of this installation:
+- Namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+- Access the Prometheus UI:
+  kubectl port-forward -n {{ include "istio-metrics.prometheusNamespace" . }} svc/{{ .Release.Name }}-prometheus-server 9090:80
+
+{{- else }}
+
+Prometheus is NOT being installed. Please ensure you have Prometheus running in namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+
+To install Prometheus with this chart, upgrade with:
+  helm upgrade {{ .Release.Name }} nullplatform/istio-metrics --set prometheus.enabled=true
+
+{{- end }}
+
+Components deployed:
+{{- if .Values.exporter.enabled }}
+- K8s labels exporter is running at: k8s-labels-exporter.{{ include "istio-metrics.prometheusNamespace" . }}:{{ .Values.exporter.port }}
+{{- end }}
+{{- if .Values.recordingRules.enabled }}
+- Prometheus recording rules ConfigMap created
+{{- end }}
+- Istio Telemetry and EnvoyFilter resources created in namespace: {{ .Values.gatewaysNamespace }}
+
+Prerequisites check:
+- Ensure Istio is installed with gateway API
+- Ensure gateways are installed in namespace: {{ .Values.gatewaysNamespace }}
+- Gateway pods must be labeled with: gateway.networking.k8s.io/gateway-name
+
+To verify the setup:
+kubectl get deployment k8s-labels-exporter -n {{ include "istio-metrics.prometheusNamespace" . }}
+kubectl get configmap prometheus-recording-rules -n {{ include "istio-metrics.prometheusNamespace" . }}
+kubectl get telemetry,envoyfilter -n {{ .Values.gatewaysNamespace }}
+
+Enriched metrics will be available at:
+- np_requests_total_enriched
+- np_request_duration_milliseconds_bucket_enriched
+- np_request_duration_milliseconds_sum_enriched
+- np_request_duration_milliseconds_count_enriched
+- np_container_cpu_usage_rate_enriched
+- np_container_cpu_usage_percent_enriched
+- np_container_memory_usage_bytes_enriched
+- np_container_memory_usage_percent_enriched
+- np_container_restarts_enriched
+- np_pod_ready_enriched
+- np_pod_phase_enriched

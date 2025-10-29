@@ -1,10 +1,9 @@
-{{- if and .Values.logging.enabled (eq .Values.logging.mode "istio-metrics") }}
 ---
 apiVersion: telemetry.istio.io/v1alpha1
 kind: Telemetry
 metadata:
   name: gateway-metrics-response-code
-  namespace: {{ .Values.logging.istioMetrics.gatewaysNamespace }}
+  namespace: {{ .Values.gatewaysNamespace }}
 spec:
   metrics:
   - providers:
@@ -43,7 +42,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: stats-filter-response-code
-  namespace: {{ .Values.logging.istioMetrics.gatewaysNamespace }}
+  namespace: {{ .Values.gatewaysNamespace }}
 spec:
   workloadSelector:
     labels:
@@ -74,7 +73,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: stats-filter-response-code-private
-  namespace: {{ .Values.logging.istioMetrics.gatewaysNamespace }}
+  namespace: {{ .Values.gatewaysNamespace }}
 spec:
   workloadSelector:
     labels:
@@ -99,5 +98,4 @@ spec:
           - dimensions:
               response_code: response.code
               destination_pod_ip: upstream.address
-{{- end }}
 {{- end }}

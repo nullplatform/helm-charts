@@ -1,0 +1,24 @@
+apiVersion: v2
+name: istio-metrics
+description: Nullplatform Istio metrics enrichment for Kubernetes applications
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - nullplatform
+  - istio
+  - metrics
+  - prometheus
+  - kubernetes
+  - observability
+home: https://nullplatform.com
+sources:
+  - https://github.com/nullplatform/infrastructure-nullplatform-helm-charts
+maintainers:
+  - name: Nullplatform
+    email: support@nullplatform.com
+dependencies:
+  - name: prometheus
+    version: "25.8.0"
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: prometheus.enabled

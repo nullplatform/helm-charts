@@ -1,0 +1,67 @@
+# Default values for istio-metrics.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Prometheus configuration
+prometheus:
+  # Enable/disable Prometheus installation
+  enabled: false
+  # Override default namespace if prometheus.enabled=true
+  namespaceOverride: "prometheus"
+  
+  # Prometheus server configuration
+  server:
+    persistentVolume:
+      size: 8Gi
+    retention: "15d"
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+    
+    # Additional scrape configs to include
+    extraScrapeConfigs: |
+      - job_name: 'k8s-labels-exporter'
+        static_configs:
+          - targets: ['k8s-labels-exporter.prometheus:9101']
+    
+    # Recording rules will be automatically added by our templates
+    serverFiles:
+      recording_rules.yml:
+        groups: []
+
+# Namespace where Prometheus is/will be installed
+# This is used whether installing Prometheus via this chart or using an existing installation
+prometheusNamespace: "prometheus"
+
+# Namespace where Istio gateways are installed
+gatewaysNamespace: "gateways"
+
+# Gateway names configuration
+gateway:
+  public:
+    name: "gateway-public"
+  internal:
+    enabled: true
+    name: "gateway-private"
+
+# K8s labels exporter configuration
+exporter:
+  enabled: true
+  image: "python:3.11-slim"
+  port: 9101
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# Prometheus recording rules configuration
+recordingRules:
+  enabled: true
+  # ConfigMap name where Prometheus server configuration is stored
+  # This is used when Prometheus is installed externally
+  prometheusConfigMap: "prometheus-server"
+  # The key in the ConfigMap that contains the prometheus.yml configuration
+  prometheusConfigKey: "prometheus.yml"
