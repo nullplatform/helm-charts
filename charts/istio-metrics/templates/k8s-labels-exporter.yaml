@@ -1,11 +1,11 @@
-{{- if and .Values.logging.enabled (eq .Values.logging.mode "istio-metrics") }}
+{{- if .Values.exporter.enabled }}
 ---
 # ConfigMap with the Python script
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: k8s-labels-exporter-script
-  namespace: {{ .Values.logging.istioMetrics.prometheusNamespace }}
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
 data:
   exporter.py: |
     #!/usr/bin/env python3
@@ -164,7 +164,7 @@ data:
                 time.sleep(5)
 
     def main():
-        port = {{ .Values.logging.istioMetrics.exporter.port }}
+        port = {{ .Values.exporter.port }}
 
         # Start Prometheus metrics server
         start_http_server(port)
@@ -196,7 +196,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: k8s-labels-exporter
-  namespace: {{ .Values.logging.istioMetrics.prometheusNamespace }}
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
 ---
 # ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -220,14 +220,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: k8s-labels-exporter
-  namespace: {{ .Values.logging.istioMetrics.prometheusNamespace }}
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
 ---
 # Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: k8s-labels-exporter
-  namespace: {{ .Values.logging.istioMetrics.prometheusNamespace }}
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
   labels:
     app: k8s-labels-exporter
 spec:
@@ -241,7 +241,7 @@ spec:
         app: k8s-labels-exporter
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "{{ .Values.logging.istioMetrics.exporter.port }}"
+        prometheus.io/port: "{{ .Values.exporter.port }}"
         prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: k8s-labels-exporter
@@ -252,7 +252,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: exporter
-        image: {{ .Values.logging.istioMetrics.exporter.image }}
+        image: {{ .Values.exporter.image }}
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
@@ -269,23 +269,23 @@ spec:
           pip install --user --no-cache-dir prometheus-client==0.19.0 kubernetes==28.1.0 && \
           python /app/exporter.py
         ports:
-        - containerPort: {{ .Values.logging.istioMetrics.exporter.port }}
+        - containerPort: {{ .Values.exporter.port }}
           name: metrics
         volumeMounts:
         - name: script
           mountPath: /app
         resources:
-          {{- toYaml .Values.logging.istioMetrics.exporter.resources | nindent 10 }}
+          {{- toYaml .Values.exporter.resources | nindent 10 }}
         livenessProbe:
           httpGet:
             path: /metrics
-            port: {{ .Values.logging.istioMetrics.exporter.port }}
+            port: {{ .Values.exporter.port }}
           initialDelaySeconds: 30
           periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /metrics
-            port: {{ .Values.logging.istioMetrics.exporter.port }}
+            port: {{ .Values.exporter.port }}
           initialDelaySeconds: 20
           periodSeconds: 10
       volumes:
@@ -298,14 +298,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: k8s-labels-exporter
-  namespace: {{ .Values.logging.istioMetrics.prometheusNamespace }}
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
   labels:
     app: k8s-labels-exporter
 spec:
   type: ClusterIP
   ports:
-  - port: {{ .Values.logging.istioMetrics.exporter.port }}
-    targetPort: {{ .Values.logging.istioMetrics.exporter.port }}
+  - port: {{ .Values.exporter.port }}
+    targetPort: {{ .Values.exporter.port }}
     protocol: TCP
     name: metrics
   selector:

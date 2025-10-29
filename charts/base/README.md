@@ -32,7 +32,6 @@ The following table lists the configurable parameters of the Null chart and thei
 | `tls.secretName`            | Name of the TLS secret                                            | `""`                               |
 | `tls.required`              | Require TLS secret name to be provided                           | `true`                             |
 | `logging.enabled`           | Enable logging functionality                                      | `true`                             |
-| `logging.mode`              | Logging mode ("controller" or "istio-metrics")                   | `"controller"`                     |
 | `logging.gelf.enabled`      | Enable GELF logging                                               | `false`                            |
 | `logging.loki.enabled`      | Enable Loki logging                                               | `false`                            |
 | `logging.datadog.enabled`   | Enable Datadog logging                                            | `false`                            |
@@ -46,34 +45,6 @@ The following table lists the configurable parameters of the Null chart and thei
 | `imagePullSecrets.password` | Password for container registry                                   | `""`                               |
 
 For a complete list of configurable options, please refer to the `values.yaml` file.
-
-## Logging Modes
-
-The chart supports two logging modes:
-
-### Controller Mode (Default)
-The traditional approach using the nullplatform log controller DaemonSet. This mode collects logs from all pods and forwards them to configured destinations.
-
-### Istio Metrics Mode
-An alternative approach that leverages Istio gateway metrics enriched with Kubernetes labels. This mode:
-- Requires Istio and Prometheus to be installed
-- Deploys a K8s labels exporter that watches all services and pods
-- Creates Prometheus recording rules to join Istio metrics with K8s labels
-- Adds response code dimensions to Istio metrics via Telemetry and EnvoyFilter
-
-To enable Istio metrics mode:
-
-```bash
-helm install my-release nullplatform/nullplatform-base \
-  --set logging.mode=istio-metrics \
-  --set logging.istioMetrics.prometheusNamespace=prometheus \
-  --set logging.istioMetrics.gatewaysNamespace=gateways
-```
-
-**Prerequisites for istio-metrics mode:**
-- Istio installed with gateway API
-- Prometheus installed and configured to scrape Istio metrics
-- Gateway pods labeled with `gateway.networking.k8s.io/gateway-name`
 
 ## Uninstalling the chart
 

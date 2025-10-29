@@ -1,4 +1,4 @@
-{{- if and .Values.logging.enabled (eq .Values.logging.mode "controller") }}
+{{- if .Values.logging.enabled }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
