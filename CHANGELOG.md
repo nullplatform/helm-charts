@@ -1,3 +1,19 @@
+# [2.18.0](https://github.com/nullplatform/helm-charts/compare/2.17.0...2.18.0) (2025-10-30)
+
+
+### Bug Fixes
+
+* **istio-metrics:** added enabled property to gateway.public ([499db1e](https://github.com/nullplatform/helm-charts/commit/499db1e8a03ba8f2481475dccb9fc8bb496fe7be))
+* **istio-metrics:** removed keys ([7cf3504](https://github.com/nullplatform/helm-charts/commit/7cf3504448c78fa54915feed6fdd83e45f4718c6))
+
+
+### Features
+
+* **base:** Add Istio metrics mode as alternative to log controller ([f2ea251](https://github.com/nullplatform/helm-charts/commit/f2ea25190723d2798975661e52fe0add4d544ecb))
+* **base:** remove job ([faa6ee3](https://github.com/nullplatform/helm-charts/commit/faa6ee31b7d251ea4e4dd5e5c91fd00010c95dbd))
+* **istio-metrics:** Add Prometheus ConfigMap patching capability ([8c6c279](https://github.com/nullplatform/helm-charts/commit/8c6c27934d2205900dba0bb4181da41a23e25ab0))
+* **istio-metrics:** Extract istio metrics into separate chart ([905e115](https://github.com/nullplatform/helm-charts/commit/905e1153939c47aa6e32d2b3cacd968c45676c9d))
+
 # [2.17.0](https://github.com/nullplatform/helm-charts/compare/2.16.1...2.17.0) (2025-10-29)
 
 
