@@ -1,7 +1,7 @@
 # Global settings
 global:
   installGatewayV2Crd: true
-  # Kubernetes provider (options: "oks", "gke", "eks", "aks")
+  # Kubernetes provider (options: "oks", "gke", "eks", "aks","aro")
   provider: "eks"
   # AWS region (applicable for EKS provider)
   awsRegion: "us-east-1"
@@ -12,6 +12,8 @@ namespaces:
   nullplatformTools: "nullplatform-tools"
   gateway: "gateways"
 # TLS configuration
+hostnamezone:
+  name: ""
 tls:
   required: true
   # Name of the TLS secret
