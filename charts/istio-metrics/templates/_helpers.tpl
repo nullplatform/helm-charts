@@ -52,9 +52,5 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Get the prometheus namespace
 */}}
 {{- define "istio-metrics.prometheusNamespace" -}}
-{{- if .Values.prometheus.enabled -}}
-{{- .Values.prometheus.namespaceOverride | default .Values.prometheusNamespace -}}
-{{- else -}}
-{{- .Values.prometheusNamespace -}}
-{{- end -}}
+{{- .Values.prometheus.namespace -}}
 {{- end -}}

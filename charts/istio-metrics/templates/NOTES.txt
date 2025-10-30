@@ -1,18 +1,50 @@
 1. Nullplatform Istio Metrics has been installed successfully!
 
-{{- if .Values.prometheus.enabled }}
-
-Prometheus has been deployed as part of this installation:
-- Namespace: {{ include "istio-metrics.prometheusNamespace" . }}
-- Access the Prometheus UI:
-  kubectl port-forward -n {{ include "istio-metrics.prometheusNamespace" . }} svc/{{ .Release.Name }}-prometheus-server 9090:80
-
-{{- else }}
+{{- if not .Values.prometheus.install }}
 
 Prometheus is NOT being installed. Please ensure you have Prometheus running in namespace: {{ include "istio-metrics.prometheusNamespace" . }}
 
-To install Prometheus with this chart, upgrade with:
-  helm upgrade {{ .Release.Name }} nullplatform/istio-metrics --set prometheus.enabled=true
+{{- if .Values.prometheus.configMap.create }}
+📋 A complete Prometheus ConfigMap has been created: {{ .Values.prometheus.configMap.name }}
+
+For existing Prometheus installations, you have two options:
+
+Option 1: Update your existing Prometheus to use our ConfigMap:
+  kubectl set volume deployment/prometheus-server -n {{ include "istio-metrics.prometheusNamespace" . }} \
+    --add --name=config-volume --type=configmap \
+    --configmap={{ .Values.prometheus.configMap.name }} --overwrite
+
+Option 2: Manually add our recording rules to your existing Prometheus config.
+  View the recording rules: kubectl get configmap {{ .Values.prometheus.configMap.name }} -n {{ include "istio-metrics.prometheusNamespace" . }} -o yaml
+{{- end }}
+
+To install Prometheus with this chart (with recording rules included):
+  helm upgrade {{ .Release.Name }} ./charts/istio-metrics \
+    --set prometheus.install=true \
+    --set prometheus.server.configMapOverrideName={{ .Values.prometheus.configMap.name }} \
+    --set prometheus.configMap.create=true
+
+{{- else }}
+
+Prometheus has been deployed as part of this installation:
+- Namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+
+{{- if and .Values.prometheus.configMap.create (not .Values.prometheus.server.configMapOverrideName) }}
+⚠️  WARNING: You have enabled both Prometheus installation and ConfigMap creation,
+but prometheus.server.configMapOverrideName is not set. 
+
+Prometheus is using its auto-generated ConfigMap WITHOUT the recording rules!
+
+To fix this, upgrade with:
+  helm upgrade {{ .Release.Name }} ./charts/istio-metrics \
+    --reuse-values \
+    --set prometheus.server.configMapOverrideName={{ .Values.prometheus.configMap.name }}
+{{- else if .Values.prometheus.server.configMapOverrideName }}
+✅ Prometheus is configured to use ConfigMap: {{ .Values.prometheus.server.configMapOverrideName }}
+{{- end }}
+
+- Access the Prometheus UI:
+  kubectl port-forward -n {{ include "istio-metrics.prometheusNamespace" . }} svc/{{ .Release.Name }}-prometheus-server 9090:80
 
 {{- end }}
 
@@ -23,20 +55,23 @@ Components deployed:
 {{- if .Values.recordingRules.enabled }}
 - Prometheus recording rules ConfigMap created: {{ .Values.recordingRules.name }}
 {{- end }}
-{{- if .Values.prometheusConfig.create }}
-- Complete Prometheus ConfigMap created: {{ .Values.prometheusConfig.name }}
+{{- if .Values.prometheus.configMap.create }}
+- Complete Prometheus ConfigMap created: {{ .Values.prometheus.configMap.name }}
 {{- end }}
-- Istio Telemetry and EnvoyFilter resources created in namespace: {{ .Values.gatewaysNamespace }}
+- Istio Telemetry and EnvoyFilter resources created in namespace: {{ .Values.gateway.namespace }}
 
 Prerequisites check:
 - Ensure Istio is installed with gateway API
-- Ensure gateways are installed in namespace: {{ .Values.gatewaysNamespace }}
+- Ensure gateways are installed in namespace: {{ .Values.gateway.namespace }}
 - Gateway pods must be labeled with: gateway.networking.k8s.io/gateway-name
 
 To verify the setup:
 kubectl get deployment k8s-labels-exporter -n {{ include "istio-metrics.prometheusNamespace" . }}
-kubectl get configmap prometheus-recording-rules -n {{ include "istio-metrics.prometheusNamespace" . }}
-kubectl get telemetry,envoyfilter -n {{ .Values.gatewaysNamespace }}
+kubectl get configmap {{ .Values.recordingRules.name }} -n {{ include "istio-metrics.prometheusNamespace" . }}
+{{- if .Values.prometheus.configMap.create }}
+kubectl get configmap {{ .Values.prometheus.configMap.name }} -n {{ include "istio-metrics.prometheusNamespace" . }}
+{{- end }}
+kubectl get telemetry,envoyfilter -n {{ .Values.gateway.namespace }}
 
 Enriched metrics will be available at:
 - np_requests_total_enriched
@@ -47,6 +82,9 @@ Enriched metrics will be available at:
 - np_container_cpu_usage_percent_enriched
 - np_container_memory_usage_bytes_enriched
 - np_container_memory_usage_percent_enriched
-- np_container_restarts_enriched
-- np_pod_ready_enriched
-- np_pod_phase_enriched
+- np_kube_pod_status_ready_enriched
+- np_kube_pod_container_status_ready_enriched
+- np_kube_pod_container_status_restarts_total_enriched
+- np_kube_pod_container_status_running_enriched
+- np_kube_pod_container_status_waiting_enriched
+- np_kube_pod_container_status_terminated_enriched

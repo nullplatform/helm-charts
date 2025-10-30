@@ -3,7 +3,7 @@ apiVersion: telemetry.istio.io/v1alpha1
 kind: Telemetry
 metadata:
   name: gateway-metrics-response-code
-  namespace: {{ .Values.gatewaysNamespace }}
+  namespace: {{ .Values.gateway.namespace }}
 spec:
   metrics:
   - providers:
@@ -43,7 +43,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: stats-filter-response-code
-  namespace: {{ .Values.gatewaysNamespace }}
+  namespace: {{ .Values.gateway.namespace }}
 spec:
   workloadSelector:
     labels:
@@ -75,7 +75,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
 metadata:
   name: stats-filter-response-code-private
-  namespace: {{ .Values.gatewaysNamespace }}
+  namespace: {{ .Values.gateway.namespace }}
 spec:
   workloadSelector:
     labels:
