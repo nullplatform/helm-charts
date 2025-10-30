@@ -3,7 +3,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  {{- if .Values.prometheus.enabled }}
+  # When Prometheus is installed by this chart, use the name it expects
+  name: {{ .Release.Name }}-prometheus-server
+  {{- else }}
+  # When using external Prometheus, use the configured name
   name: {{ .Values.prometheusConfig.name }}
+  {{- end }}
   namespace: {{ include "istio-metrics.prometheusNamespace" . }}
   labels:
     {{- include "istio-metrics.labels" . | nindent 4 }}

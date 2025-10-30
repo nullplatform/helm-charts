@@ -23,12 +23,6 @@ prometheus:
       - job_name: 'k8s-labels-exporter'
         static_configs:
           - targets: ['k8s-labels-exporter.prometheus:9101']
-    
-    # Recording rules will be automatically added by our templates
-    serverFiles:
-      recording_rules.yml:
-        groups: []
-
 # Namespace where Prometheus is/will be installed
 # This is used whether installing Prometheus via this chart or using an existing installation
 prometheusNamespace: "prometheus"
