@@ -39,6 +39,7 @@ gatewaysNamespace: "gateways"
 # Gateway names configuration
 gateway:
   public:
+    enabled: true
     name: "gateway-public"
   internal:
     enabled: true
