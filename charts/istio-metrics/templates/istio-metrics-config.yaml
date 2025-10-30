@@ -37,6 +37,7 @@ spec:
           value: response.code | "unknown"
         destination_pod_ip:
           value: destination.ip | "unknown"
+{{- if .Values.gateway.public.enabled }}
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
@@ -67,6 +68,7 @@ spec:
           - dimensions:
               response_code: response.code
               destination_pod_ip: upstream.address
+{{- end }}
 {{- if .Values.gateway.internal.enabled }}
 ---
 apiVersion: networking.istio.io/v1alpha3
