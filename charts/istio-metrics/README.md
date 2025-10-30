@@ -18,6 +18,15 @@ The istio-metrics chart:
 - Gateway pods labeled with `gateway.networking.k8s.io/gateway-name`
 - Prometheus (can be installed via this chart)
 
+## Migration from v0.x to v1.x
+
+If you're upgrading from an older version, note these breaking changes:
+- `prometheus.enabled` → `prometheus.install`
+- `prometheus.namespaceOverride` → `prometheus.namespace`
+- `prometheusNamespace` → `prometheus.namespace` (moved under prometheus section)
+- `gatewaysNamespace` → `gateway.namespace` (moved under gateway section)
+- `prometheusConfig.*` → `prometheus.configMap.*` (moved under prometheus section)
+
 ## Installing the Chart
 
 To install the chart with the release name `my-istio-metrics`:
@@ -33,7 +42,7 @@ To install the chart with Prometheus included:
 
 ```bash
 helm install my-istio-metrics nullplatform/istio-metrics \
-  --set prometheus.enabled=true
+  --set prometheus.install=true
 ```
 
 ### Using with existing Prometheus
@@ -42,8 +51,8 @@ If you already have Prometheus installed, ensure it's in the correct namespace:
 
 ```bash
 helm install my-istio-metrics nullplatform/istio-metrics \
-  --set prometheusNamespace=monitoring \
-  --set gatewaysNamespace=istio-system
+  --set prometheus.namespace=monitoring \
+  --set gateway.namespace=istio-system
 ```
 
 ### Creating a Complete Prometheus ConfigMap
@@ -53,8 +62,8 @@ If you need to create a complete Prometheus ConfigMap with the recording rules i
 ```bash
 # Create Prometheus ConfigMap with default configuration
 helm install my-istio-metrics nullplatform/istio-metrics \
-  --set prometheusConfig.create=true \
-  --set prometheusConfig.name=my-prometheus-server
+  --set prometheus.configMap.create=true \
+  --set prometheus.configMap.name=my-prometheus-server
 
 # Create Prometheus ConfigMap with custom configuration
 cat > my-prometheus-config.yaml <<EOF
@@ -72,9 +81,9 @@ recording_rules.yml: |
 EOF
 
 helm install my-istio-metrics nullplatform/istio-metrics \
-  --set prometheusConfig.create=true \
-  --set prometheusConfig.name=my-prometheus-server \
-  --set-file prometheusConfig.customConfig=my-prometheus-config.yaml
+  --set prometheus.configMap.create=true \
+  --set prometheus.configMap.name=my-prometheus-server \
+  --set-file prometheus.configMap.customConfig=my-prometheus-config.yaml
 ```
 
 ### Using Standalone Recording Rules
@@ -95,25 +104,29 @@ The following table lists the configurable parameters and their default values:
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `prometheus.enabled` | Enable Prometheus installation | `false` |
-| `prometheus.namespaceOverride` | Override namespace for Prometheus | `"prometheus"` |
+| **Prometheus Configuration** | | |
+| `prometheus.install` | Install Prometheus via this chart | `false` |
+| `prometheus.namespace` | Namespace where Prometheus is/will be installed | `"prometheus"` |
 | `prometheus.server.persistentVolume.size` | Prometheus PV size | `8Gi` |
 | `prometheus.server.retention` | Prometheus data retention | `"15d"` |
-| `prometheusNamespace` | Namespace where Prometheus is/will be installed | `"prometheus"` |
-| `gatewaysNamespace` | Namespace where Istio gateways are installed | `"gateways"` |
+| `prometheus.configMap.create` | Create complete Prometheus ConfigMap | `false` |
+| `prometheus.configMap.name` | Name of Prometheus ConfigMap to create | `"prometheus-server"` |
+| `prometheus.configMap.customConfig` | Custom ConfigMap data (replaces default) | `{}` |
+| `prometheus.configMap.additionalScrapeConfigs` | Additional scrape configs for default config | `""` |
+| **Gateway Configuration** | | |
+| `gateway.namespace` | Namespace where Istio gateways are installed | `"gateways"` |
+| `gateway.public.enabled` | Enable metrics for public gateway | `true` |
 | `gateway.public.name` | Name of the public gateway | `"gateway-public"` |
 | `gateway.internal.enabled` | Enable metrics for internal gateway | `true` |
 | `gateway.internal.name` | Name of the internal gateway | `"gateway-private"` |
+| **K8s Labels Exporter** | | |
 | `exporter.enabled` | Enable K8s labels exporter | `true` |
 | `exporter.image` | Image for the exporter | `"python:3.11-slim"` |
 | `exporter.port` | Port for the exporter metrics | `9101` |
 | `exporter.resources` | Resources for the exporter | See values.yaml |
+| **Recording Rules** | | |
 | `recordingRules.enabled` | Enable Prometheus recording rules ConfigMap | `true` |
 | `recordingRules.name` | Name of the recording rules ConfigMap | `"prometheus-recording-rules"` |
-| `prometheusConfig.create` | Create complete Prometheus ConfigMap | `false` |
-| `prometheusConfig.name` | Name of Prometheus ConfigMap to create | `"prometheus-server"` |
-| `prometheusConfig.customConfig` | Custom ConfigMap data (replaces default) | `{}` |
-| `prometheusConfig.additionalScrapeConfigs` | Additional scrape configs for default config | `""` |
 
 ## Enriched Metrics
 
@@ -130,11 +143,14 @@ After installation, the following enriched metrics will be available:
 - `np_container_cpu_usage_percent_enriched` - CPU usage percentage
 - `np_container_memory_usage_bytes_enriched` - Memory usage
 - `np_container_memory_usage_percent_enriched` - Memory usage percentage
-- `np_container_restarts_enriched` - Container restart count
 
 ### Pod Status Metrics
-- `np_pod_ready_enriched` - Pod ready status
-- `np_pod_phase_enriched` - Pod phase (Running, Pending, etc.)
+- `np_kube_pod_status_ready_enriched` - Pod ready status
+- `np_kube_pod_container_status_ready_enriched` - Container ready status
+- `np_kube_pod_container_status_restarts_total_enriched` - Container restart count
+- `np_kube_pod_container_status_running_enriched` - Container running status
+- `np_kube_pod_container_status_waiting_enriched` - Container waiting status
+- `np_kube_pod_container_status_terminated_enriched` - Container terminated status
 
 All metrics include these K8s labels:
 - `account`, `account_id`
