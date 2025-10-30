@@ -11,11 +11,11 @@
 To ensure we have letsencrypt certificates provisioned by (cert-manager)[]
 
 ```bash
-helm install cert-manager-config nullplatform/cert-manager-config \
+helm install cert-manager-config nullplatform/nullplatform-cert-manager-config \
   --set azure.enabled=true \
-  --set azure.subscriptionId=1231234-1231-23 \
+  --set azure.subscriptionID=1231234-1231-23 \
   --set azure.resourceGroupName=my-resource-group \
-  --set azure.clientId=23432-23423-23423 \
+  --set azure.clientID=23432-23423-23423 \
   --set hostedZoneName=my-poc.nullapps.io \
   --set azure.secretKey=client-secret \
   --set azure.clientSecret="" \
@@ -24,7 +24,7 @@ helm install cert-manager-config nullplatform/cert-manager-config \
 ```
 
 ```bash
-helm install cert-manager-config nullplatform/cert-manager-config \
+helm install cert-manager-config nullplatform/nullplatform-cert-manager-config \
   --set gcp.enabled=true \
   --set gcp.projectId=my-project \
   --set gcp.serviceAccountKey=my-key \
