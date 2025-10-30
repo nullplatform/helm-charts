@@ -5,9 +5,10 @@
 # Prometheus configuration
 prometheus:
   # Enable/disable Prometheus installation
-  enabled: false
-  # Override default namespace if prometheus.enabled=true
-  namespaceOverride: "prometheus"
+  install: false
+  # Namespace where Prometheus is/will be installed
+  # This is used whether installing Prometheus via this chart or using an existing installation
+  namespace: "prometheus"
   
   # Prometheus server configuration
   server:
@@ -23,15 +24,37 @@ prometheus:
       - job_name: 'k8s-labels-exporter'
         static_configs:
           - targets: ['k8s-labels-exporter.prometheus:9101']
-# Namespace where Prometheus is/will be installed
-# This is used whether installing Prometheus via this chart or using an existing installation
-prometheusNamespace: "prometheus"
+  
+  # ConfigMap configuration
+  # Use this to create a complete Prometheus ConfigMap with our recording rules included
+  configMap:
+    # Enable creation of Prometheus ConfigMap
+    create: false
+    
+    # Name of the ConfigMap to create
+    name: "prometheus-server"
+    
+    # Custom configuration - if provided, this completely replaces the default
+    # Example:
+    # customConfig:
+    #   prometheus.yml: |
+    #     global:
+    #       scrape_interval: 15s
+    #     rule_files:
+    #       - /etc/config/recording_rules.yml
+    #   recording_rules.yml: |
+    #     groups:
+    #       - name: my_rules
+    #         rules: []
+    customConfig: {}
+    
+    # Additional scrape configs to append (only used when customConfig is empty)
+    additionalScrapeConfigs: ""
 
-# Namespace where Istio gateways are installed
-gatewaysNamespace: "gateways"
-
-# Gateway names configuration
+# Gateway configuration
 gateway:
+  # Namespace where Istio gateways are installed
+  namespace: "gateways"
   public:
     enabled: true
     name: "gateway-public"
@@ -58,29 +81,3 @@ recordingRules:
   # Creates a standalone ConfigMap with recording rules
   # This can be referenced by your Prometheus configuration
   name: "prometheus-recording-rules"
-
-# Prometheus ConfigMap configuration
-# Use this to create a complete Prometheus ConfigMap with our recording rules included
-prometheusConfig:
-  # Enable creation of Prometheus ConfigMap
-  create: false
-  
-  # Name of the ConfigMap to create
-  name: "prometheus-server"
-  
-  # Custom configuration - if provided, this completely replaces the default
-  # Example:
-  # customConfig:
-  #   prometheus.yml: |
-  #     global:
-  #       scrape_interval: 15s
-  #     rule_files:
-  #       - /etc/config/recording_rules.yml
-  #   recording_rules.yml: |
-  #     groups:
-  #       - name: my_rules
-  #         rules: []
-  customConfig: {}
-  
-  # Additional scrape configs to append (only used when customConfig is empty)
-  additionalScrapeConfigs: ""

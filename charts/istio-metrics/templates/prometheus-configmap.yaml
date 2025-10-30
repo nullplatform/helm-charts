@@ -1,22 +1,22 @@
-{{- if .Values.prometheusConfig.create }}
+{{- if .Values.prometheus.configMap.create }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  {{- if .Values.prometheus.enabled }}
+  {{- if .Values.prometheus.install }}
   # When Prometheus is installed by this chart, use the name it expects
   name: {{ .Release.Name }}-prometheus-server
   {{- else }}
   # When using external Prometheus, use the configured name
-  name: {{ .Values.prometheusConfig.name }}
+  name: {{ .Values.prometheus.configMap.name }}
   {{- end }}
   namespace: {{ include "istio-metrics.prometheusNamespace" . }}
   labels:
     {{- include "istio-metrics.labels" . | nindent 4 }}
 data:
-  {{- if .Values.prometheusConfig.customConfig }}
+  {{- if .Values.prometheus.configMap.customConfig }}
   # User-provided custom configuration
-  {{- toYaml .Values.prometheusConfig.customConfig | nindent 2 }}
+  {{- toYaml .Values.prometheus.configMap.customConfig | nindent 2 }}
   {{- else }}
   # Default Prometheus configuration
   alerting_rules.yml: |
@@ -334,8 +334,8 @@ data:
     - job_name: 'k8s-labels-exporter'
       static_configs:
         - targets: ['k8s-labels-exporter:{{ .Values.exporter.port }}']
-    {{- if .Values.prometheusConfig.additionalScrapeConfigs }}
-    {{- .Values.prometheusConfig.additionalScrapeConfigs | nindent 4 }}
+    {{- if .Values.prometheus.configMap.additionalScrapeConfigs }}
+    {{- .Values.prometheus.configMap.additionalScrapeConfigs | nindent 4 }}
     {{- end }}
     alerting:
       alertmanagers:
