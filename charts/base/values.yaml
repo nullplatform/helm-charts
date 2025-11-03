@@ -14,12 +14,12 @@ namespaces:
 
 ingressControllers:
   public:
-    name: ""
+    name: "internet-facing"
     enabled: false
     scope: External
     domain: ""
   private:
-    name: ""
+    name: "internal"
     enabled: false
     scope: Internal
     domain: ""
