@@ -1,3 +1,11 @@
+# [2.19.0](https://github.com/nullplatform/helm-charts/compare/2.18.0...2.19.0) (2025-11-03)
+
+
+### Features
+
+* add private controller ([ec76c01](https://github.com/nullplatform/helm-charts/commit/ec76c0197e0e6bb43072d36c05b4b2b291054d04))
+* edit values with ingresscontroler ([821945e](https://github.com/nullplatform/helm-charts/commit/821945edd6f9ae9873d8b58677b4de1d0c7de104))
+
 # [2.18.0](https://github.com/nullplatform/helm-charts/compare/2.17.0...2.18.0) (2025-10-30)
 
 
