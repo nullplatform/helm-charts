@@ -11,9 +11,19 @@ namespaces:
   nullplatformApplications: "nullplatform"
   nullplatformTools: "nullplatform-tools"
   gateway: "gateways"
+
+ingressControllers:
+  public:
+    name: ""
+    enabled: false
+    scope: External
+    domain: ""
+  private:
+    name: ""
+    enabled: false
+    scope: Internal
+    domain: ""
 # TLS configuration
-hostnamezone:
-  name: ""
 tls:
   required: true
   # Name of the TLS secret
