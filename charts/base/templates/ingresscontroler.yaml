@@ -1,23 +1,76 @@
 {{- if eq .Values.global.provider "aro" }}
+{{- if .Values.ingressControllers.public.enabled }}
 apiVersion: operator.openshift.io/v1
 kind: IngressController
 metadata:
-  name: nullplatform-domain
+  name: {{ .Values.ingressControllers.public.name }}
   namespace: openshift-ingress-operator
 spec:
   defaultCertificate:
-    name: wildcard-tls
-  domain: "{{ .Values.hostnamezone.name }}"
+    name: {{ .Values.tls.secretName }}
+  domain: {{ .Values.ingressControllers.public.domain }}
   endpointPublishingStrategy:
-    loadBalancer:
-      scope: External
     type: LoadBalancerService
+    loadBalancer:
+      scope: {{ .Values.ingressControllers.public.scope }}
   nodePlacement:
     nodeSelector:
       matchLabels:
-        node-role.kubernetes.io/worker: ""
+        kubernetes.io/os: linux
+        node-role.kubernetes.io/master: ""
+    tolerations:
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node.kubernetes.io/not-ready"
+      operator: "Exists"
+      effect: "NoExecute"
+      tolerationSeconds: 120
+    - key: "node.kubernetes.io/unreachable"
+      operator: "Exists"
+      effect: "NoExecute"
+      tolerationSeconds: 120
   replicas: 2
   routeSelector:
     matchLabels:
       type: custom-domain
+---
+{{- end }}
+{{- if .Values.ingressControllers.private.enabled }}
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: {{ .Values.ingressControllers.private.name }}
+  namespace: openshift-ingress-operator
+spec:
+  defaultCertificate:
+    name: {{ .Values.tls.secretName }}
+  domain: {{ .Values.ingressControllers.private.domain }}
+  endpointPublishingStrategy:
+    type: LoadBalancerService
+    loadBalancer:
+      scope: {{ .Values.ingressControllers.private.scope }}
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        kubernetes.io/os: linux
+        node-role.kubernetes.io/master: ""
+    tolerations:
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node.kubernetes.io/not-ready"
+      operator: "Exists"
+      effect: "NoExecute"
+      tolerationSeconds: 120
+    - key: "node.kubernetes.io/unreachable"
+      operator: "Exists"
+      effect: "NoExecute"
+      tolerationSeconds: 120
+  replicas: 2
+  routeSelector:
+    matchLabels:
+      type: custom-domain
+---
+{{- end }}
 {{- end }}
