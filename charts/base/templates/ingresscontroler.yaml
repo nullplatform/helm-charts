@@ -13,6 +13,7 @@ spec:
     type: LoadBalancerService
     loadBalancer:
       scope: {{ .Values.ingressControllers.public.scope }}
+      dnsManagementPolicy: Unmanaged
   nodePlacement:
     nodeSelector:
       matchLabels:
@@ -50,6 +51,7 @@ spec:
     type: LoadBalancerService
     loadBalancer:
       scope: {{ .Values.ingressControllers.private.scope }}
+      dnsManagementPolicy: Unmanaged
   nodePlacement:
     nodeSelector:
       matchLabels:
