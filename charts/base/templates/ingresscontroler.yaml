@@ -33,7 +33,7 @@ spec:
   replicas: 2
   routeSelector:
     matchLabels:
-      type: custom-domain
+      type: internet-facing
 ---
 {{- end }}
 {{- if .Values.ingressControllers.private.enabled }}
@@ -70,7 +70,7 @@ spec:
   replicas: 2
   routeSelector:
     matchLabels:
-      type: custom-domain
+      type: internal
 ---
 {{- end }}
 {{- end }}
