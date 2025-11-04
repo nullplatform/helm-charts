@@ -1,3 +1,10 @@
+## [2.21.1](https://github.com/nullplatform/helm-charts/compare/2.21.0...2.21.1) (2025-11-04)
+
+
+### Bug Fixes
+
+* dnsManagementPolicy is now  Unmanaged ([5aebed0](https://github.com/nullplatform/helm-charts/commit/5aebed0a9b99d75947835981dc6591133d84f6bb))
+
 # [2.21.0](https://github.com/nullplatform/helm-charts/compare/2.20.0...2.21.0) (2025-11-04)
 
 
