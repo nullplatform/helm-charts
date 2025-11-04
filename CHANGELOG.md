@@ -1,3 +1,10 @@
+# [2.22.0](https://github.com/nullplatform/helm-charts/compare/2.21.2...2.22.0) (2025-11-04)
+
+
+### Features
+
+* **base:** edit certifcate name for ingress controller internal ([79925be](https://github.com/nullplatform/helm-charts/commit/79925be7196fb9b783fb60a6ca4692763fd422ec))
+
 ## [2.21.2](https://github.com/nullplatform/helm-charts/compare/2.21.1...2.21.2) (2025-11-04)
 
 
