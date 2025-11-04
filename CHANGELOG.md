@@ -1,3 +1,10 @@
+# [2.21.0](https://github.com/nullplatform/helm-charts/compare/2.20.0...2.21.0) (2025-11-04)
+
+
+### Features
+
+* **aro:** disambiguate ingresses for internal/external ([0c50c5c](https://github.com/nullplatform/helm-charts/commit/0c50c5c2088d2e12ae882916cabca6eb75ac893d))
+
 # [2.20.0](https://github.com/nullplatform/helm-charts/compare/2.19.0...2.20.0) (2025-11-04)
 
 
