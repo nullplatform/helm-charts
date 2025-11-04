@@ -1,3 +1,10 @@
+# [2.20.0](https://github.com/nullplatform/helm-charts/compare/2.19.0...2.20.0) (2025-11-04)
+
+
+### Features
+
+* **base:** add SecurityContextConstraints to ARO ([3a2a258](https://github.com/nullplatform/helm-charts/commit/3a2a258c60cf0c320cc057fe4d025c56e84596f7))
+
 # [2.19.0](https://github.com/nullplatform/helm-charts/compare/2.18.0...2.19.0) (2025-11-03)
 
 
