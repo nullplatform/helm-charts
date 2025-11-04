@@ -45,7 +45,7 @@ metadata:
   namespace: openshift-ingress-operator
 spec:
   defaultCertificate:
-    name: {{ .Values.tls.secretName }}
+    name: "wildcard-tls-internal"
   domain: {{ .Values.ingressControllers.private.domain }}
   endpointPublishingStrategy:
     type: LoadBalancerService
