@@ -18,4 +18,4 @@ cloudflare:
   secretName: cloudflare-api-token-secret
 namespacecontroller:
   name: " "
-               
+secretName: "wildcard-tls"
