@@ -1,3 +1,10 @@
+## [2.21.2](https://github.com/nullplatform/helm-charts/compare/2.21.1...2.21.2) (2025-11-04)
+
+
+### Bug Fixes
+
+* secretName can be configured for cert manager ([2ded9dc](https://github.com/nullplatform/helm-charts/commit/2ded9dc4877af0934e80135252712f2eb277e2cb))
+
 ## [2.21.1](https://github.com/nullplatform/helm-charts/compare/2.21.0...2.21.1) (2025-11-04)
 
 
