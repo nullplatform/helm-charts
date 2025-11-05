@@ -1,3 +1,10 @@
+## [2.22.1](https://github.com/nullplatform/helm-charts/compare/2.22.0...2.22.1) (2025-11-05)
+
+
+### Bug Fixes
+
+* removed security context constraints for aro since they don't work ([ee1c033](https://github.com/nullplatform/helm-charts/commit/ee1c03350497dadecb9480bdb386e0727674dbb6))
+
 # [2.22.0](https://github.com/nullplatform/helm-charts/compare/2.21.2...2.22.0) (2025-11-04)
 
 
