@@ -1,0 +1,67 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPVolumeTypes
+metadata:
+  generation: 1
+  labels:
+    kustomize.toolkit.fluxcd.io/name: root-sync-gatekeeper-crs
+    kustomize.toolkit.fluxcd.io/namespace: flux-system
+  name: all-constraint-volumetypes
+spec:
+  enforcementAction: deny
+  match:
+    excludedNamespaces:
+    - kube-system
+    - nullplatform-tools 
+    - velero
+    - calico-system
+    - kaas-system
+    - tigera-operator
+    - aquasec
+    - prometheus
+    - flux-system
+    kinds:
+    - apiGroups:
+      - ""
+      kinds:
+      - Pod
+    labelSelector:
+      matchExpressions:
+      - key: exceptionvolumetypesconstraint
+        operator: DoesNotExist
+  parameters:
+    volumes:
+    - configMap
+    - projected
+    - secret
+    - downwardAPI
+    - persistentVolumeClaim
+    - azureFile
+    - csi
+    - emptyDir
+status:
+  auditTimestamp: "2025-09-29T20:05:37Z"
+  byPod:
+  - constraintUID: c1114495-2177-434e-809a-a95ef0d48f25
+    enforced: true
+    id: gatekeeper-audit-7bc6dd7869-l9lps
+    observedGeneration: 1
+    operations:
+    - audit
+    - generate
+    - mutation-status
+    - status
+  - constraintUID: c1114495-2177-434e-809a-a95ef0d48f25
+    enforced: true
+    id: gatekeeper-controller-manager-8c8d64674-45r5r
+    observedGeneration: 1
+    operations:
+    - mutation-webhook
+    - webhook
+  - constraintUID: c1114495-2177-434e-809a-a95ef0d48f25
+    enforced: true
+    id: gatekeeper-controller-manager-8c8d64674-tfxmd
+    observedGeneration: 1
+    operations:
+    - mutation-webhook
+    - webhook
+  totalViolations: 0
