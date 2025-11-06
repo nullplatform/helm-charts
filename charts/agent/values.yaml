@@ -1,5 +1,31 @@
 replicaCount: 1
 
+# Workload type: "deployment" or "statefulset"
+workloadType: deployment
+
+# StatefulSet specific configuration (only used when workloadType is "statefulset")
+statefulset:
+  # Service name for StatefulSet (required for StatefulSet)
+  serviceName: nullplatform-agent
+  # Pod Management Policy: "OrderedReady" or "Parallel"
+  podManagementPolicy: OrderedReady
+  # Update strategy
+  updateStrategy:
+    type: RollingUpdate
+  # Persistent Volume Claims for StatefulSet
+  # volumeClaimTemplates: []
+  # Example:
+  # volumeClaimTemplates:
+  #   - metadata:
+  #       name: data
+  #     spec:
+  #       accessModes: [ "ReadWriteOnce" ]
+  #       storageClassName: "standard"
+  #       resources:
+  #         requests:
+  #           storage: 1Gi
+  volumeClaimTemplates: []
+
 namespace: nullplatform-tools
 
 args:
@@ -35,6 +61,8 @@ serviceAccount:
   automount: true
   annotations: {}
   name: nullplatform-agent
+  # Set to true for cluster-wide access (ClusterRole), false for namespace-scoped access (Role)
+  clusterWide: true
   role:
     rules:
       - apiGroups:
@@ -92,6 +120,10 @@ tolerations:
     tolerationSeconds: 300
 
 affinity: {}
+
+priorityClass:
+  enabled: true
+  value: 500000
 
 # Init containers to run before the main container
 # Example:

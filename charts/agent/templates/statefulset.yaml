@@ -1,6 +1,6 @@
-{{- if eq .Values.workloadType "deployment" }}
+{{- if eq .Values.workloadType "statefulset" }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: nullplatform-agent-{{ .Release.Name }}
   namespace: {{ .Values.namespace }}
@@ -10,6 +10,10 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  serviceName: {{ .Values.statefulset.serviceName }}
+  podManagementPolicy: {{ .Values.statefulset.podManagementPolicy }}
+  updateStrategy:
+    {{- toYaml .Values.statefulset.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
       {{- include "agent.selectorLabels" . | nindent 6 }}
@@ -25,7 +29,7 @@ spec:
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      
+
     spec:
       {{- if .Values.priorityClass.enabled }}
       priorityClassName: nullplatform-critical-{{ .Release.Name }}
@@ -83,4 +87,8 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- with .Values.statefulset.volumeClaimTemplates }}
+  volumeClaimTemplates:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end }}
