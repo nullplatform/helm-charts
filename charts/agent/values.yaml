@@ -36,6 +36,17 @@ serviceAccount:
   annotations: {}
   name: nullplatform-agent
   role:
+    # Whether to create RBAC resources at all
+    create: true
+    
+    # Scope: 'cluster' for ClusterRole/ClusterRoleBinding or 'namespace' for Role/RoleBinding
+    scope: cluster
+    
+    # Import existing role instead of creating new one
+    import: false
+    name: ""
+    
+    # Rules for the role (only used when creating new role)
     rules:
       - apiGroups:
           - '*'
