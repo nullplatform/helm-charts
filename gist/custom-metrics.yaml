@@ -1,0 +1,98 @@
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: gateway-metrics-response-code
+  namespace: gateways
+spec:
+  metrics:
+  - providers:
+    - name: prometheus
+    overrides:
+    - match:
+        metric: REQUEST_COUNT
+      tagOverrides:
+        response_code:
+          value: response.code | "unknown"
+        destination_pod_ip:
+          value: destination.ip | "unknown"
+    - match:
+        metric: REQUEST_DURATION
+      tagOverrides:
+        response_code:
+          value: response.code | "unknown"
+        destination_pod_ip:
+          value: destination.ip | "unknown"
+    - match:
+        metric: REQUEST_SIZE
+      tagOverrides:
+        response_code:
+          value: response.code | "unknown"
+        destination_pod_ip:
+          value: destination.ip | "unknown"
+    - match:
+        metric: RESPONSE_SIZE
+      tagOverrides:
+        response_code:
+          value: response.code | "unknown"
+        destination_pod_ip:
+          value: destination.ip | "unknown"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: stats-filter-response-code
+  namespace: gateways
+spec:
+  workloadSelector:
+    labels:
+      gateway.networking.k8s.io/gateway-name: gateway-public
+  configPatches:
+  # Add response_code to istio metrics
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: "envoy.filters.network.http_connection_manager"
+            subFilter:
+              name: "istio.stats"
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          "@type": type.googleapis.com/stats.PluginConfig
+          metrics:
+          - dimensions:
+              response_code: response.code
+              destination_pod_ip: upstream.address
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: stats-filter-response-code-private
+  namespace: gateways
+spec:
+  workloadSelector:
+    labels:
+      gateway.networking.k8s.io/gateway-name: gateway-private
+  configPatches:
+  # Add response_code to istio metrics
+  - applyTo: HTTP_FILTER
+    match:
+      context: GATEWAY
+      listener:
+        filterChain:
+          filter:
+            name: "envoy.filters.network.http_connection_manager"
+            subFilter:
+              name: "istio.stats"
+    patch:
+      operation: MERGE
+      value:
+        typed_config:
+          "@type": type.googleapis.com/stats.PluginConfig
+          metrics:
+          - dimensions:
+              response_code: response.code
+              destination_pod_ip: upstream.address

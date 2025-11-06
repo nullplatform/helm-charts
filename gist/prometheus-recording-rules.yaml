@@ -1,0 +1,540 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-server
+  namespace: prometheus
+data:
+  alerting_rules.yml: |
+    {}
+  alerts: |
+    {}
+  allow-snippet-annotations: 'false'
+  prometheus.yml: |
+    global:
+      evaluation_interval: 1m
+      scrape_interval: 1m
+      scrape_timeout: 10s
+    rule_files:
+    - /etc/config/recording_rules.yml
+    - /etc/config/alerting_rules.yml
+    - /etc/config/rules
+    - /etc/config/alerts
+    scrape_configs:
+    - job_name: prometheus
+      static_configs:
+      - targets:
+        - localhost:9090
+    - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      job_name: kubernetes-apiservers
+      kubernetes_sd_configs:
+      - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: default;kubernetes;https
+        source_labels:
+        - __meta_kubernetes_namespace
+        - __meta_kubernetes_service_name
+        - __meta_kubernetes_endpoint_port_name
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      job_name: kubernetes-nodes
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - replacement: kubernetes.default.svc:443
+        target_label: __address__
+      - regex: (.+)
+        replacement: /api/v1/nodes/$1/proxy/metrics
+        source_labels:
+        - __meta_kubernetes_node_name
+        target_label: __metrics_path__
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      job_name: kubernetes-nodes-cadvisor
+      kubernetes_sd_configs:
+      - role: node
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - replacement: kubernetes.default.svc:443
+        target_label: __address__
+      - regex: (.+)
+        replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
+        source_labels:
+        - __meta_kubernetes_node_name
+        target_label: __metrics_path__
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    - honor_labels: true
+      job_name: kubernetes-service-endpoints
+      kubernetes_sd_configs:
+      - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape
+      - action: drop
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape_slow
+      - action: replace
+        regex: (https?)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scheme
+        target_label: __scheme__
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: (.+?)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_service_annotation_prometheus_io_param_(.+)
+        replacement: __param_$1
+      - action: labelmap
+        regex: __meta_kubernetes_service_label_(.+)
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: namespace
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_service_name
+        target_label: service
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_node_name
+        target_label: node
+    - honor_labels: true
+      job_name: kubernetes-service-endpoints-slow
+      kubernetes_sd_configs:
+      - role: endpoints
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scrape_slow
+      - action: replace
+        regex: (https?)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_scheme
+        target_label: __scheme__
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: (.+?)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_service_annotation_prometheus_io_port
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_service_annotation_prometheus_io_param_(.+)
+        replacement: __param_$1
+      - action: labelmap
+        regex: __meta_kubernetes_service_label_(.+)
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: namespace
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_service_name
+        target_label: service
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_node_name
+        target_label: node
+      scrape_interval: 5m
+      scrape_timeout: 30s
+    - honor_labels: true
+      job_name: prometheus-pushgateway
+      kubernetes_sd_configs:
+      - role: service
+      relabel_configs:
+      - action: keep
+        regex: pushgateway
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_probe
+    - honor_labels: true
+      job_name: kubernetes-services
+      kubernetes_sd_configs:
+      - role: service
+      metrics_path: /probe
+      params:
+        module:
+        - http_2xx
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_service_annotation_prometheus_io_probe
+      - source_labels:
+        - __address__
+        target_label: __param_target
+      - replacement: blackbox
+        target_label: __address__
+      - source_labels:
+        - __param_target
+        target_label: instance
+      - action: labelmap
+        regex: __meta_kubernetes_service_label_(.+)
+      - source_labels:
+        - __meta_kubernetes_namespace
+        target_label: namespace
+      - source_labels:
+        - __meta_kubernetes_service_name
+        target_label: service
+    - honor_labels: true
+      job_name: kubernetes-pods
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+      - action: drop
+        regex: true
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scrape_slow
+      - action: replace
+        regex: (https?)
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scheme
+        target_label: __scheme__
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: (\d+);(([A-Fa-f0-9]{1,4}::?){1,7}[A-Fa-f0-9]{1,4})
+        replacement: '[$2]:$1'
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        - __meta_kubernetes_pod_ip
+        target_label: __address__
+      - action: replace
+        regex: (\d+);((([0-9]+?)(\.|$)){4})
+        replacement: $2:$1
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        - __meta_kubernetes_pod_ip
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
+        replacement: __param_$1
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: namespace
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_name
+        target_label: pod
+      - action: drop
+        regex: Pending|Succeeded|Failed|Completed
+        source_labels:
+        - __meta_kubernetes_pod_phase
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_node_name
+        target_label: node
+    - honor_labels: true
+      job_name: kubernetes-pods-slow
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - action: keep
+        regex: true
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scrape_slow
+      - action: replace
+        regex: (https?)
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_scheme
+        target_label: __scheme__
+      - action: replace
+        regex: (.+)
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_path
+        target_label: __metrics_path__
+      - action: replace
+        regex: (\d+);(([A-Fa-f0-9]{1,4}::?){1,7}[A-Fa-f0-9]{1,4})
+        replacement: '[$2]:$1'
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        - __meta_kubernetes_pod_ip
+        target_label: __address__
+      - action: replace
+        regex: (\d+);((([0-9]+?)(\.|$)){4})
+        replacement: $2:$1
+        source_labels:
+        - __meta_kubernetes_pod_annotation_prometheus_io_port
+        - __meta_kubernetes_pod_ip
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
+        replacement: __param_$1
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: namespace
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_name
+        target_label: pod
+      - action: drop
+        regex: Pending|Succeeded|Failed|Completed
+        source_labels:
+        - __meta_kubernetes_pod_phase
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_node_name
+        target_label: node
+      scrape_interval: 5m
+      scrape_timeout: 30s
+    alerting:
+      alertmanagers:
+      - kubernetes_sd_configs:
+          - role: pod
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_namespace]
+          regex: prometheus
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_instance]
+          regex: kaas-prometheus
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+          regex: alertmanager
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_container_port_number]
+          regex: "9093"
+          action: keep
+  recording_rules.yml: |
+    groups:
+    - name: istio_enriched_with_k8s_labels
+      interval: 15s
+      rules:
+      # Join Istio requests with K8s pod labels
+      - record: np_requests_total_enriched
+        expr: |
+          label_replace(
+            istio_requests_total{source_workload=~"gateway-public-istio|gateway-private-istio"},
+            "destination_pod_ip_clean", "$1", "destination_pod_ip", "(.*):.*"
+          )
+          * on(destination_pod_ip_clean, destination_workload_namespace) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod)
+          (
+            max by (destination_pod_ip_clean, destination_workload_namespace, account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod) (
+              label_replace(
+                label_replace(
+                  label_replace(
+                    k8s_pod_labels_info{application_id!=""},
+                    "destination_workload_namespace", "$1", "namespace", "(.*)"
+                  ),
+                  "destination_pod_ip_clean", "$1", "pod_ip", "(.*)"
+                ),
+                "destination_pod", "$1", "pod", "(.*)"
+              )
+            )
+          )
+      
+      # Join Istio request duration buckets with K8s pod labels
+      - record: np_request_duration_milliseconds_bucket_enriched
+        expr: |
+          label_replace(
+            istio_request_duration_milliseconds_bucket{source_workload=~"gateway-public-istio|gateway-private-istio"},
+            "destination_pod_ip_clean", "$1", "destination_pod_ip", "(.*):.*"
+          )
+          * on(destination_pod_ip_clean, destination_workload_namespace) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod)
+          (
+            max by (destination_pod_ip_clean, destination_workload_namespace, account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod) (
+              label_replace(
+                label_replace(
+                  label_replace(
+                    k8s_pod_labels_info{application_id!=""},
+                    "destination_workload_namespace", "$1", "namespace", "(.*)"
+                  ),
+                  "destination_pod_ip_clean", "$1", "pod_ip", "(.*)"
+                ),
+                "destination_pod", "$1", "pod", "(.*)"
+              )
+            )
+          )
+      
+      # Join Istio request duration sum with K8s pod labels
+      - record: np_request_duration_milliseconds_sum_enriched
+        expr: |
+          label_replace(
+            istio_request_duration_milliseconds_sum{source_workload=~"gateway-public-istio|gateway-private-istio"},
+            "destination_pod_ip_clean", "$1", "destination_pod_ip", "(.*):.*"
+          )
+          * on(destination_pod_ip_clean, destination_workload_namespace) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod)
+          (
+            max by (destination_pod_ip_clean, destination_workload_namespace, account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod) (
+              label_replace(
+                label_replace(
+                  label_replace(
+                    k8s_pod_labels_info{application_id!=""},
+                    "destination_workload_namespace", "$1", "namespace", "(.*)"
+                  ),
+                  "destination_pod_ip_clean", "$1", "pod_ip", "(.*)"
+                ),
+                "destination_pod", "$1", "pod", "(.*)"
+              )
+            )
+          )
+      
+      # Join Istio request duration count with K8s pod labels
+      - record: np_request_duration_milliseconds_count_enriched
+        expr: |
+          label_replace(
+            istio_request_duration_milliseconds_count{source_workload=~"gateway-public-istio|gateway-private-istio"},
+            "destination_pod_ip_clean", "$1", "destination_pod_ip", "(.*):.*"
+          )
+          * on(destination_pod_ip_clean, destination_workload_namespace) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod)
+          (
+            max by (destination_pod_ip_clean, destination_workload_namespace, account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id, destination_pod) (
+              label_replace(
+                label_replace(
+                  label_replace(
+                    k8s_pod_labels_info{application_id!=""},
+                    "destination_workload_namespace", "$1", "namespace", "(.*)"
+                  ),
+                  "destination_pod_ip_clean", "$1", "pod_ip", "(.*)"
+                ),
+                "destination_pod", "$1", "pod", "(.*)"
+              )
+            )
+          )
+
+    - name: container_resources_enriched_with_k8s_labels
+      interval: 15s
+      rules:
+      # CPU usage rate enriched with pod labels
+      # This joins container metrics directly with k8s_pod_labels_info on namespace and pod
+      - record: np_container_cpu_usage_rate_enriched
+        expr: |
+          rate(container_cpu_usage_seconds_total{container!="", container!="POD"}[5m])
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # CPU usage percentage (vs limits) enriched with pod labels
+      - record: np_container_cpu_usage_percent_enriched
+        expr: |
+          (
+            rate(container_cpu_usage_seconds_total{container!="", container!="POD"}[5m])
+            / on(namespace, pod, container) group_left() (max by(namespace, pod, container, resource, unit) (kube_pod_container_resource_limits{resource="cpu"}))
+            * 100
+          )
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # Memory usage enriched with pod labels
+      - record: np_container_memory_usage_bytes_enriched
+        expr: |
+          container_memory_usage_bytes{container!="", container!="POD"}
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # Memory usage percentage (vs limits) enriched with pod labels
+      - record: np_container_memory_usage_percent_enriched
+        expr: |
+          (
+            container_memory_usage_bytes{container!="", container!="POD"}
+            / on(namespace, pod, container) group_left() (max by(namespace, pod, container, resource, unit) (kube_pod_container_resource_limits{resource="memory"}))
+            * 100
+          )
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # Memory working set enriched with pod labels
+      - record: np_container_memory_working_set_bytes_enriched
+        expr: |
+          container_memory_working_set_bytes{container!="", container!="POD"}
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # Memory working set percentage (vs limits) enriched with pod labels
+      - record: np_container_memory_working_set_percent_enriched
+        expr: |
+          (
+            container_memory_working_set_bytes{container!="", container!="POD"}
+            / on(namespace, pod, container) group_left() (max by(namespace, pod, container, resource, unit) (kube_pod_container_resource_limits{resource="memory"}))
+            * 100
+          )
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+    - name: pod_health_enriched_with_k8s_labels
+      interval: 15s
+      rules:
+      # Pod readiness status enriched with pod labels
+      - record: np_kube_pod_status_ready_enriched
+        expr: |
+          kube_pod_status_ready
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # Container ready status enriched with pod labels
+      - record: np_kube_pod_container_status_ready_enriched
+        expr: |
+          kube_pod_container_status_ready
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # Container restarts enriched with pod labels
+      - record: np_kube_pod_container_status_restarts_total_enriched
+        expr: |
+          kube_pod_container_status_restarts_total
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # Container running status enriched with pod labels
+      - record: np_kube_pod_container_status_running_enriched
+        expr: |
+          kube_pod_container_status_running
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # Container waiting status enriched with pod labels
+      - record: np_kube_pod_container_status_waiting_enriched
+        expr: |
+          kube_pod_container_status_waiting
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+
+      # Container terminated status enriched with pod labels
+      - record: np_kube_pod_container_status_terminated_enriched
+        expr: |
+          kube_pod_container_status_terminated
+          * on(namespace, pod) group_left(account, account_id, application, application_id, deployment_id, scope, scope_id, namespace_id)
+          k8s_pod_labels_info
+  rules: |
+    {}
+

@@ -1,0 +1,316 @@
+---
+# ConfigMap with the Python script
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-labels-exporter-script
+  namespace: prometheus
+data:
+  exporter.py: |
+    #!/usr/bin/env python3
+    """
+    Kubernetes Labels Exporter for Prometheus
+    Dynamically watches all K8s Services and Pods and exports their labels as Prometheus metrics
+    """
+
+    import time
+    import logging
+    from prometheus_client import start_http_server, Info, REGISTRY
+    from kubernetes import client, config, watch
+    import threading
+
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
+
+    class LabelsExporter:
+        def __init__(self):
+            self.service_info = Info('k8s_service_labels', 'Kubernetes service labels', ['service', 'namespace'])
+            self.pod_info = Info('k8s_pod_labels', 'Kubernetes pod labels', ['pod', 'namespace'])
+            self.services = {}
+            self.pods = {}
+            self.lock = threading.RLock()
+
+        def update_service(self, name, namespace, labels):
+            with self.lock:
+                key = f"{namespace}/{name}"
+                self.services[key] = {
+                    'service': name,
+                    'namespace': namespace,
+                    'labels': labels or {}
+                }
+
+                # Create labels dict for prometheus
+                prom_labels = {}
+                for label_key, label_value in (labels or {}).items():
+                    # Skip 'namespace' label to avoid conflict with the metric's namespace dimension
+                    if label_key == 'namespace':
+                        continue
+                    # Sanitize label names for prometheus
+                    safe_key = label_key.replace('.', '_').replace('-', '_').replace('/', '_')
+                    prom_labels[safe_key] = str(label_value)
+
+                # Set the info metric
+                self.service_info.labels(service=name, namespace=namespace).info(prom_labels)
+                logger.info(f"Updated service {key} with {len(labels or {})} labels")
+
+        def delete_service(self, name, namespace):
+            with self.lock:
+                key = f"{namespace}/{name}"
+                if key in self.services:
+                    del self.services[key]
+                    logger.info(f"Deleted service {key}")
+
+        def update_pod(self, name, namespace, labels, pod_ip=None):
+            with self.lock:
+                key = f"{namespace}/{name}"
+                self.pods[key] = {
+                    'pod': name,
+                    'namespace': namespace,
+                    'labels': labels or {},
+                    'pod_ip': pod_ip
+                }
+
+                # Create labels dict for prometheus
+                prom_labels = {}
+                for label_key, label_value in (labels or {}).items():
+                    # Skip 'namespace' label to avoid conflict with the metric's namespace dimension
+                    if label_key == 'namespace':
+                        continue
+                    # Sanitize label names for prometheus
+                    safe_key = label_key.replace('.', '_').replace('-', '_').replace('/', '_')
+                    prom_labels[safe_key] = str(label_value)
+
+                # Add pod_ip if available
+                if pod_ip:
+                    prom_labels['pod_ip'] = pod_ip
+
+                # Set the info metric
+                self.pod_info.labels(pod=name, namespace=namespace).info(prom_labels)
+                logger.info(f"Updated pod {key} with {len(labels or {})} labels and IP {pod_ip}")
+
+        def delete_pod(self, name, namespace):
+            with self.lock:
+                key = f"{namespace}/{name}"
+                if key in self.pods:
+                    del self.pods[key]
+                    logger.info(f"Deleted pod {key}")
+
+    def watch_services(exporter):
+        """Watch all Kubernetes Services and update exporter"""
+        try:
+            config.load_incluster_config()
+            logger.info("Loaded in-cluster config for services")
+        except:
+            config.load_kube_config()
+            logger.info("Loaded kube config for services")
+
+        v1 = client.CoreV1Api()
+        w = watch.Watch()
+
+        logger.info("Starting service watcher...")
+
+        while True:
+            try:
+                for event in w.stream(v1.list_service_for_all_namespaces, timeout_seconds=0):
+                    service = event['object']
+                    event_type = event['type']
+
+                    name = service.metadata.name
+                    namespace = service.metadata.namespace
+                    labels = service.metadata.labels
+
+                    if event_type in ['ADDED', 'MODIFIED']:
+                        exporter.update_service(name, namespace, labels)
+                    elif event_type == 'DELETED':
+                        exporter.delete_service(name, namespace)
+
+            except Exception as e:
+                logger.error(f"Service watch error: {e}")
+                time.sleep(5)
+
+    def watch_pods(exporter):
+        """Watch all Kubernetes Pods and update exporter"""
+        try:
+            config.load_incluster_config()
+            logger.info("Loaded in-cluster config for pods")
+        except:
+            config.load_kube_config()
+            logger.info("Loaded kube config for pods")
+
+        v1 = client.CoreV1Api()
+        w = watch.Watch()
+
+        logger.info("Starting pod watcher...")
+
+        while True:
+            try:
+                for event in w.stream(v1.list_pod_for_all_namespaces, timeout_seconds=0):
+                    pod = event['object']
+                    event_type = event['type']
+
+                    name = pod.metadata.name
+                    namespace = pod.metadata.namespace
+                    labels = pod.metadata.labels
+                    pod_ip = pod.status.pod_ip if pod.status else None
+
+                    if event_type in ['ADDED', 'MODIFIED']:
+                        exporter.update_pod(name, namespace, labels, pod_ip)
+                    elif event_type == 'DELETED':
+                        exporter.delete_pod(name, namespace)
+
+            except Exception as e:
+                logger.error(f"Pod watch error: {e}")
+                time.sleep(5)
+
+    def main():
+        port = 9101
+
+        # Start Prometheus metrics server
+        start_http_server(port)
+        logger.info(f"Metrics server listening on port {port}")
+        logger.info(f"Endpoint: http://0.0.0.0:{port}/metrics")
+
+        # Create exporter
+        exporter = LabelsExporter()
+
+        # Start watcher threads
+        service_watcher = threading.Thread(target=watch_services, args=(exporter,), daemon=True)
+        service_watcher.start()
+
+        pod_watcher = threading.Thread(target=watch_pods, args=(exporter,), daemon=True)
+        pod_watcher.start()
+
+        # Keep alive
+        try:
+            while True:
+                time.sleep(60)
+        except KeyboardInterrupt:
+            logger.info("Shutting down...")
+
+    if __name__ == '__main__':
+        main()
+---
+# ServiceAccount
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-labels-exporter
+  namespace: prometheus
+---
+# ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: k8s-labels-exporter
+rules:
+- apiGroups: [""]
+  resources: ["services", "pods"]
+  verbs: ["get", "list", "watch"]
+---
+# ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-labels-exporter
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: k8s-labels-exporter
+subjects:
+- kind: ServiceAccount
+  name: k8s-labels-exporter
+  namespace: prometheus
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-labels-exporter
+  namespace: prometheus
+  labels:
+    app: k8s-labels-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-labels-exporter
+  template:
+    metadata:
+      labels:
+        app: k8s-labels-exporter
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9101"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: k8s-labels-exporter
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+      - name: exporter
+        image: python:3.11-slim
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
+        env:
+        - name: HOME
+          value: /tmp
+        command:
+        - /bin/sh
+        - -c
+        - |
+          pip install --user --no-cache-dir prometheus-client==0.19.0 kubernetes==28.1.0 && \
+          python /app/exporter.py
+        ports:
+        - containerPort: 9101
+          name: metrics
+        volumeMounts:
+        - name: script
+          mountPath: /app
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 9101
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 9101
+          initialDelaySeconds: 20
+          periodSeconds: 10
+      volumes:
+      - name: script
+        configMap:
+          name: k8s-labels-exporter-script
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-labels-exporter
+  namespace: prometheus
+  labels:
+    app: k8s-labels-exporter
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9101
+    targetPort: 9101
+    protocol: TCP
+    name: metrics
+  selector:
+    app: k8s-labels-exporter
