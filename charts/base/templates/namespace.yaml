@@ -7,6 +7,7 @@ metadata:
     name: {{ .Values.namespaces.nullplatformTools }}
   annotations:
     "helm.sh/hook": pre-install
+    openshift.io/cluster-monitoring: "true"
 {{- end }}
 ---
 {{- if not (lookup "v1" "Namespace" "" .Values.namespaces.nullplatformApplications) }}
