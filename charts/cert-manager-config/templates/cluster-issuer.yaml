@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt
-  namespace: cert-manager
+  namespace:  {{ .Values.namespaceController.name }}
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
@@ -28,7 +28,7 @@ spec:
           environment: AzurePublicCloud
           clientID: {{ required "azure.clientID is required" .Values.azure.clientID | quote }}
           clientSecretSecretRef:
-            name: azuredns-config
+            name: {{ .Values.azure.secretName }}
             key:  {{ .Values.azure.secretKey | default "client-secret" | quote }}
           {{- end }}
 

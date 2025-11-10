@@ -13,9 +13,11 @@ azure:
   clientSecret: "" 
   tenantID: ""
   hostedZoneName: ""
+  secretName: "azuredns-config"
 cloudflare:
   enabled: false
-  secretName: cloudflare-api-token-secret
-namespacecontroller:
-  name: " "
+  secretName: "cloudflare-api-token-secret"
+  apiToken: ""
+namespaceController:
+  name: ""
 secretName: "wildcard-tls"
