@@ -1,3 +1,10 @@
+# [2.23.0](https://github.com/nullplatform/helm-charts/compare/2.22.1...2.23.0) (2025-11-10)
+
+
+### Features
+
+* **agent:** support agent by namespace ([a567739](https://github.com/nullplatform/helm-charts/commit/a567739fdad69f1e97e175ef3afdc4c04397ebaa))
+
 ## [2.22.1](https://github.com/nullplatform/helm-charts/compare/2.22.0...2.22.1) (2025-11-05)
 
 
