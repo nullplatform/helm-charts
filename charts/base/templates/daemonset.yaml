@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: nullplatform-log-controller
-  namespace: nullplatform-tools
+  namespace: {{ .Values.namespaces.nullplatformTools }}
 spec:
   selector:
     matchLabels:
@@ -15,7 +15,7 @@ spec:
       {{- if .Values.logging.prometheus.enabled }}
       annotations:
         prometheus.io/path: /metrics
-        prometheus.io/port: '2021'
+        prometheus.io/port: {{ .Values.logging.prometheus.exporterPort | quote }}
         prometheus.io/scrape: 'true'
       {{- end }}
     spec:

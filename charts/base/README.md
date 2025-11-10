@@ -31,6 +31,7 @@ The following table lists the configurable parameters of the Null chart and thei
 | `gateway.internal.enabled`  | Enable internal/private load balancer gateway                    | `true`                             |
 | `tls.secretName`            | Name of the TLS secret                                            | `""`                               |
 | `tls.required`              | Require TLS secret name to be provided                           | `true`                             |
+| `logging.enabled`           | Enable logging functionality                                      | `true`                             |
 | `logging.gelf.enabled`      | Enable GELF logging                                               | `false`                            |
 | `logging.loki.enabled`      | Enable Loki logging                                               | `false`                            |
 | `logging.datadog.enabled`   | Enable Datadog logging                                            | `false`                            |

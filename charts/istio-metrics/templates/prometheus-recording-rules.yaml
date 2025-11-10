@@ -1,0 +1,14 @@
+{{- if .Values.recordingRules.enabled }}
+---
+# Standalone ConfigMap with Prometheus recording rules
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.recordingRules.name }}
+  namespace: {{ include "istio-metrics.prometheusNamespace" . }}
+  labels:
+    {{- include "istio-metrics.labels" . | nindent 4 }}
+data:
+  recording_rules.yml: |
+    {{- .Files.Get "files/recording_rules.yml" | nindent 4 }}
+{{- end }}

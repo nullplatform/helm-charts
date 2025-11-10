@@ -1,3 +1,92 @@
+## [2.22.1](https://github.com/nullplatform/helm-charts/compare/2.22.0...2.22.1) (2025-11-05)
+
+
+### Bug Fixes
+
+* removed security context constraints for aro since they don't work ([ee1c033](https://github.com/nullplatform/helm-charts/commit/ee1c03350497dadecb9480bdb386e0727674dbb6))
+
+# [2.22.0](https://github.com/nullplatform/helm-charts/compare/2.21.2...2.22.0) (2025-11-04)
+
+
+### Features
+
+* **base:** edit certifcate name for ingress controller internal ([79925be](https://github.com/nullplatform/helm-charts/commit/79925be7196fb9b783fb60a6ca4692763fd422ec))
+
+## [2.21.2](https://github.com/nullplatform/helm-charts/compare/2.21.1...2.21.2) (2025-11-04)
+
+
+### Bug Fixes
+
+* secretName can be configured for cert manager ([2ded9dc](https://github.com/nullplatform/helm-charts/commit/2ded9dc4877af0934e80135252712f2eb277e2cb))
+
+## [2.21.1](https://github.com/nullplatform/helm-charts/compare/2.21.0...2.21.1) (2025-11-04)
+
+
+### Bug Fixes
+
+* dnsManagementPolicy is now  Unmanaged ([5aebed0](https://github.com/nullplatform/helm-charts/commit/5aebed0a9b99d75947835981dc6591133d84f6bb))
+
+# [2.21.0](https://github.com/nullplatform/helm-charts/compare/2.20.0...2.21.0) (2025-11-04)
+
+
+### Features
+
+* **aro:** disambiguate ingresses for internal/external ([0c50c5c](https://github.com/nullplatform/helm-charts/commit/0c50c5c2088d2e12ae882916cabca6eb75ac893d))
+
+# [2.20.0](https://github.com/nullplatform/helm-charts/compare/2.19.0...2.20.0) (2025-11-04)
+
+
+### Features
+
+* **base:** add SecurityContextConstraints to ARO ([3a2a258](https://github.com/nullplatform/helm-charts/commit/3a2a258c60cf0c320cc057fe4d025c56e84596f7))
+
+# [2.19.0](https://github.com/nullplatform/helm-charts/compare/2.18.0...2.19.0) (2025-11-03)
+
+
+### Features
+
+* add private controller ([ec76c01](https://github.com/nullplatform/helm-charts/commit/ec76c0197e0e6bb43072d36c05b4b2b291054d04))
+* edit values with ingresscontroler ([821945e](https://github.com/nullplatform/helm-charts/commit/821945edd6f9ae9873d8b58677b4de1d0c7de104))
+
+# [2.18.0](https://github.com/nullplatform/helm-charts/compare/2.17.0...2.18.0) (2025-10-30)
+
+
+### Bug Fixes
+
+* **istio-metrics:** added enabled property to gateway.public ([499db1e](https://github.com/nullplatform/helm-charts/commit/499db1e8a03ba8f2481475dccb9fc8bb496fe7be))
+* **istio-metrics:** removed keys ([7cf3504](https://github.com/nullplatform/helm-charts/commit/7cf3504448c78fa54915feed6fdd83e45f4718c6))
+
+
+### Features
+
+* **base:** Add Istio metrics mode as alternative to log controller ([f2ea251](https://github.com/nullplatform/helm-charts/commit/f2ea25190723d2798975661e52fe0add4d544ecb))
+* **base:** remove job ([faa6ee3](https://github.com/nullplatform/helm-charts/commit/faa6ee31b7d251ea4e4dd5e5c91fd00010c95dbd))
+* **istio-metrics:** Add Prometheus ConfigMap patching capability ([8c6c279](https://github.com/nullplatform/helm-charts/commit/8c6c27934d2205900dba0bb4181da41a23e25ab0))
+* **istio-metrics:** Extract istio metrics into separate chart ([905e115](https://github.com/nullplatform/helm-charts/commit/905e1153939c47aa6e32d2b3cacd968c45676c9d))
+
+# [2.17.0](https://github.com/nullplatform/helm-charts/compare/2.16.1...2.17.0) (2025-10-29)
+
+
+### Features
+
+* **agent:** Add image pull secret configuration ([4a5efe6](https://github.com/nullplatform/helm-charts/commit/4a5efe6e34c42b026057535ab65886c3f7bdc14f))
+* **agent:** Comment out image pull secret credential fields ([533228c](https://github.com/nullplatform/helm-charts/commit/533228c5ac1c09fe203e2627b9e102500616154c))
+
+## [2.16.1](https://github.com/nullplatform/helm-charts/compare/2.16.0...2.16.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* **base:** Honour nullplatform tools ns configuration ([a6c8740](https://github.com/nullplatform/helm-charts/commit/a6c87405500a37d17613f445157ba060b3d70eea))
+
+# [2.16.0](https://github.com/nullplatform/helm-charts/compare/2.15.0...2.16.0) (2025-10-13)
+
+
+### Features
+
+* **base:** add annotations for prometheus auto discovery ([be18456](https://github.com/nullplatform/helm-charts/commit/be18456429275fcf84d51da239600aac617ccb1a))
+* **base:** make prometheus port annotation configurable ([a8ec8da](https://github.com/nullplatform/helm-charts/commit/a8ec8dad4cc83417bfe81c45cdedf779503b0638))
+
 # [2.15.0](https://github.com/nullplatform/helm-charts/compare/2.14.0...2.15.0) (2025-10-06)
 
 

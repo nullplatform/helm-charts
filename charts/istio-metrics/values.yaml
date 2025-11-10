@@ -1,0 +1,83 @@
+# Default values for istio-metrics.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Prometheus configuration
+prometheus:
+  # Enable/disable Prometheus installation
+  install: false
+  # Namespace where Prometheus is/will be installed
+  # This is used whether installing Prometheus via this chart or using an existing installation
+  namespace: "prometheus"
+  
+  # Prometheus server configuration
+  server:
+    persistentVolume:
+      size: 8Gi
+    retention: "15d"
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+    
+    # Additional scrape configs to include
+    extraScrapeConfigs: |
+      - job_name: 'k8s-labels-exporter'
+        static_configs:
+          - targets: ['k8s-labels-exporter.prometheus:9101']
+  
+  # ConfigMap configuration
+  # Use this to create a complete Prometheus ConfigMap with our recording rules included
+  configMap:
+    # Enable creation of Prometheus ConfigMap
+    create: false
+    
+    # Name of the ConfigMap to create
+    name: "prometheus-server"
+    
+    # Custom configuration - if provided, this completely replaces the default
+    # Example:
+    # customConfig:
+    #   prometheus.yml: |
+    #     global:
+    #       scrape_interval: 15s
+    #     rule_files:
+    #       - /etc/config/recording_rules.yml
+    #   recording_rules.yml: |
+    #     groups:
+    #       - name: my_rules
+    #         rules: []
+    customConfig: {}
+    
+    # Additional scrape configs to append (only used when customConfig is empty)
+    additionalScrapeConfigs: ""
+
+# Gateway configuration
+gateway:
+  # Namespace where Istio gateways are installed
+  namespace: "gateways"
+  public:
+    enabled: true
+    name: "gateway-public"
+  internal:
+    enabled: true
+    name: "gateway-private"
+
+# K8s labels exporter configuration
+exporter:
+  enabled: true
+  image: "python:3.11-slim"
+  port: 9101
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# Prometheus recording rules configuration
+recordingRules:
+  enabled: true
+  # Creates a standalone ConfigMap with recording rules
+  # This can be referenced by your Prometheus configuration
+  name: "prometheus-recording-rules"

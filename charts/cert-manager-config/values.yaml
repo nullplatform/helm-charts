@@ -16,4 +16,6 @@ azure:
 cloudflare:
   enabled: false
   secretName: cloudflare-api-token-secret
-  apiToken: ""                  
+namespacecontroller:
+  name: " "
+secretName: "wildcard-tls"

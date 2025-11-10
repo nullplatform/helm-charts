@@ -2,10 +2,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: nullplatform-pod-metadata-reader-binding
-subjects: 
+subjects:
   - kind: ServiceAccount
     name: nullplatform-pod-metadata-reader-sa
-    namespace: nullplatform-tools
+    namespace: {{ .Values.namespaces.nullplatformTools }}
 roleRef:
   kind: ClusterRole
   name: nullplatform-pod-metadata-reader
@@ -15,10 +15,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: nullplatform-leases-pod-metadata-reader-binding
-subjects: 
+subjects:
   - kind: ServiceAccount
     name: nullplatform-pod-metadata-reader-sa
-    namespace: nullplatform-tools
+    namespace: {{ .Values.namespaces.nullplatformTools }}
 roleRef:
   kind: ClusterRole
   name: nullplatform-leases
