@@ -1,3 +1,11 @@
+# [2.24.0](https://github.com/nullplatform/helm-charts/compare/2.23.0...2.24.0) (2025-11-11)
+
+
+### Features
+
+* **base:** add metadata namespace for prometheus ([ffbcee7](https://github.com/nullplatform/helm-charts/commit/ffbcee7e70856db674f4e38fe79eeef486d2ada8))
+* **base:** edit yaml podmonitor ([c0eb54c](https://github.com/nullplatform/helm-charts/commit/c0eb54c6557eb7a54a84eb2e537e126d79200733))
+
 # [2.23.0](https://github.com/nullplatform/helm-charts/compare/2.22.1...2.23.0) (2025-11-10)
 
 
