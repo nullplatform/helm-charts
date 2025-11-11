@@ -9,26 +9,26 @@ metadata:
 spec:
   namespaceSelector:
     matchNames:
-    - nullplatform-tools
+      - nullplatform-tools
   selector:
     matchLabels:
-      name: nullplatform-log-controller
+      Name: nullplatform-log-controller
   podMetricsEndpoints:
-  - interval: 30s
-    path: /metrics
-    port: "2021"
-    scheme: http
-    relabelings:
-    - sourceLabels: [__meta_kubernetes_pod_node_name]
-      targetLabel: node
-      action: replace
-    - sourceLabels: [__meta_kubernetes_pod_name]
-      targetLabel: pod
-      action: replace
-    - sourceLabels: [__meta_kubernetes_namespace]
-      targetLabel: namespace
-      action: replace
-    - sourceLabels: [__meta_kubernetes_pod_host_ip]
-      targetLabel: host_ip
-      action: replace
+    - interval: 30s
+      path: /metrics
+      port: prometheus
+      scheme: http
+      relabelings:
+        - action: replace
+          sourceLabels: [__meta_kubernetes_pod_node_name]
+          targetLabel: node
+        - action: replace
+          sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod
+        - action: replace
+          sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - action: replace
+          sourceLabels: [__meta_kubernetes_pod_host_ip]
+          targetLabel: host_ip
 {{- end }}
