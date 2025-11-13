@@ -21,3 +21,13 @@ cloudflare:
 namespaceController:
   name: ""
 secretName: "wildcard-tls"
+private:
+  enabled: false
+  domainName: ""
+certificate:
+  name: "wildcard-tls-internal"
+  namespace: ""
+  secretName: "wildcard-tls-internal"
+  issuerRef:
+    name: "letsencrypt-internal"
+    kind: "ClusterIssuer"
