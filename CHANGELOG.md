@@ -1,3 +1,10 @@
+# [2.26.0](https://github.com/nullplatform/helm-charts/compare/2.25.0...2.26.0) (2025-11-14)
+
+
+### Features
+
+* **certmanager-config:** add support for clusterissuer and certificate private ([623ebb0](https://github.com/nullplatform/helm-charts/commit/623ebb0ba2414c2ff503a628835e094fc60c0d74))
+
 # [2.25.0](https://github.com/nullplatform/helm-charts/compare/2.24.0...2.25.0) (2025-11-13)
 
 
