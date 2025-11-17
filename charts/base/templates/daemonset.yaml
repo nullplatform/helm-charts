@@ -19,7 +19,7 @@ spec:
         prometheus.io/scrape: 'true'
       {{- end }}
     spec:
-       #SELINUX for openshift
+      #SELINUX for openshift
       securityContext:
         seLinuxOptions:
           type: spc_t
