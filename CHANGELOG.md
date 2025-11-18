@@ -1,3 +1,24 @@
+# [2.27.0](https://github.com/nullplatform/helm-charts/compare/2.26.0...2.27.0) (2025-11-18)
+
+
+### Features
+
+* add support to aro ([a813bfb](https://github.com/nullplatform/helm-charts/commit/a813bfb1c5e6b7183bcbaea16bb555edb3915cb2))
+
+# [2.26.0](https://github.com/nullplatform/helm-charts/compare/2.25.0...2.26.0) (2025-11-14)
+
+
+### Features
+
+* **certmanager-config:** add support for clusterissuer and certificate private ([623ebb0](https://github.com/nullplatform/helm-charts/commit/623ebb0ba2414c2ff503a628835e094fc60c0d74))
+
+# [2.25.0](https://github.com/nullplatform/helm-charts/compare/2.24.0...2.25.0) (2025-11-13)
+
+
+### Features
+
+* **cert-manager-config:** naming convention helm ([fa93911](https://github.com/nullplatform/helm-charts/commit/fa93911eb32f05ceb07c44b14ab1c100d59e4bf2))
+
 # [2.24.0](https://github.com/nullplatform/helm-charts/compare/2.23.0...2.24.0) (2025-11-11)
 
 
