@@ -1,3 +1,10 @@
+# [2.27.0](https://github.com/nullplatform/helm-charts/compare/2.26.0...2.27.0) (2025-11-18)
+
+
+### Features
+
+* add support to aro ([a813bfb](https://github.com/nullplatform/helm-charts/commit/a813bfb1c5e6b7183bcbaea16bb555edb3915cb2))
+
 # [2.26.0](https://github.com/nullplatform/helm-charts/compare/2.25.0...2.26.0) (2025-11-14)
 
 
