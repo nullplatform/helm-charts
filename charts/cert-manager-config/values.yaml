@@ -16,10 +16,16 @@ azure:
   secretName: "azuredns-config"
 cloudflare:
   enabled: false
+<<<<<<< HEAD
   secretName: "cloudflare-api-token-secret"
   apiToken: ""
 namespaceController:
   name: ""
+=======
+  secretName: cloudflare-api-token-secret
+namespacecontroller:
+  name: " "
+>>>>>>> f72974e (feat(certmanager-config))
 secretName: "wildcard-tls"
 private:
   enabled: false
