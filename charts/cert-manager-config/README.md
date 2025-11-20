@@ -20,6 +20,9 @@ helm install cert-manager-config nullplatform/nullplatform-cert-manager-config \
   --set azure.secretKey=client-secret \
   --set azure.clientSecret="" \
   --set azure.tenantID="" \
+  --set private.enabled=true \
+  --set private.domainName="example.private" \
+  --set certificate.namespace=" " \
   --namespace cert-manager
 ```
 
