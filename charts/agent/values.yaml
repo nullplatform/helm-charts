@@ -144,9 +144,14 @@ githubTokenInit:
   secretName: "github-app-secret"
   # Keys in the secret for each value
   secretKeys:
-    appId: "APP_ID"
+    appId: "APP_ID"           # nombre de la clave en el secret
     installationId: "INSTALLATION_ID"
     privateKey: "PRIVATE_KEY"
+  values:
+    appId: ""
+    installationId: ""
+    privateKey: ""
+ 
   repositoryUrl: "github.com/packer-builder/scope.git"
   # Directory where the repository will be cloned (shared with main container)
   workingDir: "/root/.np"
