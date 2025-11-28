@@ -136,6 +136,26 @@ priorityClass:
 #         mountPath: /root/.np
 initContainers: []
 
+# GitHub App Token Init Container Configuration
+githubTokenInit:
+  enabled: true
+  image: alpine:3.22.2
+  # Secret that contains GitHub App configuration
+  secretName: "github-app-secret"
+  # Keys in the secret for each value
+  secretKeys:
+    appId: "APP_ID"
+    installationId: "INSTALLATION_ID"
+    privateKey: "PRIVATE_KEY"
+  repositoryUrl: "github.com/packer-builder/scope.git"
+  # Directory where the repository will be cloned (shared with main container)
+  workingDir: "/root/.np"
+  cloneDir: "nullplatform"
+
+podSecurityContext:
+  runAsUser: 0
+  runAsNonRoot: false
+
 volumes: []
 
 initScripts: []
