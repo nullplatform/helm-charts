@@ -1,22 +1,10 @@
-{{- if or (eq .Values.global.provider "aks") (eq .Values.global.provider "gke") (eq .Values.global.provider "oke") }}
+{{- if or (eq .Values.global.provider "aks") (eq .Values.global.provider "gke") (eq .Values.global.provider "oke") (eq .Values.global.provider "eks") }}
 {{- $secretName := "" }}
 {{- if .Values.tls.required  }}
 {{- $secretName = required "The 'tls.secretName' field is required" .Values.tls.secretName }}
 {{- else }}
 {{- $secretName = .Values.tls.secretName | default "" }}
 {{- end }}
-{{- if not (lookup "v1" "Namespace" "" .Values.namespaces.gateway) }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.namespaces.gateway }}
-  labels:
-    name: {{ .Values.namespaces.gateway }}
-  annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/resource-policy": "keep"
-{{- end }}
----
 {{- if and .Values.gateways.enabled .Values.gateway.internal.enabled }}
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
@@ -45,6 +33,23 @@ metadata:
     service.beta.kubernetes.io/oci-load-balancer-internal: "false"
     {{- end }}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- else if eq .Values.global.provider "eks" }}
+    service.beta.kubernetes.io/aws-load-balancer-name: "k8s-nullplatform-{{ .Values.gateway.internal.name }}"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+    {{- else }}
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    {{- end }}
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    {{- if .Values.gateway.aws.sslCertArn }}
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: {{ .Values.gateway.aws.sslCertArn | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15021"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/healthz/ready"
     {{- else }}
     {{- /* Default annotations for other providers */ -}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
@@ -68,14 +73,18 @@ spec:
   {{- if .Values.tls.required }}
     - name: https
       port: 443
+      {{- if eq .Values.global.provider "eks" }}
+      protocol: HTTP
+      {{- else }}
       protocol: HTTPS
-    {{- if $secretName }}
+      {{- if $secretName }}
       tls:
         certificateRefs:
           - group: ''
             kind: Secret
             name: {{ $secretName }}
-    {{- end }}
+      {{- end }}
+      {{- end }}
       allowedRoutes:
         namespaces:
           from: All
@@ -146,6 +155,23 @@ metadata:
     service.beta.kubernetes.io/oci-load-balancer-internal: "false"
     {{- end }}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- else if eq .Values.global.provider "eks" }}
+    service.beta.kubernetes.io/aws-load-balancer-name: "k8s-nullplatform-{{ .Values.gateway.public.name }}"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+    {{- else }}
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    {{- end }}
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    {{- if .Values.gateway.aws.sslCertArn }}
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: {{ .Values.gateway.aws.sslCertArn | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15021"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/healthz/ready"
     {{- else }}
     {{- /* Default annotations for other providers */ -}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
@@ -169,14 +195,18 @@ spec:
   {{- if .Values.tls.required }}
     - name: https
       port: 443
+      {{- if eq .Values.global.provider "eks" }}
+      protocol: HTTP
+      {{- else }}
       protocol: HTTPS
-    {{- if $secretName }}
+      {{- if $secretName }}
       tls:
         certificateRefs:
           - group: ''
             kind: Secret
             name: {{ $secretName }}
-    {{- end }}
+      {{- end }}
+      {{- end }}
       allowedRoutes:
         namespaces:
           from: All

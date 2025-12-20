@@ -47,6 +47,9 @@ gateway:
       minReplicas: 2
       maxReplicas: 10
     loadBalancerType: "external"  # internal, external
+  # AWS Load Balancer configuration (only for EKS provider)
+  aws:
+    sslCertArn: ""  # ARN del certificado ACM, ej: arn:aws:acm:us-east-1:123456789:certificate/xxx
 # Nullplatform configurations
 nullplatform:
   apiKey: ""
