@@ -28,13 +28,13 @@ spec:
             environment: AzurePublicCloud
             config:
               useWorkloadIdentityExtension: true
-            {{- else if eq .Values.cloudProvider "cloudflare" }}
-            cloudflare:
-              apiTokenSecretRef:
-                name: {{ .Values.cloudflare.secretName | default "cloudflare-api-token-secret" }}
-                key: api-token
-            {{- else if eq .Values.cloudProvider "aws"}}
-            route53:
-              region: {{ .Values.route53.region}}
+          {{- else if eq .Values.cloudProvider "cloudflare" }}
+          cloudflare:
+            apiTokenSecretRef:
+              name: {{ .Values.cloudflare.secretName | default "cloudflare-api-token-secret" }}
+              key: api-token
+          {{- else if eq .Values.cloudProvider "aws" }}
+          route53:
+            region: {{ .Values.route53.region }}
           {{- end }}
 {{- end }}
