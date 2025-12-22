@@ -2,31 +2,28 @@ hostedZoneName: ""
 nullPlatform:
   accountSlug: ""
 gcp:
-  enabled: false
-  serviceAccountKey: ""
+  enabled: true
+  projectId: ""
 azure:
   enabled: false
   subscriptionID: ""
   resourceGroupName: ""
   clientID: ""
-  secretKey: "client-secret"
-  clientSecret: "" 
   tenantID: ""
   hostedZoneName: ""
-  secretName: "azuredns-config"
 cloudflare:
   enabled: false
   secretName: "cloudflare-api-token-secret"
   apiToken: ""
 namespaceController:
-  name: ""
+  name: "gateways"
 secretName: "wildcard-tls"
 private:
-  enabled: false
+  enabled: true
   domainName: ""
 certificate:
   name: "wildcard-tls-internal"
-  namespace: ""
+  namespace: "gateways"
   secretName: "wildcard-tls-internal"
   issuerRef:
     name: "letsencrypt-internal"

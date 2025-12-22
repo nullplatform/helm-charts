@@ -14,22 +14,16 @@ spec:
         {{- if .Values.gcp.enabled }}
         cloudDNS:
           project: "{{ .Values.gcp.projectId }}"
-          # The secret containing the service account key JSON with DNS permissions
-          serviceAccountSecretRef:
-            name: gcp-cloud-dns-service-account
-            key: key.json
         {{- end }}
           {{- if .Values.azure.enabled }}
         azureDNS:
           subscriptionID: {{ required "azure.subscriptionID is required" .Values.azure.subscriptionID | quote }}
-          tenantID:       {{ required "azure.tenantID is required" .Values.azure.tenantID | quote }}
           resourceGroupName: {{ required "azure.resourceGroupName is required" .Values.azure.resourceGroupName | quote }}
-          hostedZoneName:    {{ .Values.hostedZoneName  }}
+          hostedZoneName: {{ .Values.hostedZoneName }}
           environment: AzurePublicCloud
-          clientID: {{ required "azure.clientID is required" .Values.azure.clientID | quote }}
-          clientSecretSecretRef:
-            name: {{ .Values.azure.secretName }}
-            key:  {{ .Values.azure.secretKey | default "client-secret" | quote }}
+          config:
+            useWorkloadIdentityExtension: true
+          ###
           {{- end }}
 
           {{- if .Values.cloudflare.enabled }}
