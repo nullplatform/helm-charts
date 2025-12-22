@@ -34,4 +34,3 @@ spec:
               route53:
                 region: {{ .Values.route53.region }}
                 {{- end }}
-
