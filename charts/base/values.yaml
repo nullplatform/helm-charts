@@ -28,6 +28,7 @@ tls:
   required: true
   # Name of the TLS secret
   secretName: "wildcard-tls"
+  secretPrivateName: "wildcard-tl-internal"
   # Gateway configurations
 gateway:
   http:
