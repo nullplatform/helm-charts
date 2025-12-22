@@ -11,6 +11,15 @@ spec:
       name: letsencrypt
     solvers:
     - dns01:
+        {{- if .Values.route53.enabled }}
+        route53:
+          region: {{ .Values.route53.region }}
+          role: {{ .Values.route53.role }}
+          auth:
+            kubernetes:
+              serviceAccountRef:
+                name: {{ .Values.route53.auth }}
+        {{- end }}
         {{- if .Values.gcp.enabled }}
         cloudDNS:
           project: "{{ .Values.gcp.projectId }}"

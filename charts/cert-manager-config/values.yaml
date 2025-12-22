@@ -1,6 +1,14 @@
 hostedZoneName: ""
 nullPlatform:
   accountSlug: ""
+route53:
+  enabled: false
+  region: ""
+  role: ""
+  auth:
+    kubernetes:
+      serviceAccountRef:
+        name: ""
 gcp:
   enabled: false
   serviceAccountKey: ""
