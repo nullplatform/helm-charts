@@ -1,18 +1,16 @@
 hostedZoneName: ""
 nullPlatform:
   accountSlug: ""
+cloudProvider: ""
 gcp:
-  enabled: true
   projectId: ""
 azure:
-  enabled: false
   subscriptionID: ""
   resourceGroupName: ""
   clientID: ""
   tenantID: ""
   hostedZoneName: ""
 cloudflare:
-  enabled: false
   secretName: "cloudflare-api-token-secret"
   apiToken: ""
 namespaceController:

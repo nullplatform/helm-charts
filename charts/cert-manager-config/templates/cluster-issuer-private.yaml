@@ -15,11 +15,10 @@ spec:
           dnsZones:
             - "{{ .Values.private.domainName }}"
         dns01:
-
-          {{- if .Values.gcp.enabled }}
+         {{- if eq .Values.cloudProvider "gcp" }}
           cloudDNS:
             project: "{{ .Values.gcp.projectId }}"
-          {{- else if .Values.azure.enabled }}
+          {{- else if eq .Values.cloudProvider "azure" }}
           azureDNS:
             clientID: {{ .Values.azure.clientID }}
             subscriptionID: {{ .Values.azure.subscriptionID }}
@@ -29,5 +28,10 @@ spec:
             environment: AzurePublicCloud
             config:
               useWorkloadIdentityExtension: true
+            {{- else if eq .Values.cloudProvider "cloudflare" }}
+            cloudflare:
+              apiTokenSecretRef:
+                name: {{ .Values.cloudflare.secretName | default "cloudflare-api-token-secret" }}
+                key: api-token
           {{- end }}
 {{- end }}
