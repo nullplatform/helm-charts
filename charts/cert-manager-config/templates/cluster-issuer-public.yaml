@@ -10,22 +10,28 @@ spec:
     privateKeySecretRef:
       name: letsencrypt
     solvers:
-    - dns01:
-        {{- if eq .Values.cloudProvider "gcp" }}
-        cloudDNS:
-          project: "{{ .Values.gcp.projectId }}"
-        {{- else if eq .Values.cloudProvider "azure" }}
-        azureDNS:
-          subscriptionID: {{ required "azure.subscriptionID is required" .Values.azure.subscriptionID | quote }}
-          resourceGroupName: {{ required "azure.resourceGroupName is required" .Values.azure.resourceGroupName | quote }}
-          hostedZoneName: {{ .Values.hostedZoneName }}
-          environment: AzurePublicCloud
-          config:
-            useWorkloadIdentityExtension: true
-          {{- else if eq .Values.cloudProvider "cloudflare" }}
-        cloudflare:
-          apiTokenSecretRef:
-            name: {{ .Values.cloudflare.secretName | default "cloudflare-api-token-secret" }}
-            key: api-token
-          {{- end }}
-     
+      - selector:
+          dnsZones:
+            - "{{ .Values.hostedZoneName }}"
+          dns01:
+              {{- if eq .Values.cloudProvider "gcp" }}
+              cloudDNS:
+                project: "{{ .Values.gcp.projectId }}"
+              {{- else if eq .Values.cloudProvider "azure" }}
+              azureDNS:
+                subscriptionID: {{ required "azure.subscriptionID is required" .Values.azure.subscriptionID | quote }}
+                resourceGroupName: {{ required "azure.resourceGroupName is required" .Values.azure.resourceGroupName | quote }}
+                hostedZoneName: {{ .Values.hostedZoneName }}
+                environment: AzurePublicCloud
+                config:
+                  useWorkloadIdentityExtension: true
+                {{- else if eq .Values.cloudProvider "cloudflare" }}
+              cloudflare:
+                apiTokenSecretRef:
+                  name: {{ .Values.cloudflare.secretName | default "cloudflare-api-token-secret" }}
+                  key: api-token
+                {{- else if eq .Values.cloudProvider "aws"}}
+              route53:
+                region: {{ .Values.route53.region }}
+                {{- end }}
+
