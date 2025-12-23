@@ -1,3 +1,16 @@
+# [2.28.0](https://github.com/nullplatform/helm-charts/compare/2.27.0...2.28.0) (2025-12-23)
+
+
+### Features
+
+* **base:** add selinux for aro ([1bc916a](https://github.com/nullplatform/helm-charts/commit/1bc916ae17100a6bae4f63527e446636acf7bf06))
+* **certmanager:** add cloud_provider values ([14e69a0](https://github.com/nullplatform/helm-charts/commit/14e69a07ac6539fc84ae857f92af20093ccf627c))
+* **certmanager:** add cloud_provider values ([fba6900](https://github.com/nullplatform/helm-charts/commit/fba69005c4afe46653b22f3ccdcd10082809455c))
+* **certmanager:** add private certificate ([89ee117](https://github.com/nullplatform/helm-charts/commit/89ee1172f2b13b060d6f4720d4a00bc96ac12bed))
+* **certmanager:** edit config of issuer ([77eb57c](https://github.com/nullplatform/helm-charts/commit/77eb57cb4792f88d2bb15a782e968cb0d345ad0e))
+* **certmanager:** edit config of issuer ([b2cba59](https://github.com/nullplatform/helm-charts/commit/b2cba59988b6f3a71b1e89d71693f755ca00436c))
+* **helm-charts:** add aws cert-manager & chart-base ([bbda817](https://github.com/nullplatform/helm-charts/commit/bbda817e163588d4dda89e990ba9fbdf6a17f91b))
+
 # [2.27.0](https://github.com/nullplatform/helm-charts/compare/2.26.0...2.27.0) (2025-11-18)
 
 
