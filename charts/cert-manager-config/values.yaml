@@ -2,6 +2,8 @@ hostedZoneName: ""
 nullPlatform:
   accountSlug: ""
 cloudProvider: ""
+route53:
+  region: ""
 gcp:
   projectId: ""
 azure:
