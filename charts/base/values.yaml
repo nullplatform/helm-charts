@@ -32,7 +32,7 @@ tls:
   # Gateway configurations
 gateway:
   http:
-    enabled: true
+    enabled: false
   internal:
     enabled: true
     name: "gateway-private"
