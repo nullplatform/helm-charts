@@ -1,3 +1,11 @@
+## [2.28.1](https://github.com/nullplatform/helm-charts/compare/2.28.0...2.28.1) (2025-12-29)
+
+
+### Bug Fixes
+
+* **chart-base:** disable http option ([0704ed9](https://github.com/nullplatform/helm-charts/commit/0704ed9e91cdb10323f03ad9a1ddecf7d982be2e))
+* **chart-base:** fix annotation to aws gateways ([759c21d](https://github.com/nullplatform/helm-charts/commit/759c21d9870de0f11b3028069aa16b99edeca689))
+
 # [2.28.0](https://github.com/nullplatform/helm-charts/compare/2.27.0...2.28.0) (2025-12-23)
 
 
