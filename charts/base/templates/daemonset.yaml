@@ -19,6 +19,10 @@ spec:
         prometheus.io/scrape: 'true'
       {{- end }}
     spec:
+      #SELINUX for openshift
+      securityContext:
+        seLinuxOptions:
+          type: spc_t
       serviceAccountName: nullplatform-pod-metadata-reader-sa
       restartPolicy: Always
       containers:
@@ -31,21 +35,26 @@ spec:
           {{- end }}
           {{- if .Values.logging.prometheus.enabled }}
           ports:
-          - containerPort: {{ .Values.logging.prometheus.exporterPort }}
-            hostPort: {{ .Values.logging.prometheus.exporterPort }}
-            name: prometheus
-            protocol: TCP
+            - containerPort: {{ .Values.logging.prometheus.exporterPort }}
+              hostPort: {{ .Values.logging.prometheus.exporterPort }}
+              name: prometheus
+              protocol: TCP
           {{- end }}
           volumeMounts:
             - mountPath: /var/log
               name: host-logs
+            # OPENSHIFT / CRI-O
+            - mountPath: /var/log/containers
+              name: containers
             - mountPath: /etc/null-logs/dynamic
               name: logs-config
+
           {{- if .Values.logging.dynatrace.enabled }}
           envFrom:
             - secretRef:
                 name: dynatrace-secret
           {{- end }}
+
           env:
             - name: NULL_LOGS_RELOAD_ENABLED
               value: 'true'
@@ -67,6 +76,7 @@ spec:
               value: 'False'
             - name: LOG_KEY_NAME
               value: message
+
             {{- if .Values.logging.datadog.enabled }}
             - name: DATADOG_LOGS_ENABLED
               value: 'true'
@@ -82,6 +92,7 @@ spec:
                   name: datadog-secret
                   key: DATADOG_API_KEY
             {{- end }}
+
             {{- if .Values.logging.newrelic.enabled }}
             - name: NEWRELIC_LOGS_ENABLED
               value: "true"
@@ -94,6 +105,7 @@ spec:
               value: {{ .Values.logging.newrelic.region | quote }}
             {{- end }}
             {{- end }}
+
             {{- if .Values.cloudwatch.enabled }}
             - name: CLOUDWATCH_RETENTION_DAYS
               value: {{ .Values.cloudwatch.retentionDays | quote }}
@@ -106,8 +118,9 @@ spec:
             - name: CLOUDWATCH_CUSTOM_METRICS_ENABLED
               value: {{ .Values.cloudwatch.customMetrics.enabled | quote }}
             - name: CLOUDWATCH_ACCESS_LOGS_ENABLED
-              value:  {{ .Values.cloudwatch.accessLogs.enabled | quote }}
-            {{- end}}
+              value: {{ .Values.cloudwatch.accessLogs.enabled | quote }}
+            {{- end }}
+
             {{- if .Values.logging.loki.enabled }}
             - name: LOKI_LOGS_ENABLED
               value: 'true'
@@ -128,51 +141,30 @@ spec:
                 secretKeyRef:
                   name: loki-secret
                   key: LOKI_PASSWORD
-            {{- end}}
+            {{- end }}
             {{- if .Values.logging.loki.bearerToken }}
             - name: LOKI_BEARER_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: loki-secret
                   key: LOKI_BEARER_TOKEN
-            {{- end}}
-            {{- end}}
+            {{- end }}
+            {{- end }}
+
             {{- if .Values.logging.prometheus.enabled }}
             - name: PROMETHEUS_PERFORMANCE_METRICS_EXPORTER_PORT
               value: {{ .Values.logging.prometheus.exporterPort | quote }}
             - name: PROMETHEUS_PERFORMANCE_METRICS_ENABLED
               value: 'true'
-            {{- end}}
-        {{- if and .Values.controlPlane.enabled (or .Values.nullplatform.apiKey .Values.nullplatform.secretName) }}
-        - name: nullplatform-controlplane-agent
-          image: {{ .Values.controlPlane.agent.image }}
-          {{- if .Values.controlPlane.agent.resources }}
-          resources:
-            {{- toYaml .Values.controlPlane.agent.resources | nindent 12 }}
-          {{- end }}
-          command:
-            - /app/k8s_launcher.sh
-          env:
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: spec.nodeName
-            - name: NULLPLATFORM_APIKEY
-              valueFrom:
-                secretKeyRef:
-                  key: NULLPLATFORM_APIKEY
-                  name: {{ if .Values.nullplatform.secretName }}{{ .Values.nullplatform.secretName }}{{ else }}nullplatform-secret{{ end }}
-          image: public.ecr.aws/nullplatform/controlplane-agent:latest
-          imagePullPolicy: Always
-          volumeMounts:
-          - mountPath: /etc/null-logs/dynamic
-            name: logs-config
-        {{- end}}
+            {{- end }}
+
       volumes:
         - name: host-logs
           hostPath:
             path: /var/log
+        - name: containers
+          hostPath:
+            path: /var/log/containers
         - name: logs-config
           emptyDir: {}
 {{- end}}

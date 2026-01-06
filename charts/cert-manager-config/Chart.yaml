@@ -2,5 +2,5 @@ apiVersion: v2
 name: nullplatform-cert-manager-config
 description: A Helm chart for cert-manager configurations
 type: application
-version: 2.22.1
-appVersion: 2.22.1
+version: 2.28.1
+appVersion: 2.28.1
