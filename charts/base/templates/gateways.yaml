@@ -42,7 +42,7 @@ metadata:
     {{- else if eq .Values.global.provider "aks" }}
     {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
     service.beta.kubernetes.io/azure-load-balancer-internal: 'true'
-    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "load_balancer"
+    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: {{ .Values.gateway.internal.azure_load_balancer_subnet }}
     {{- else }}
     service.beta.kubernetes.io/azure-load-balancer-internal: 'false'
     {{- end }}
