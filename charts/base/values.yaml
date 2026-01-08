@@ -66,6 +66,9 @@ controlPlane:
         memory: 150Mi
 logging:
   enabled: true
+  streams:
+    enabled: false
+  streamsConfigMapName: "streams-dd-config"
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
     resources:
