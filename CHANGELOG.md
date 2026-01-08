@@ -1,3 +1,17 @@
+# [2.29.0](https://github.com/nullplatform/helm-charts/compare/2.28.1...2.29.0) (2026-01-08)
+
+
+### Bug Fixes
+
+* **base-gateways:** add annottaion to LB use subnet private ([22cb988](https://github.com/nullplatform/helm-charts/commit/22cb9887b30356c03e6961e585ceb5f44d98889c))
+* **base-gateways:** add annottaion to LB use subnet private ([ef740a2](https://github.com/nullplatform/helm-charts/commit/ef740a2b1164950280993b663f34c42580920e19))
+* **base:** update node version to CI ([605861c](https://github.com/nullplatform/helm-charts/commit/605861c52ca485908ac14800358892555d648ff3))
+
+
+### Features
+
+* **base:** add annotations for prometheus auto discovery ([6bdbdbe](https://github.com/nullplatform/helm-charts/commit/6bdbdbeda346780353a9b8bfe38cbbcc7709a1dd))
+
 ## [2.28.1](https://github.com/nullplatform/helm-charts/compare/2.28.0...2.28.1) (2025-12-29)
 
 
