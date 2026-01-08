@@ -48,13 +48,17 @@ spec:
               name: containers
             - mountPath: /etc/null-logs/dynamic
               name: logs-config
-
+            {{- if .Values.logging.streams.enabled }}
+            - name: streams-config-vol
+              mountPath: /etc/null-logs/streams-dd.conf
+              subPath: streams-dd.conf
+              readOnly: true
+            {{- end }}
           {{- if .Values.logging.dynatrace.enabled }}
           envFrom:
             - secretRef:
                 name: dynatrace-secret
           {{- end }}
-
           env:
             - name: NULL_LOGS_RELOAD_ENABLED
               value: 'true'
@@ -76,7 +80,6 @@ spec:
               value: 'False'
             - name: LOG_KEY_NAME
               value: message
-
             {{- if .Values.logging.datadog.enabled }}
             - name: DATADOG_LOGS_ENABLED
               value: 'true'
@@ -92,7 +95,6 @@ spec:
                   name: datadog-secret
                   key: DATADOG_API_KEY
             {{- end }}
-
             {{- if .Values.logging.newrelic.enabled }}
             - name: NEWRELIC_LOGS_ENABLED
               value: "true"
@@ -105,7 +107,6 @@ spec:
               value: {{ .Values.logging.newrelic.region | quote }}
             {{- end }}
             {{- end }}
-
             {{- if .Values.cloudwatch.enabled }}
             - name: CLOUDWATCH_RETENTION_DAYS
               value: {{ .Values.cloudwatch.retentionDays | quote }}
@@ -120,7 +121,6 @@ spec:
             - name: CLOUDWATCH_ACCESS_LOGS_ENABLED
               value: {{ .Values.cloudwatch.accessLogs.enabled | quote }}
             {{- end }}
-
             {{- if .Values.logging.loki.enabled }}
             - name: LOKI_LOGS_ENABLED
               value: 'true'
@@ -157,7 +157,6 @@ spec:
             - name: PROMETHEUS_PERFORMANCE_METRICS_ENABLED
               value: 'true'
             {{- end }}
-
       volumes:
         - name: host-logs
           hostPath:
@@ -167,4 +166,14 @@ spec:
             path: /var/log/containers
         - name: logs-config
           emptyDir: {}
+        {{- if .Values.logging.streams.enabled }}
+        - name: streams-config-vol
+          configMap:
+            name: {{ .Values.logging.streamsConfigMapName | default "streams-dd-config" }}
+            # Optional:  streams-dd.conf
+            # items:
+            #   - key: streams-dd.conf
+            #     path: streams-dd.conf
+        {{- end }}
+
 {{- end}}
