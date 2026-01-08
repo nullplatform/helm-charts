@@ -50,8 +50,8 @@ spec:
               name: logs-config
             {{- if .Values.logging.streams.enabled }}
             - name: streams-config-vol
-              mountPath: /etc/null-logs/streams-dd.conf
-              subPath: streams-dd.conf
+              mountPath: {{ .Values.logging.streams.mountPath | default "/etc/null-logs/streams-dd.conf" }}
+              subPath: {{ .Values.logging.streams.subPath | default "streams-dd.conf" }}
               readOnly: true
             {{- end }}
           {{- if .Values.logging.dynatrace.enabled }}
