@@ -69,7 +69,9 @@ logging:
   enabled: true
   streams:
     enabled: false
-  streamsConfigMapName: "streams-dd-config"
+    mountPath: "/etc/null-logs/custom.conf"
+    subPath: "custom.conf"
+    streamsConfigMapName: ""
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
     resources:
