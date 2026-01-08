@@ -35,7 +35,7 @@ gateway:
     enabled: false
   internal:
     enabled: true
-    azure_load_balancer_subnet: 
+    azure_load_balancer_subnet:
     name: "gateway-private"
     addresses: {}
     autoscaling:
