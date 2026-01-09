@@ -1,3 +1,10 @@
+## [2.29.1](https://github.com/nullplatform/helm-charts/compare/2.29.0...2.29.1) (2026-01-09)
+
+
+### Bug Fixes
+
+* **base:** fix values tls name ([2331b60](https://github.com/nullplatform/helm-charts/commit/2331b603f0b6fb08a814f119b816641aa78a3997))
+
 # [2.29.0](https://github.com/nullplatform/helm-charts/compare/2.28.1...2.29.0) (2026-01-08)
 
 
