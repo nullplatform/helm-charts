@@ -1,3 +1,10 @@
+## [2.29.2](https://github.com/nullplatform/helm-charts/compare/2.29.1...2.29.2) (2026-01-10)
+
+
+### Bug Fixes
+
+* **certmanager:** fix secret ([4bf28ff](https://github.com/nullplatform/helm-charts/commit/4bf28ff2df824d7762af9fbc001395490d74d567))
+
 ## [2.29.1](https://github.com/nullplatform/helm-charts/compare/2.29.0...2.29.1) (2026-01-09)
 
 
