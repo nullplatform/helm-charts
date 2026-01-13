@@ -1,0 +1,10 @@
+{{- if .Values.logging.datadog.enabled }}
+apiVersion: coordination.k8s.io/v1
+kind: Lease
+metadata:
+    name: nullplatform-metrics-extractor
+    namespace: nullplatform-tools
+spec:
+    holderIdentity: ""
+{{- end }}
+
