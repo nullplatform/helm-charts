@@ -40,7 +40,13 @@ spec:
               name: prometheus
               protocol: TCP
           {{- end }}
-          volumeMounts:
+          volumeMounts: 
+            {{- if .Values.customConf.enabled }}     
+            - mountPath: /etc/null-logs/fluent-bit.conf
+              name: fluent-bit-config-vol
+              subPath: fluent-bit.conf # Importante: debe coincidir con la 'key' en el ConfigMap
+              readOnly: true
+            {{- end }}
             - mountPath: /var/log
               name: host-logs
             # OPENSHIFT / CRI-O
@@ -158,6 +164,11 @@ spec:
               value: 'true'
             {{- end }}
       volumes:
+        {{- if .Values.customConf.enabled }} 
+        - name: fluent-bit-config-vol
+          configMap:
+            name: {{ .Values.customConf.configMapName | default "fluent-bit-config" }}
+        {{- end }}
         - name: host-logs
           hostPath:
             path: /var/log
@@ -170,10 +181,6 @@ spec:
         - name: streams-config-vol
           configMap:
             name: {{ .Values.logging.streamsConfigMapName | default "streams-dd-config" }}
-            # Optional:  streams-dd.conf
-            # items:
-            #   - key: streams-dd.conf
-            #     path: streams-dd.conf
         {{- end }}
 
 {{- end}}
