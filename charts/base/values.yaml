@@ -15,12 +15,12 @@ namespaces:
 ingressControllers:
   public:
     name: "internet-facing"
-    enabled: false
+    enabled: true
     scope: External
     domain: ""
   private:
     name: "internal"
-    enabled: false
+    enabled: true
     scope: Internal
     domain: ""
 # TLS configuration
@@ -68,9 +68,9 @@ logging:
   enabled: true
   streams:
     enabled: false
-    mountPath: "/etc/null-logs/custom.conf"
-    subPath: "custom.conf"
-    streamsConfigMapName: ""
+    mountPath: "/etc/null-logs/streams-dd.conf"
+    subPath: "streams-dd.conf"
+  streamsConfigMapName: "streams-dd-config"
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
     resources:
@@ -100,7 +100,7 @@ logging:
     apiKey: ""
     environmentId: ""
   datadog:
-    enabled: false
+    enabled: true
     apiKey: ""
     region: ""
   newrelic:
@@ -141,3 +141,6 @@ envoy:
   filters:
     preserveExternalRequestId:
       enabled: false
+customConf:
+  enabled: false
+  configMapName: ""
