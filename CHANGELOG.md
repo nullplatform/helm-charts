@@ -1,3 +1,15 @@
+# [2.30.0](https://github.com/nullplatform/helm-charts/compare/2.29.2...2.30.0) (2026-01-14)
+
+
+### Features
+
+* add lease for datadog ([002f6fa](https://github.com/nullplatform/helm-charts/commit/002f6fa6029fe2b8ba1324033d2fdb76371b10bb))
+* **base:** add configmaps custom ([64b011b](https://github.com/nullplatform/helm-charts/commit/64b011b3daead45086420a48c06bb45752be05ac))
+* **base:** add configmaps custom ([031ab83](https://github.com/nullplatform/helm-charts/commit/031ab8371a3244ab43c1339b4613eef67717cbe0))
+* **base:** add custom configuration ([33cebf4](https://github.com/nullplatform/helm-charts/commit/33cebf4954de1d89c68104f70af0ed688d425c7d))
+* **base:** add custom configuration ([459d7bb](https://github.com/nullplatform/helm-charts/commit/459d7bba173adce9193f71098a18e7d8f3eac352))
+* **logs:** add fluent conf ([2cefe46](https://github.com/nullplatform/helm-charts/commit/2cefe465792c38deb0811d1ffcc6f08f660bbb64))
+
 ## [2.29.2](https://github.com/nullplatform/helm-charts/compare/2.29.1...2.29.2) (2026-01-10)
 
 
