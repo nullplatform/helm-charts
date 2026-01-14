@@ -44,7 +44,7 @@ spec:
             {{- if .Values.customConf.enabled }}     
             - mountPath: /etc/null-logs/fluent-bit.conf
               name: fluent-bit-config-vol
-              subPath: fluent-bit.conf # Importante: debe coincidir con la 'key' en el ConfigMap
+              subPath: fluent-bit.conf 
               readOnly: true
             {{- end }}
             - mountPath: /var/log
