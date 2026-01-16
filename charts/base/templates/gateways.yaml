@@ -26,10 +26,10 @@ metadata:
   annotations:
     {{- if eq .Values.global.provider "eks" }}
     {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
-    service.beta.kubernetes.io/aws-load-balancer-name: "k8s-nullplatform-internal"
+    service.beta.kubernetes.io/aws-load-balancer-name:  {{ .Values.gateway.internal.aws.name }}
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
     {{- else }}
-    service.beta.kubernetes.io/aws-load-balancer-name: "k8s-nullplatform-internet-facing"
+    service.beta.kubernetes.io/aws-load-balancer-name: {{ .Values.gateway.public.aws.name }}
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
     {{- end }}
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
@@ -143,10 +143,10 @@ metadata:
   annotations:
     {{- if eq .Values.global.provider "eks" }}
     {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
-    service.beta.kubernetes.io/aws-load-balancer-name: "k8s-nullplatform-internal"
+    service.beta.kubernetes.io/aws-load-balancer-name: {{ .Values.gateway.internal.aws.name }}
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
     {{- else }}
-    service.beta.kubernetes.io/aws-load-balancer-name: "k8s-nullplatform-internet-facing"
+    service.beta.kubernetes.io/aws-load-balancer-name: {{ .Values.gateway.public.aws.name }}
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
     {{- end }}
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"

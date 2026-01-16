@@ -35,7 +35,9 @@ gateway:
     enabled: false
   internal:
     enabled: true
-    azure_load_balancer_subnet: 
+    azure_load_balancer_subnet:
+    aws:
+      name: "k8s-nullplatform-internal"
     name: "gateway-private"
     addresses: {}
     autoscaling:
@@ -44,6 +46,8 @@ gateway:
     loadBalancerType: "internal"  # internal, external
   public:
     name: "gateway-public"
+    aws:
+      name: "k8s-nullplatform-internet-facing"
     addresses: {}
     autoscaling:
       minReplicas: 2
