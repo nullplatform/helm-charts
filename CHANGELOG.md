@@ -1,3 +1,10 @@
+## [2.30.1](https://github.com/nullplatform/helm-charts/compare/2.30.0...2.30.1) (2026-01-16)
+
+
+### Bug Fixes
+
+* **chart-base:** add balancer name for aws ([68b36ec](https://github.com/nullplatform/helm-charts/commit/68b36ecb06b5318badcf8a2cec568efd778fe1e8))
+
 # [2.30.0](https://github.com/nullplatform/helm-charts/compare/2.29.2...2.30.0) (2026-01-14)
 
 
