@@ -38,7 +38,11 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15021"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/healthz/ready"
-    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "http" 
+    {{- if .Values.gateway.internal.aws.securityGroups }}
+    service.beta.kubernetes.io/aws-load-balancer-security-groups: {{ .Values.gateway.internal.aws.securityGroups | quote }}
+    service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: "false"
+    {{- end }}
     {{- else if eq .Values.global.provider "aks" }}
     {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
     service.beta.kubernetes.io/azure-load-balancer-internal: 'true'
@@ -47,6 +51,9 @@ metadata:
     service.beta.kubernetes.io/azure-load-balancer-internal: 'false'
     {{- end }}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- if .Values.gateway.internal.azure.networkSecurityGroup }}
+    service.beta.kubernetes.io/azure-load-balancer-security-groups: {{ .Values.gateway.internal.azure.networkSecurityGroup | quote }}
+    {{- end }}
     {{- else if eq .Values.global.provider "gke" }}
     {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
     networking.gke.io/load-balancer-type: "Internal"
@@ -54,6 +61,10 @@ metadata:
     networking.gke.io/load-balancer-type: "External"
     {{- end }}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- if .Values.gateway.internal.gcp.firewallRule }}
+    # GCP firewall rule is managed externally via Terraform
+    # Firewall rule name: {{ .Values.gateway.internal.gcp.firewallRule }}
+    {{- end }}
     {{- else if eq .Values.global.provider "oke" }}
     {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
     service.beta.kubernetes.io/oci-load-balancer-internal: "true"
@@ -156,6 +167,10 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15021"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/healthz/ready"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "http"
+    {{- if .Values.gateway.public.aws.securityGroups }}
+    service.beta.kubernetes.io/aws-load-balancer-security-groups: {{ .Values.gateway.public.aws.securityGroups | quote }}
+    service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: "false"
+    {{- end }}
     {{- else if eq .Values.global.provider "aks" }}
     {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
     service.beta.kubernetes.io/azure-load-balancer-internal: 'true'
@@ -163,6 +178,9 @@ metadata:
     service.beta.kubernetes.io/azure-load-balancer-internal: 'false'
     {{- end }}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- if .Values.gateway.public.azure.networkSecurityGroup }}
+    service.beta.kubernetes.io/azure-load-balancer-security-groups: {{ .Values.gateway.public.azure.networkSecurityGroup | quote }}
+    {{- end }}
     {{- else if eq .Values.global.provider "gke" }}
     {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
     networking.gke.io/load-balancer-type: "Internal"
@@ -170,6 +188,10 @@ metadata:
     networking.gke.io/load-balancer-type: "External"
     {{- end }}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- if .Values.gateway.public.gcp.firewallRule }}
+    # GCP firewall rule is managed externally via Terraform
+    # Firewall rule name: {{ .Values.gateway.public.gcp.firewallRule }}
+    {{- end }}
     {{- else if eq .Values.global.provider "oke" }}
     {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
     service.beta.kubernetes.io/oci-load-balancer-internal: "true"

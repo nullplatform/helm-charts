@@ -36,8 +36,26 @@ gateway:
   internal:
     enabled: true
     azure_load_balancer_subnet:
+    # AWS-specific configuration (EKS)
     aws:
       name: "k8s-nullplatform-internal"
+      # Security Group ID for the internal gateway (restricts health check port 15021 to VPC CIDR)
+      # If empty, the AWS LB Controller will create a default SG with 0.0.0.0/0 access
+      securityGroups: ""
+    # Azure-specific configuration (AKS)
+    azure:
+      # Network Security Group ID for the internal gateway
+      # If empty, Azure will create default rules
+      networkSecurityGroup: ""
+    # GCP-specific configuration (GKE)
+    gcp:
+      # Firewall rule name for the internal gateway
+      # If empty, GCP will use default firewall rules
+      firewallRule: ""
+    # loadBalancerSourceRanges restricts traffic to specified CIDRs (works on Azure/GCP)
+    # For internal gateway, this should be set to VNet/VPC CIDR
+    # Example: ["10.0.0.0/16"]
+    loadBalancerSourceRanges: []
     name: "gateway-private"
     addresses: {}
     autoscaling:
@@ -46,8 +64,26 @@ gateway:
     loadBalancerType: "internal"  # internal, external
   public:
     name: "gateway-public"
+    # AWS-specific configuration (EKS)
     aws:
       name: "k8s-nullplatform-internet-facing"
+      # Security Group ID for the public gateway (restricts health check port 15021 to VPC CIDR while allowing 443 from internet)
+      # If empty, the AWS LB Controller will create a default SG with 0.0.0.0/0 access on all ports
+      securityGroups: ""
+    # Azure-specific configuration (AKS)
+    azure:
+      # Network Security Group ID for the public gateway
+      # If empty, Azure will create default rules
+      networkSecurityGroup: ""
+    # GCP-specific configuration (GKE)
+    gcp:
+      # Firewall rule name for the public gateway
+      # If empty, GCP will use default firewall rules
+      firewallRule: ""
+    # loadBalancerSourceRanges restricts traffic to specified CIDRs (works on Azure/GCP)
+    # For public gateway with health check restriction, use firewall/NSG rules instead
+    # This field is mainly for the private gateway scenario on Azure/GCP
+    loadBalancerSourceRanges: []
     addresses: {}
     autoscaling:
       minReplicas: 2
