@@ -1,3 +1,10 @@
+## [2.30.2](https://github.com/nullplatform/helm-charts/compare/2.30.1...2.30.2) (2026-01-20)
+
+
+### Bug Fixes
+
+* **base:** add security groups to gateways ([04553ed](https://github.com/nullplatform/helm-charts/commit/04553ed4a71cfeb73b382a404d6eb75a91c362fa))
+
 ## [2.30.1](https://github.com/nullplatform/helm-charts/compare/2.30.0...2.30.1) (2026-01-16)
 
 
