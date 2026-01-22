@@ -1,3 +1,10 @@
+# [2.31.0](https://github.com/nullplatform/helm-charts/compare/2.30.2...2.31.0) (2026-01-22)
+
+
+### Features
+
+* **cert-manager:** add support to oci ([b485bb2](https://github.com/nullplatform/helm-charts/commit/b485bb27d40b4817377bdd752d7f94533331a014))
+
 ## [2.30.2](https://github.com/nullplatform/helm-charts/compare/2.30.1...2.30.2) (2026-01-20)
 
 
