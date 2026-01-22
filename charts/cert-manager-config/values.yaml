@@ -15,6 +15,9 @@ azure:
 cloudflare:
   secretName: "cloudflare-api-token-secret"
   apiToken: ""
+oci:
+  region: ""
+  compartmentOCID: ""
 namespaceController:
   name: "gateways"
 secretName: "wildcard-tls"
