@@ -36,5 +36,15 @@ spec:
           {{- else if eq .Values.cloudProvider "aws" }}
           route53:
             region: {{ .Values.route53.region }}
+          {{- else if eq .Values.cloudProvider "oci" }}
+          webhook:
+            groupName: acme.d-n.be
+            solverName: oci
+            config:
+              ociWorkloadIdentityEnabled: true
+              ociRegion: {{ .Values.oci.region }}
+              ociCompartmentOCID: {{ .Values.oci.compartmentOCID }}
           {{- end }}
+          
+
 {{- end }}
