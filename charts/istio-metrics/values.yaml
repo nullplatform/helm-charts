@@ -9,7 +9,7 @@ prometheus:
   # Namespace where Prometheus is/will be installed
   # This is used whether installing Prometheus via this chart or using an existing installation
   namespace: "prometheus"
-  
+
   # Prometheus server configuration
   server:
     persistentVolume:
@@ -18,22 +18,22 @@ prometheus:
     global:
       scrape_interval: 15s
       evaluation_interval: 15s
-    
+
     # Additional scrape configs to include
     extraScrapeConfigs: |
       - job_name: 'k8s-labels-exporter'
         static_configs:
           - targets: ['k8s-labels-exporter.prometheus:9101']
-  
+
   # ConfigMap configuration
   # Use this to create a complete Prometheus ConfigMap with our recording rules included
   configMap:
     # Enable creation of Prometheus ConfigMap
     create: false
-    
+
     # Name of the ConfigMap to create
     name: "prometheus-server"
-    
+
     # Custom configuration - if provided, this completely replaces the default
     # Example:
     # customConfig:
@@ -47,7 +47,7 @@ prometheus:
     #       - name: my_rules
     #         rules: []
     customConfig: {}
-    
+
     # Additional scrape configs to append (only used when customConfig is empty)
     additionalScrapeConfigs: ""
 
