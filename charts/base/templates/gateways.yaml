@@ -71,7 +71,20 @@ metadata:
     {{- else }}
     service.beta.kubernetes.io/oci-load-balancer-internal: "false"
     {{- end }}
-    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    oci.oraclecloud.com/load-balancer-type: {{ .Values.gateway.internal.oci.loadBalancerType | default "lb" | quote }}
+    service.beta.kubernetes.io/oci-load-balancer-shape: {{ .Values.gateway.internal.oci.shape | default "flexible" | quote }}
+    {{- if eq (.Values.gateway.internal.oci.shape | default "flexible") "flexible" }}
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: {{ .Values.gateway.internal.oci.shapeFlexMin | default "10" | quote }}
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: {{ .Values.gateway.internal.oci.shapeFlexMax | default "100" | quote }}
+    {{- end }}
+    {{- if .Values.gateway.internal.oci.subnet }}
+    service.beta.kubernetes.io/oci-load-balancer-subnet1: {{ .Values.gateway.internal.oci.subnet | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: {{ .Values.gateway.internal.oci.securityListManagementMode | default "None" | quote }}
+    {{- if .Values.gateway.internal.oci.networkSecurityGroupIds }}
+    oci.oraclecloud.com/oci-network-security-groups: {{ .Values.gateway.internal.oci.networkSecurityGroupIds | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/oci-load-balancer-backend-protocol: "TCP"
     {{- else }}
     {{- /* Default annotations for other providers */ -}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
@@ -198,7 +211,20 @@ metadata:
     {{- else }}
     service.beta.kubernetes.io/oci-load-balancer-internal: "false"
     {{- end }}
-    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    oci.oraclecloud.com/load-balancer-type: {{ .Values.gateway.public.oci.loadBalancerType | default "lb" | quote }}
+    service.beta.kubernetes.io/oci-load-balancer-shape: {{ .Values.gateway.public.oci.shape | default "flexible" | quote }}
+    {{- if eq (.Values.gateway.public.oci.shape | default "flexible") "flexible" }}
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: {{ .Values.gateway.public.oci.shapeFlexMin | default "10" | quote }}
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: {{ .Values.gateway.public.oci.shapeFlexMax | default "100" | quote }}
+    {{- end }}
+    {{- if .Values.gateway.public.oci.subnet }}
+    service.beta.kubernetes.io/oci-load-balancer-subnet1: {{ .Values.gateway.public.oci.subnet | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: {{ .Values.gateway.public.oci.securityListManagementMode | default "None" | quote }}
+    {{- if .Values.gateway.public.oci.networkSecurityGroupIds }}
+    oci.oraclecloud.com/oci-network-security-groups: {{ .Values.gateway.public.oci.networkSecurityGroupIds | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/oci-load-balancer-backend-protocol: "TCP"
     {{- else }}
     {{- /* Default annotations for other providers */ -}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
