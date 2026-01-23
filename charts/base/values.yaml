@@ -122,7 +122,7 @@ gateway:
 # Nullplatform configurations
 nullplatform:
   apiKey: ""
-  secretName: "" #If provided will mount it from an existing secret
+  secretName: ""  # If provided will mount it from an existing secret
 # Logging configurations
 controlPlane:
   enabled: false

@@ -44,8 +44,8 @@ configuration:
     TAGS: ""
     NP_LOG_LEVEL: DEBUG
     NP_API_KEY: ""
-      #example:
-    #AGENT_REPO: "https://reppo_01.gt#main,https://token@repo_01.git#main"
+      # example:
+    # AGENT_REPO: "https://reppo_01.gt#main,https://token@repo_01.git#main"
     AGENT_REPO: ""
 
 image:
@@ -143,7 +143,7 @@ initScripts: []
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: []
 
-#Lifecycle preStop Hook for Graceful Agent Shutdown
+# Lifecycle preStop Hook for Graceful Agent Shutdown
 lifecycle:
   preStop:
     exec:
