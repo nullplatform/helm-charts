@@ -11,7 +11,7 @@ spec:
       serviceAccountName: nullplatform-crd-installer-sa
       containers:
       - name: install-crds
-        image: docker.io/bitnami/kubectl:latest
+        image: bitnamisecure/kubectl:latest
         command:
           - /bin/sh
           - -c
