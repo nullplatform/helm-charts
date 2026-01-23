@@ -73,3 +73,11 @@ Examples:
 - feat: add autoscaling values
 - fix: correct service name
 - chore: update docs
+
+## Tooling
+
+Install yamllint for local YAML validation:
+
+```bash
+pip install yamllint
+```
