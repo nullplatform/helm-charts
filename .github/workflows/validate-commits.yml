@@ -28,5 +28,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate branch name
+        run: ./scripts/validate-branch-name.sh "${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+
       - name: Validate commit messages
         run: npx commitlint --from ${{ github.event.pull_request.base.sha || 'HEAD~10' }} --to ${{ github.sha }} --verbose

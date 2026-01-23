@@ -1,94 +1,90 @@
-<h2 align="center">
-    <a href="https://httpie.io" target="blank_">
-        <img height="100" alt="nullplatform" src="https://nullplatform.com/favicon/android-chrome-192x192.png" />
-    </a>
-    <br>
-    <br>
-    Nullplatform Agent Helm Chart
-    <br>
-</h2>
+# nullplatform-agent
 
-This chart installs the Nullplatform agent to operate on your behalf to operate the lifecycle of:
-* Custom Scopes
-* Services
-* Custom Actions
+![Version: 2.31.0](https://img.shields.io/badge/Version-2.31.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.31.0](https://img.shields.io/badge/AppVersion-2.31.0-informational?style=flat-square)
+
+Agent used to interact with services, scopes and telemetry inside a cluster
+
+## Installation
 
 ```bash
-helm install nullplatform-agent nullplatform/nullplatform-agent \
-  --set configuration.values.NP_API_KEY=$NP_API_KEY \
-  --set configuration.values.TAGS="$AGENT_TAGS" \
-  --set configuration.values.GITHUB_TOKEN=$GITHUB_TOKEN \
-  --set configuration.values.GITHUB_REPO=$GITHUB_REPO
+helm repo add nullplatform https://nullplatform.github.io/helm-charts
+helm repo update
+helm install nullplatform-agent nullplatform/nullplatform-agent
 ```
 
 ## Configuration
 
-This chart supports to extend the agent into a different registry and change the command being executed:
+## Values
 
-* Override the `args` value to change the command and map it up with secrets mounted
-* Add any env variable needed to start the agent using `configuration.values`
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| args[0] | string | `"--tags=$(TAGS)"` |  |
+| args[1] | string | `"--apikey=$(NP_API_KEY)"` |  |
+| args[2] | string | `"--runtime=host"` |  |
+| args[3] | string | `"--command-executor-env=NP_API_KEY=$(NP_API_KEY)"` |  |
+| args[4] | string | `"--command-executor-debug"` |  |
+| args[5] | string | `"--webserver-enabled"` |  |
+| args[6] | string | `"--command-executor-git-command-repos $(AGENT_REPO)"` |  |
+| autoscaling.enabled | bool | `false` |  |
+| autoscaling.maxReplicas | int | `2` |  |
+| autoscaling.minReplicas | int | `1` |  |
+| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| configuration.create | bool | `true` |  |
+| configuration.secretName | string | `"nullplatform-agent-secret"` |  |
+| configuration.values.AGENT_REPO | string | `""` |  |
+| configuration.values.NP_API_KEY | string | `""` |  |
+| configuration.values.NP_LOG_LEVEL | string | `"DEBUG"` |  |
+| configuration.values.TAGS | string | `""` |  |
+| fullnameOverride | string | `""` |  |
+| image.pullPolicy | string | `"Always"` |  |
+| image.repository | string | `"public.ecr.aws/nullplatform/controlplane-agent"` |  |
+| image.tag | string | `"latest"` |  |
+| imagePullSecret.create | bool | `false` |  |
+| initContainers | list | `[]` |  |
+| initScripts | list | `[]` |  |
+| lifecycle.preStop.exec.command[0] | string | `"/bin/sh"` |  |
+| lifecycle.preStop.exec.command[1] | string | `"-c"` |  |
+| lifecycle.preStop.exec.command[2] | string | `"pid=$(pgrep -f agent) && kill -15 $pid && sleep 30"` |  |
+| livenessProbe.httpGet.path | string | `"/health"` |  |
+| livenessProbe.httpGet.port | int | `8080` |  |
+| nameOverride | string | `""` |  |
+| namespace | string | `"nullplatform-tools"` |  |
+| nodeSelector | object | `{}` |  |
+| podAnnotations.name | string | `"nullplatform-agent"` |  |
+| podLabels.name | string | `"nullplatform-agent"` |  |
+| podSecurityContext | object | `{}` |  |
+| priorityClass.enabled | bool | `true` |  |
+| priorityClass.value | int | `500000` |  |
+| readinessProbe.httpGet.path | string | `"/health"` |  |
+| readinessProbe.httpGet.port | int | `8080` |  |
+| replicaCount | int | `1` |  |
+| resources | object | `{}` |  |
+| securityContext | object | `{}` |  |
+| serviceAccount.annotations | object | `{}` |  |
+| serviceAccount.automount | bool | `true` |  |
+| serviceAccount.clusterWide | bool | `true` |  |
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.name | string | `"nullplatform-agent"` |  |
+| serviceAccount.role.rules[0].apiGroups[0] | string | `"*"` |  |
+| serviceAccount.role.rules[0].apiGroups[1] | string | `""` |  |
+| serviceAccount.role.rules[0].resources[0] | string | `"*"` |  |
+| serviceAccount.role.rules[0].verbs[0] | string | `"*"` |  |
+| statefulset.podManagementPolicy | string | `"OrderedReady"` |  |
+| statefulset.serviceName | string | `"nullplatform-agent"` |  |
+| statefulset.updateStrategy.type | string | `"RollingUpdate"` |  |
+| statefulset.volumeClaimTemplates | list | `[]` |  |
+| tolerations[0].effect | string | `"NoExecute"` |  |
+| tolerations[0].key | string | `"node.kubernetes.io/not-ready"` |  |
+| tolerations[0].operator | string | `"Exists"` |  |
+| tolerations[0].tolerationSeconds | int | `300` |  |
+| tolerations[1].effect | string | `"NoExecute"` |  |
+| tolerations[1].key | string | `"node.kubernetes.io/unreachable"` |  |
+| tolerations[1].operator | string | `"Exists"` |  |
+| tolerations[1].tolerationSeconds | int | `300` |  |
+| volumeMounts | list | `[]` |  |
+| volumes | list | `[]` |  |
+| workloadType | string | `"deployment"` |  |
 
-| Configuration Section | Key | Value | Purpose |
-|----------------------|-----|-------|---------|
-| **Basic Deployment** | `replicaCount` | `1` | Number of pod replicas to run |
-| | `namespace` | `nullplatform-tools` | Kubernetes namespace for deployment |
-| **Application Arguments** | `args[0]` | `"--tags=$(TAGS)"` | Sets application tags from environment variable → **References**: `configuration.values.TAGS` |
-| | `args[1]` | `"--apikey=$(NP_API_KEY)"` | Provides API key for authentication → **References**: `configuration.values.NP_API_KEY` |
-| | `args[2]` | `"--runtime=host"` | Configures runtime environment as host (static value) |
-| | `args[3]` | `"--command-executor-env=NP_API_KEY=$(NP_API_KEY)"` | Passes API key to command executor → **References**: `configuration.values.NP_API_KEY` |
-| | `args[4]` | `"--command-executor-debug"` | Enables debug mode for command executor (static value) |
-| | `args[5]` | `"--webserver-enabled"` | Enables built-in web server (static value) |
-| | `args[6]` | `"--command-executor-git-command-repos https://$(GITHUB_TOKEN)@$(GITHUB_REPO)#$(GITHUB_BRANCH)"` | Configures Git repository access → **References**: `configuration.values.GITHUB_TOKEN`, `configuration.values.GITHUB_REPO`, `configuration.values.GITHUB_BRANCH` |
-| **Secret Configuration** | `configuration.create` | `true` | Creates a Kubernetes secret |
-| | `configuration.secretName` | `nullplatform-agent-secret` | Name of the secret to create |
-| | `configuration.values.TAGS` | `""` | Empty tags value (to be filled) |
-| | `configuration.values.NP_LOG_LEVEL` | `DEBUG` | Sets logging level to debug |
-| | `configuration.values.NP_API_KEY` | `""` | Nullplatform API key (to be filled) |
-| | `configuration.values.GITHUB_USER` | `""` | GitHub username (to be filled) |
-| | `configuration.values.GITHUB_TOKEN` | `""` | GitHub personal access token (to be filled) |
-| | `configuration.values.GITHUB_REPO` | `""` | GitHub repository URL (to be filled) |
-| | `configuration.values.GITHUB_BRANCH` | `main` | Git branch to use |
-| **Container Image** | `image.repository` | `public.ecr.aws/nullplatform/controlplane-agent` | Container image repository |
-| | `image.pullPolicy` | `Never` | Never pull image (use local) |
-| | `image.tag` | `beta` | Image tag version |
-| **Image Pull Secret** | `imagePullSecret.create` | `false` | Create a new image pull secret (set to `true` and provide credentials) |
-| | `imagePullSecret.name` | `image-pull-secret-agent` | Name of the image pull secret (to create or reference existing) |
-| | `imagePullSecret.registry` | `""` | Container registry URL (required if `create: true`) |
-| | `imagePullSecret.username` | `""` | Username for registry authentication (required if `create: true`) |
-| | `imagePullSecret.password` | `""` | Password for registry authentication (required if `create: true`) |
-| **Service Account** | `serviceAccount.create` | `true` | Creates a service account |
-| | `serviceAccount.automount` | `true` | Auto-mounts service account token |
-| | `serviceAccount.name` | `nullplatform-agent` | Service account name |
-| | `serviceAccount.role.rules` | Full access (`*`) | Grants full cluster permissions |
-| **Pod Configuration** | `podAnnotations.name` | `nullplatform-agent` | Pod annotation for identification |
-| | `podLabels.name` | `nullplatform-agent` | Pod label for identification |
-| **Resource Management** | `resources.requests.cpu` | `100m` | Minimum CPU requirement |
-| | `resources.requests.memory` | `64Mi` | Minimum memory requirement |
-| | `resources.limits.cpu` | `200m` | Maximum CPU limit |
-| | `resources.limits.memory` | `128Mi` | Maximum memory limit |
-| **Health Checks** | `livenessProbe.httpGet.path` | `/health` | Health check endpoint path → **Correlates with**: `args[5]` webserver |
-| | `livenessProbe.httpGet.port` | `8080` | Health check port → **Correlates with**: `args[5]` webserver |
-| | `readinessProbe.httpGet.path` | `/health` | Readiness check endpoint path → **Correlates with**: `args[5]` webserver |
-| | `readinessProbe.httpGet.port` | `8080` | Readiness check port → **Correlates with**: `args[5]` webserver |
-| **Auto Scaling** | `autoscaling.enabled` | `false` | Horizontal pod autoscaling disabled |
-| | `autoscaling.minReplicas` | `1` | Minimum replicas when scaling |
-| | `autoscaling.maxReplicas` | `2` | Maximum replicas when scaling |
-| | `autoscaling.targetCPUUtilizationPercentage` | `80` | CPU threshold for scaling |
-| **Pod Scheduling** | `tolerations[0]` | Node not ready toleration | Allows pod to run on not-ready nodes for 5 minutes |
-| | `tolerations[1]` | Node unreachable toleration | Allows pod to run on unreachable nodes for 5 minutes |
-| **Storage** | `volumes[0].name` | `repos` | Volume name for repository storage → **Correlates with**: `volumeMounts[0].name` and Git operations from `args[6]` |
-| | `volumes[0].type` | `emptyDir` | Temporary volume type for Git repository cloning |
-| | `volumeMounts[0].name` | `repos` | Mount the repos volume → **References**: `volumes[0].name` |
-| | `volumeMounts[0].mountPath` | `/root/.np` | Mount path inside container for Nullplatform agent data and Git repos |
-
-## Argument and Configuration Correlations
-
-### Environment Variable Flow:
-- **`configuration.values`** → **Pod Environment Variables** → **`args` command-line arguments**
-
-### Key Relationships:
-1. **`NP_API_KEY`**: Defined in `configuration.values.NP_API_KEY` → Used in `args[1]` and `args[3]`
-2. **`TAGS`**: Defined in `configuration.values.TAGS` → Used in `args[0]`
-3. **GitHub Integration**: `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` from `configuration.values` → Combined in `args[6]`
-4. **Web Server**: Enabled by `args[5]` → Health probes depend on this server running on port 8080
-5. **Storage**: `volumes[0]` creates storage → `volumeMounts[0]` mounts it → Git operations from `args[6]` use it
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
