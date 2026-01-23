@@ -1,7 +1,7 @@
 # Global settings
 global:
   installGatewayV2Crd: true
-  # Kubernetes provider (options: "oks", "gke", "eks", "aks","aro")
+  # Kubernetes provider (options: "oke", "gke", "eks", "aks", "aro")
   provider: "eks"
   # AWS region (applicable for EKS provider)
   awsRegion: "us-east-1"
@@ -52,6 +52,21 @@ gateway:
       # Firewall rule name for the internal gateway
       # If empty, GCP will use default firewall rules
       firewallRule: ""
+    # OCI-specific configuration (OKE)
+    oci:
+      # Load balancer type: "lb" (Layer 7) or "nlb" (Layer 4 Network Load Balancer)
+      loadBalancerType: "lb"
+      # Shape of the load balancer: "flexible", "100Mbps", "400Mbps", "8000Mbps"
+      shape: "flexible"
+      # Flexible shape bandwidth (only applicable when shape is "flexible")
+      shapeFlexMin: "10"
+      shapeFlexMax: "100"
+      # Subnet OCID for the load balancer (optional, uses default if empty)
+      subnet: ""
+      # Security list management mode: "All", "Frontend", "None"
+      securityListManagementMode: "None"
+      # Network Security Group OCIDs (comma-separated, optional)
+      networkSecurityGroupIds: ""
     # loadBalancerSourceRanges restricts traffic to specified CIDRs (works on Azure/GCP)
     # For internal gateway, this should be set to VNet/VPC CIDR
     # Example: ["10.0.0.0/16"]
@@ -80,6 +95,21 @@ gateway:
       # Firewall rule name for the public gateway
       # If empty, GCP will use default firewall rules
       firewallRule: ""
+    # OCI-specific configuration (OKE)
+    oci:
+      # Load balancer type: "lb" (Layer 7) or "nlb" (Layer 4 Network Load Balancer)
+      loadBalancerType: "lb"
+      # Shape of the load balancer: "flexible", "100Mbps", "400Mbps", "8000Mbps"
+      shape: "flexible"
+      # Flexible shape bandwidth (only applicable when shape is "flexible")
+      shapeFlexMin: "10"
+      shapeFlexMax: "100"
+      # Subnet OCID for the load balancer (optional, uses default if empty)
+      subnet: ""
+      # Security list management mode: "All", "Frontend", "None"
+      securityListManagementMode: "None"
+      # Network Security Group OCIDs (comma-separated, optional)
+      networkSecurityGroupIds: ""
     # loadBalancerSourceRanges restricts traffic to specified CIDRs (works on Azure/GCP)
     # For public gateway with health check restriction, use firewall/NSG rules instead
     # This field is mainly for the private gateway scenario on Azure/GCP
