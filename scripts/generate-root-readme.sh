@@ -1,3 +1,9 @@
+#!/usr/bin/env sh
+set -e
+
+tmp_file="$(mktemp)"
+
+cat > "$tmp_file" <<'EOF'
 <h2 align="center">
     <a href="https://httpie.io" target="blank_">
         <img height="100" alt="nullplatform" src="https://nullplatform.com/favicon/android-chrome-192x192.png" />
@@ -16,10 +22,48 @@ This repository contains the following charts:
 
 | Chart | Description | Version |
 |------|-------------|---------|
-| istio-metrics | Nullplatform Istio metrics enrichment for Kubernetes applications | 1.0.0 |
-| nullplatform-agent | Agent used to interact with services, scopes and telemetry inside a cluster | 2.31.0 |
-| nullplatform-base | A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes | 2.31.0 |
-| nullplatform-cert-manager-config | A Helm chart for cert-manager configurations | 2.31.0 |
+EOF
+
+list_charts() {
+  for chart in charts/*/Chart.yaml; do
+    name=$(awk -F': *' '$1=="name"{print $2; exit}' "$chart")
+    version=$(awk -F': *' '$1=="version"{print $2; exit}' "$chart")
+    desc=$(awk '
+      /^description:/ {
+        sub(/^description:[[:space:]]*/, "", $0)
+        if ($0 != "" && $0 != ">-" && $0 != ">") {
+          print $0
+          exit
+        }
+        in_desc = 1
+        next
+      }
+      in_desc {
+        if ($0 ~ /^[^[:space:]]/) {
+          exit
+        }
+        sub(/^[[:space:]]+/, "", $0)
+        if (line == "") {
+          line = $0
+        } else {
+          line = line " " $0
+        }
+      }
+      END {
+        if (line != "") {
+          print line
+        }
+      }
+    ' "$chart")
+    printf "%s\t%s\t%s\n" "$name" "$desc" "$version"
+  done
+}
+
+list_charts | sort | while IFS=$'\t' read -r name desc version; do
+  printf "| %s | %s | %s |\n" "$name" "$desc" "$version" >> "$tmp_file"
+done
+
+cat >> "$tmp_file" <<'EOF'
 
 ## How to Use This Repository
 
@@ -73,3 +117,6 @@ Examples:
 - feat: add autoscaling values
 - fix: correct service name
 - chore: update docs
+EOF
+
+mv "$tmp_file" README.md

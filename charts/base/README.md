@@ -1,65 +1,127 @@
-<h2 align="center">
-    <a href="https://httpie.io" target="blank_">
-        <img height="100" alt="nullplatform" src="https://nullplatform.com/favicon/android-chrome-192x192.png" />
-    </a>
-    <br>
-    <br>
-    Nullplatform Base Helm Chart
-    <br>
-</h2>
+# nullplatform-base
 
-To install the nullplatform base helm chart with custom values, you can use the following `helm install` command with specific `--set` parameters:
+![Version: 2.31.0](https://img.shields.io/badge/Version-2.31.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.31.0](https://img.shields.io/badge/AppVersion-2.31.0-informational?style=flat-square)
+
+A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
+
+## Installation
 
 ```bash
-helm install my-release nullplatform/nullplatform-base \
-  --set global.provider=eks \
-  --set global.awsRegion=us-east-1 \
-  --set tls.secretName=my-tls-secret \
-  --set logging.datadog.enabled=true \
-  --set logging.datadog.apiKey=my-datadog-api-key
+helm repo add nullplatform https://nullplatform.github.io/helm-charts
+helm repo update
+helm install nullplatform-base nullplatform/nullplatform-base
 ```
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://kubernetes-sigs.github.io/metrics-server | metrics-server | ^3.12.0 |
+
 ## Configuration
 
-The following table lists the configurable parameters of the Null chart and their default values.
+## Values
 
-| Parameter                   | Description                                                       | Default                            |
-|-----------------------------| ----------------------------------------------------------------- |------------------------------------|
-| `global.provider`           | Kubernetes provider (options: "oks", "gke", "eks", "aks", native) | `"eks"`                            |
-| `global.awsRegion`          | AWS region (applicable for EKS provider)                          | `"us-east-1"`                      |
-| `global.installGatewayV2Crd`| Install Gateway API v2 CRDs via pre-install hook                 | `true`                             |
-| `gateway.http.enabled`      | Enable HTTP listener on port 80                                  | `false`                            |
-| `gateway.internal.enabled`  | Enable internal/private load balancer gateway                    | `true`                             |
-| `tls.secretName`            | Name of the TLS secret                                            | `""`                               |
-| `tls.required`              | Require TLS secret name to be provided                           | `true`                             |
-| `logging.enabled`           | Enable logging functionality                                      | `true`                             |
-| `logging.gelf.enabled`      | Enable GELF logging                                               | `false`                            |
-| `logging.loki.enabled`      | Enable Loki logging                                               | `false`                            |
-| `logging.datadog.enabled`   | Enable Datadog logging                                            | `false`                            |
-| `cloudwatch.enabled`        | Enable CloudWatch                                                 | `false`                            |
-| `metricsServer.enabled`     | Enable metrics server                                             | `true`                             |
-| `gatewayAPI.enabled`        | Enable Gateway API                                                | `true`                             |
-| `imagePullSecrets.enabled`  | Enable image pull secret                                          | `false`                            |
-| `imagePullSecrets.name`     | Name of the image pull secret                                     | `"image-pull-secret-nullplatform"` |
-| `imagePullSecrets.registry` | Container registry URL for image pull secret                      | `""`                               |
-| `imagePullSecrets.username` | Username for container registry                                   | `""`                               |
-| `imagePullSecrets.password` | Password for container registry                                   | `""`                               |
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| cloudwatch.accessLogs.enabled | bool | `false` |  |
+| cloudwatch.customMetrics.enabled | bool | `true` |  |
+| cloudwatch.enabled | bool | `false` |  |
+| cloudwatch.logs.enabled | bool | `true` |  |
+| cloudwatch.performanceMetrics.enabled | bool | `true` |  |
+| cloudwatch.region | string | `"us-east-1"` |  |
+| cloudwatch.retentionDays | int | `7` |  |
+| controlPlane.agent.image | string | `"public.ecr.aws/nullplatform/controlplane-agent:latest"` |  |
+| controlPlane.agent.resources.limits.cpu | string | `"100m"` |  |
+| controlPlane.agent.resources.limits.memory | string | `"150Mi"` |  |
+| controlPlane.agent.resources.requests.cpu | string | `"50m"` |  |
+| controlPlane.agent.resources.requests.memory | string | `"100Mi"` |  |
+| controlPlane.enabled | bool | `false` |  |
+| customConf.configMapName | string | `""` |  |
+| customConf.enabled | bool | `false` |  |
+| envoy.filters.preserveExternalRequestId.enabled | bool | `false` |  |
+| gateway.http.enabled | bool | `false` |  |
+| gateway.internal.addresses | object | `{}` |  |
+| gateway.internal.autoscaling.maxReplicas | int | `10` |  |
+| gateway.internal.autoscaling.minReplicas | int | `2` |  |
+| gateway.internal.aws.name | string | `"k8s-nullplatform-internal"` |  |
+| gateway.internal.aws.securityGroups | string | `""` |  |
+| gateway.internal.azure.networkSecurityGroup | string | `""` |  |
+| gateway.internal.azure_load_balancer_subnet | string | `nil` |  |
+| gateway.internal.enabled | bool | `true` |  |
+| gateway.internal.gcp.firewallRule | string | `""` |  |
+| gateway.internal.loadBalancerSourceRanges | list | `[]` |  |
+| gateway.internal.loadBalancerType | string | `"internal"` |  |
+| gateway.internal.name | string | `"gateway-private"` |  |
+| gateway.public.addresses | object | `{}` |  |
+| gateway.public.autoscaling.maxReplicas | int | `10` |  |
+| gateway.public.autoscaling.minReplicas | int | `2` |  |
+| gateway.public.aws.name | string | `"k8s-nullplatform-internet-facing"` |  |
+| gateway.public.aws.securityGroups | string | `""` |  |
+| gateway.public.azure.networkSecurityGroup | string | `""` |  |
+| gateway.public.gcp.firewallRule | string | `""` |  |
+| gateway.public.loadBalancerSourceRanges | list | `[]` |  |
+| gateway.public.loadBalancerType | string | `"external"` |  |
+| gateway.public.name | string | `"gateway-public"` |  |
+| gatewayAPI.crds.install | bool | `true` |  |
+| gatewayAPI.enabled | bool | `true` |  |
+| gateways.enabled | bool | `true` |  |
+| global.awsRegion | string | `"us-east-1"` |  |
+| global.installGatewayV2Crd | bool | `true` |  |
+| global.provider | string | `"eks"` |  |
+| imagePullSecrets.enabled | bool | `false` |  |
+| imagePullSecrets.name | string | `"image-pull-secret-nullplatform"` |  |
+| imagePullSecrets.password | string | `""` |  |
+| imagePullSecrets.registry | string | `""` |  |
+| imagePullSecrets.username | string | `""` |  |
+| ingressControllers.private.domain | string | `""` |  |
+| ingressControllers.private.enabled | bool | `true` |  |
+| ingressControllers.private.name | string | `"internal"` |  |
+| ingressControllers.private.scope | string | `"Internal"` |  |
+| ingressControllers.public.domain | string | `""` |  |
+| ingressControllers.public.enabled | bool | `true` |  |
+| ingressControllers.public.name | string | `"internet-facing"` |  |
+| ingressControllers.public.scope | string | `"External"` |  |
+| logging.controller.image | string | `"public.ecr.aws/nullplatform/k8s-logs-controller:latest"` |  |
+| logging.controller.resources.limits.cpu | string | `"700m"` |  |
+| logging.controller.resources.limits.memory | string | `"300Mi"` |  |
+| logging.controller.resources.requests.cpu | string | `"100m"` |  |
+| logging.controller.resources.requests.memory | string | `"200Mi"` |  |
+| logging.datadog.apiKey | string | `""` |  |
+| logging.datadog.enabled | bool | `true` |  |
+| logging.datadog.region | string | `""` |  |
+| logging.dynatrace.apiKey | string | `""` |  |
+| logging.dynatrace.enabled | bool | `false` |  |
+| logging.dynatrace.environmentId | string | `""` |  |
+| logging.enabled | bool | `true` |  |
+| logging.gelf.enabled | bool | `false` |  |
+| logging.gelf.host | string | `""` |  |
+| logging.gelf.port | string | `""` |  |
+| logging.loki.bearerToken | string | `""` |  |
+| logging.loki.enabled | bool | `false` |  |
+| logging.loki.host | string | `""` |  |
+| logging.loki.matchRegex | string | `"container.*.application"` |  |
+| logging.loki.password | string | `""` |  |
+| logging.loki.port | string | `""` |  |
+| logging.loki.user | string | `""` |  |
+| logging.newrelic.enabled | bool | `false` |  |
+| logging.newrelic.licenseKey | string | `""` |  |
+| logging.newrelic.region | string | `""` |  |
+| logging.prometheus.enabled | bool | `false` |  |
+| logging.prometheus.exporterPort | int | `2021` |  |
+| logging.streams.enabled | bool | `false` |  |
+| logging.streams.mountPath | string | `"/etc/null-logs/streams-dd.conf"` |  |
+| logging.streams.subPath | string | `"streams-dd.conf"` |  |
+| logging.streamsConfigMapName | string | `"streams-dd-config"` |  |
+| metricsServer.enabled | bool | `true` |  |
+| namespaces.gateway | string | `"gateways"` |  |
+| namespaces.nullplatformApplications | string | `"nullplatform"` |  |
+| namespaces.nullplatformTools | string | `"nullplatform-tools"` |  |
+| nullplatform.apiKey | string | `""` |  |
+| nullplatform.secretName | string | `""` |  |
+| tls.required | bool | `true` |  |
+| tls.secretName | string | `"wildcard-tls"` |  |
+| tls.secretPrivateName | string | `"wildcard-tls-internal"` |  |
 
-For a complete list of configurable options, please refer to the `values.yaml` file.
-
-## Uninstalling the chart
-
-This Helm chart includes a protection mechanism that prevents deletion of the release. The protection works by using a pre-delete hook that runs indefinitely, blocking the Helm uninstall process. This protection is permanent - Once deployed, the Helm release cannot be deleted through normal Helm commands
-This is by design to prevent unauthorized deletion of critical infrastructure
-Only the Nullplatform team can safely remove this chart
-When users attempt to run helm uninstall, they must check the job logs to see the message.
-
-
-## Notes
-
-- When using specific logging solutions (GELF, Loki, Datadog), make sure to set their respective `enabled` flag to `true` and provide the necessary configuration details.
-- The `global.provider` must be set to one of the supported providers: "oks", "gke", "eks", "native" or "aks".
-- For EKS installations, you may want to enable CloudWatch by setting `cloudwatch.enabled=true`.
-- By default, TLS configuration requires a valid `tls.secretName`. Set `tls.required=false` to make TLS optional.
-- Set `global.installGatewayV2Crd=false` to skip installing Gateway API CRDs if they're already present in your cluster.
-- The `metrics-server` and `gateway-api` are enabled by default. Set their `enabled` flag to `false` if you don't want to use them.
-- If you have `nullplatform` and/or `nullplatform-tools` already created run helm with `--no-hooks` option
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
