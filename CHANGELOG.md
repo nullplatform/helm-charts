@@ -1,3 +1,21 @@
+# [2.32.0](https://github.com/nullplatform/helm-charts/compare/2.31.0...2.32.0) (2026-01-26)
+
+
+### Bug Fixes
+
+* **base:** use fully qualified image name for kubectl ([5fca77a](https://github.com/nullplatform/helm-charts/commit/5fca77a611495cb00d91cca25c5df774c03330e6))
+
+
+### Features
+
+* **base:** add OCI/OKE gateway support with load balancer annotations ([b784b21](https://github.com/nullplatform/helm-charts/commit/b784b218d21b48a1cb62c3d1351d9acade6ac578))
+* **oci:** add support to oci ([c7e0b9f](https://github.com/nullplatform/helm-charts/commit/c7e0b9fd4e745c64e491e6cd0281249aea543d8d))
+
+
+### Reverts
+
+* Revert "fix(base): use fully qualified image name for kubectl" ([ab05249](https://github.com/nullplatform/helm-charts/commit/ab05249ecf7441534516c065a21c604c5b4b459b))
+
 # [2.31.0](https://github.com/nullplatform/helm-charts/compare/2.30.2...2.31.0) (2026-01-22)
 
 
