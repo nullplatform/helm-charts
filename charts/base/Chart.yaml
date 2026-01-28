@@ -6,6 +6,17 @@ description: >-
 type: application
 version: 2.33.0
 appVersion: 2.32.1
+keywords:
+  - nullplatform
+  - base
+  - kubernetes
+  - metrics-server
+home: https://nullplatform.com
+sources:
+  - https://github.com/nullplatform/helm-charts
+maintainers:
+  - name: Nullplatform
+    email: support@nullplatform.com
 dependencies:
   - name: metrics-server
     version: ^3.12.0
