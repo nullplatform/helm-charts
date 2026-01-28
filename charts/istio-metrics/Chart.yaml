@@ -13,7 +13,7 @@ keywords:
   - observability
 home: https://nullplatform.com
 sources:
-  - https://github.com/nullplatform/infrastructure-nullplatform-helm-charts
+  - https://github.com/nullplatform/helm-charts
 maintainers:
   - name: Nullplatform
     email: support@nullplatform.com
