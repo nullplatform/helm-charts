@@ -1,6 +1,6 @@
 # nullplatform-base
 
-![Version: 2.31.0](https://img.shields.io/badge/Version-2.31.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.31.0](https://img.shields.io/badge/AppVersion-2.31.0-informational?style=flat-square)
+![Version: 2.33.0](https://img.shields.io/badge/Version-2.33.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 
@@ -53,6 +53,13 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | gateway.internal.loadBalancerSourceRanges | list | `[]` |  |
 | gateway.internal.loadBalancerType | string | `"internal"` |  |
 | gateway.internal.name | string | `"gateway-private"` |  |
+| gateway.internal.oci.loadBalancerType | string | `"lb"` |  |
+| gateway.internal.oci.networkSecurityGroupIds | string | `""` |  |
+| gateway.internal.oci.securityListManagementMode | string | `"None"` |  |
+| gateway.internal.oci.shape | string | `"flexible"` |  |
+| gateway.internal.oci.shapeFlexMax | string | `"100"` |  |
+| gateway.internal.oci.shapeFlexMin | string | `"10"` |  |
+| gateway.internal.oci.subnet | string | `""` |  |
 | gateway.public.addresses | object | `{}` |  |
 | gateway.public.autoscaling.maxReplicas | int | `10` |  |
 | gateway.public.autoscaling.minReplicas | int | `2` |  |
@@ -63,6 +70,13 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | gateway.public.loadBalancerSourceRanges | list | `[]` |  |
 | gateway.public.loadBalancerType | string | `"external"` |  |
 | gateway.public.name | string | `"gateway-public"` |  |
+| gateway.public.oci.loadBalancerType | string | `"lb"` |  |
+| gateway.public.oci.networkSecurityGroupIds | string | `""` |  |
+| gateway.public.oci.securityListManagementMode | string | `"None"` |  |
+| gateway.public.oci.shape | string | `"flexible"` |  |
+| gateway.public.oci.shapeFlexMax | string | `"100"` |  |
+| gateway.public.oci.shapeFlexMin | string | `"10"` |  |
+| gateway.public.oci.subnet | string | `""` |  |
 | gatewayAPI.crds.install | bool | `true` |  |
 | gatewayAPI.enabled | bool | `true` |  |
 | gateways.enabled | bool | `true` |  |
@@ -88,7 +102,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | logging.controller.resources.requests.cpu | string | `"100m"` |  |
 | logging.controller.resources.requests.memory | string | `"200Mi"` |  |
 | logging.datadog.apiKey | string | `""` |  |
-| logging.datadog.enabled | bool | `true` |  |
+| logging.datadog.enabled | bool | `false` |  |
 | logging.datadog.region | string | `""` |  |
 | logging.dynatrace.apiKey | string | `""` |  |
 | logging.dynatrace.enabled | bool | `false` |  |
