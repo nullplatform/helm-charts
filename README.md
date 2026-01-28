@@ -16,7 +16,7 @@ This repository contains the following charts:
 
 | Chart | Description | Version |
 |------|-------------|---------|
-| istio-metrics | Nullplatform Istio metrics enrichment for Kubernetes applications | 1.1.1 |
+| istio-metrics | Nullplatform Istio metrics enrichment for Kubernetes applications | 1.2.0 |
 | nullplatform-agent | Agent used to interact with services, scopes and telemetry inside a cluster | 2.33.1 |
 | nullplatform-base | A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes | 2.33.1 |
 | nullplatform-cert-manager-config | A Helm chart for cert-manager configurations | 2.33.0 |

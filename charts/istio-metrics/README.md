@@ -1,6 +1,6 @@
 # istio-metrics
 
-![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Nullplatform Istio metrics enrichment for Kubernetes applications
 
@@ -58,7 +58,7 @@ helm install istio-metrics nullplatform/istio-metrics
 | prometheus.server.global.evaluation_interval | string | `"15s"` |  |
 | prometheus.server.global.scrape_interval | string | `"15s"` |  |
 | prometheus.server.persistentVolume.size | string | `"8Gi"` |  |
-| prometheus.server.retention | string | `"15d"` |  |
+| prometheus.server.retention | string | `"30d"` |  |
 | recordingRules.enabled | bool | `true` |  |
 | recordingRules.name | string | `"prometheus-recording-rules"` |  |
 
