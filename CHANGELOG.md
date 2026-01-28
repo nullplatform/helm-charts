@@ -1,3 +1,11 @@
+## [2.32.1](https://github.com/nullplatform/helm-charts/compare/2.32.0...2.32.1) (2026-01-28)
+
+
+### Bug Fixes
+
+* **security:** address 3 security vulnerabilities ([b3810d5](https://github.com/nullplatform/helm-charts/commit/b3810d5d4d455014545e4cb86710abe1c3af3a4c))
+* **security:** address 4 security vulnerabilities ([79f0290](https://github.com/nullplatform/helm-charts/commit/79f0290d45e98a9266f5a6d9939c67b8f6f126a9))
+
 # [2.32.0](https://github.com/nullplatform/helm-charts/compare/2.31.0...2.32.0) (2026-01-26)
 
 
