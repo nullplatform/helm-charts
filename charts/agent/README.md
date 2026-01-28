@@ -1,8 +1,10 @@
 # nullplatform-agent
 
-![Version: 2.33.0](https://img.shields.io/badge/Version-2.33.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.33.1](https://img.shields.io/badge/Version-2.33.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
+
+**Homepage:** <https://nullplatform.com>
 
 ## Installation
 
@@ -11,6 +13,16 @@ helm repo add nullplatform https://nullplatform.github.io/helm-charts
 helm repo update
 helm install nullplatform-agent nullplatform/nullplatform-agent
 ```
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Nullplatform | <support@nullplatform.com> |  |
+
+## Source Code
+
+* <https://github.com/nullplatform/helm-charts>
 
 ## Configuration
 

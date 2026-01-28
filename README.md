@@ -16,10 +16,10 @@ This repository contains the following charts:
 
 | Chart | Description | Version |
 |------|-------------|---------|
-| istio-metrics | Nullplatform Istio metrics enrichment for Kubernetes applications | 1.0.0 |
-| nullplatform-agent | Agent used to interact with services, scopes and telemetry inside a cluster | 2.31.0 |
-| nullplatform-base | A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes | 2.31.0 |
-| nullplatform-cert-manager-config | A Helm chart for cert-manager configurations | 2.31.0 |
+| is | io-me | rics	Nullplatform Istio metrics enrichment for Kubernetes applications	1.1.1 |
+| nullpla | form-agen | 	Agent used to interact with services, scopes and telemetry inside a cluster	2.33.1 |
+| nullpla | form-base	A Helm char |  for deploying the nullplatform base dependencies applications using Kubernetes	2.33.0 |
+| nullpla | form-cer | -manager-config	A Helm chart for cert-manager configurations	2.33.0 |
 
 ## How to Use This Repository
 
