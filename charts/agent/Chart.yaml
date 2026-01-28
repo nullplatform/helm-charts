@@ -4,3 +4,13 @@ description: Agent used to interact with services, scopes and telemetry inside a
 type: application
 version: 2.33.0
 appVersion: 2.32.1
+keywords:
+  - nullplatform
+  - agent
+  - kubernetes
+home: https://nullplatform.com
+sources:
+  - https://github.com/nullplatform/helm-charts
+maintainers:
+  - name: Nullplatform
+    email: support@nullplatform.com
