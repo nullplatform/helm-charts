@@ -62,7 +62,7 @@ jobs:
       - name: Push changes to GitHub
         if: steps.chart-release.outputs.has_changes == 'true'
         run: |
-          git add charts releases
+          git add charts releases README.md
           if ! git diff --cached --quiet; then
             git commit -m "ci: publish chart releases [ci skip]"
             git push origin ${GITHUB_REF#refs/heads/}
