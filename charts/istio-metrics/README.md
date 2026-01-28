@@ -1,6 +1,6 @@
 # istio-metrics
 
-![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
 
 Nullplatform Istio metrics enrichment for Kubernetes applications
 
@@ -22,7 +22,7 @@ helm install istio-metrics nullplatform/istio-metrics
 
 ## Source Code
 
-* <https://github.com/nullplatform/infrastructure-nullplatform-helm-charts>
+* <https://github.com/nullplatform/helm-charts>
 
 ## Requirements
 
