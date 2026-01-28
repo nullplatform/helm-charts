@@ -7,10 +7,33 @@ on:
 
 jobs:
   branch-name:
-    uses: nullplatform/actions-nullplatform-terraform/.github/workflows/branch-validation.yml@main
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Validate branch name
+        run: ./scripts/validate-branch-name.sh "${{ github.head_ref }}"
 
   commitlint:
-    uses: nullplatform/actions-nullplatform-terraform/.github/workflows/conventional-commit.yml@main
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate commit messages
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.sha }} --verbose
 
   lint-charts:
     runs-on: ubuntu-24.04
