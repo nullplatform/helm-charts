@@ -1,8 +1,10 @@
 # nullplatform-base
 
-![Version: 2.33.0](https://img.shields.io/badge/Version-2.33.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.33.1](https://img.shields.io/badge/Version-2.33.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
+
+**Homepage:** <https://nullplatform.com>
 
 ## Installation
 
@@ -11,6 +13,16 @@ helm repo add nullplatform https://nullplatform.github.io/helm-charts
 helm repo update
 helm install nullplatform-base nullplatform/nullplatform-base
 ```
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Nullplatform | <support@nullplatform.com> |  |
+
+## Source Code
+
+* <https://github.com/nullplatform/helm-charts>
 
 ## Requirements
 

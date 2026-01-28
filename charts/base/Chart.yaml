@@ -4,7 +4,7 @@ description: >-
   A Helm chart for deploying the nullplatform base dependencies applications
   using Kubernetes
 type: application
-version: 2.33.0
+version: 2.33.1
 appVersion: 2.32.1
 keywords:
   - nullplatform
