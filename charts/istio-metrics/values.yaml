@@ -14,7 +14,7 @@ prometheus:
   server:
     persistentVolume:
       size: 8Gi
-    retention: "15d"
+    retention: "30d"
     global:
       scrape_interval: 15s
       evaluation_interval: 15s
