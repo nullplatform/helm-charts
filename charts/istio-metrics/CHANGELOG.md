@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/nullplatform/helm-charts/compare/istio-metrics-1.2.0...istio-metrics-1.3.0) (2026-01-30)
+
+
+### Features
+
+* **ci:** use centralized changelog-release workflow ([a90e4a1](https://github.com/nullplatform/helm-charts/commit/a90e4a17725f6833f953cc2dcfcb34fa29f212b0))
+
+
 
 ## [1.2.0](https://github.com/nullplatform/helm-charts/compare/istio-metrics-1.1.1...istio-metrics-1.2.0) (2026-01-28)
 

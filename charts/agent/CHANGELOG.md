@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.34.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.33.1...nullplatform-agent-2.34.0) (2026-01-30)
+
+
+### Features
+
+* **ci:** use centralized changelog-release workflow ([a90e4a1](https://github.com/nullplatform/helm-charts/commit/a90e4a17725f6833f953cc2dcfcb34fa29f212b0))
+
+
 
 ## [2.33.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.33.0...nullplatform-agent-2.33.1) (2026-01-28)
 
