@@ -84,18 +84,120 @@ EOF
 
   changelog="$dir/CHANGELOG.md"
   date=$(date -u +%Y-%m-%d)
-  section="## ${new_version} - ${date}\n"
-  bullets=$(printf "%s\n" "$subjects" | sed '/^$/d' | sed 's/^/- /')
-  content="${section}${bullets}\n"
+  repo_url="https://github.com/nullplatform/helm-charts"
 
+  # Build compare URL for version header
+  if [ -n "$last_tag" ]; then
+    prev_version="${last_tag#${name}-}"
+    version_header="## [${new_version}](${repo_url}/compare/${name}-${prev_version}...${name}-${new_version}) (${date})"
+  else
+    version_header="## [${new_version}](${repo_url}/releases/tag/${name}-${new_version}) (${date})"
+  fi
+
+  # Get commits with hash, subject for this chart
+  if [ -n "$range" ]; then
+    commits=$(git log "$range" --format="%H %s" -- "$dir" || true)
+  else
+    commits=$(git log --format="%H %s" -- "$dir" || true)
+  fi
+
+  # Initialize sections
+  breaking_changes=""
+  features=""
+  fixes=""
+  perf=""
+  reverts=""
+  other=""
+
+  # Parse each commit and categorize
+  while IFS= read -r line; do
+    [ -z "$line" ] && continue
+
+    hash=$(echo "$line" | cut -d' ' -f1)
+    short_hash="${hash:0:7}"
+    subject=$(echo "$line" | cut -d' ' -f2-)
+
+    # Check for breaking change indicator
+    is_breaking=""
+    if echo "$subject" | grep -Eq '^[a-zA-Z]+(\([^)]+\))?!:'; then
+      is_breaking="true"
+    fi
+
+    # Parse conventional commit: type(scope): message or type: message
+    if echo "$subject" | grep -Eq '^[a-zA-Z]+(\([^)]+\))?!?:'; then
+      type=$(echo "$subject" | sed -E 's/^([a-zA-Z]+)(\([^)]+\))?!?:.*/\1/')
+      scope=$(echo "$subject" | sed -E 's/^[a-zA-Z]+(\(([^)]+)\))?!?:.*/\2/')
+      message=$(echo "$subject" | sed -E 's/^[a-zA-Z]+(\([^)]+\))?!?:[[:space:]]*//')
+    else
+      type="other"
+      scope=""
+      message="$subject"
+    fi
+
+    # Format the entry
+    if [ -n "$scope" ]; then
+      entry="* **${scope}:** ${message} ([${short_hash}](${repo_url}/commit/${hash}))"
+    else
+      entry="* ${message} ([${short_hash}](${repo_url}/commit/${hash}))"
+    fi
+
+    # Categorize by type
+    case "$type" in
+      feat)
+        features="${features}${entry}"$'\n'
+        ;;
+      fix)
+        fixes="${fixes}${entry}"$'\n'
+        ;;
+      perf)
+        perf="${perf}${entry}"$'\n'
+        ;;
+      revert)
+        reverts="${reverts}${entry}"$'\n'
+        ;;
+      *)
+        # Skip non-user-facing changes (chore, ci, docs, style, refactor, test)
+        ;;
+    esac
+
+    # Add to breaking changes if applicable
+    if [ -n "$is_breaking" ]; then
+      breaking_changes="${breaking_changes}${entry}"$'\n'
+    fi
+  done <<< "$commits"
+
+  # Build the changelog content
+  content="${version_header}"$'\n\n'
+
+  if [ -n "$breaking_changes" ]; then
+    content="${content}"$'\n'"### BREAKING CHANGES"$'\n\n'"${breaking_changes}"
+  fi
+
+  if [ -n "$features" ]; then
+    content="${content}"$'\n'"### Features"$'\n\n'"${features}"
+  fi
+
+  if [ -n "$fixes" ]; then
+    content="${content}"$'\n'"### Bug Fixes"$'\n\n'"${fixes}"
+  fi
+
+  if [ -n "$perf" ]; then
+    content="${content}"$'\n'"### Performance Improvements"$'\n\n'"${perf}"
+  fi
+
+  if [ -n "$reverts" ]; then
+    content="${content}"$'\n'"### Reverts"$'\n\n'"${reverts}"
+  fi
+
+  # Write changelog
   if [ -f "$changelog" ]; then
     if [ "$(head -n 1 "$changelog")" = "# Changelog" ]; then
-      { printf "# Changelog\n\n%s\n" "$content"; tail -n +2 "$changelog"; } > "${changelog}.tmp"
+      { printf "# Changelog\n\n%s" "$content"; tail -n +2 "$changelog"; } > "${changelog}.tmp"
     else
       { printf "# Changelog\n\n%s\n" "$content"; cat "$changelog"; } > "${changelog}.tmp"
     fi
   else
-    { printf "# Changelog\n\n%s\n" "$content"; } > "${changelog}.tmp"
+    { printf "# Changelog\n\n%s" "$content"; } > "${changelog}.tmp"
   fi
   mv "${changelog}.tmp" "$changelog"
 
