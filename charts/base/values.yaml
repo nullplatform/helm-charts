@@ -1,7 +1,7 @@
 # Global settings
 global:
   installGatewayV2Crd: true
-  # Kubernetes provider (options: "oke", "gke", "eks", "aks", "aro")
+  # Kubernetes provider (options: "eks", "gke", "aks", "aro", "oke", "k3s")
   provider: "eks"
   # AWS region (applicable for EKS provider)
   awsRegion: "us-east-1"
