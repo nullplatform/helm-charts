@@ -12,9 +12,6 @@ metadata:
   name: {{ .Values.namespaces.gateway }}
   labels:
     name: {{ .Values.namespaces.gateway }}
-  annotations:
-    "helm.sh/hook": pre-install, pre-upgrade
-    "helm.sh/resource-policy": "keep"
 {{- end }}
 ---
 {{- if and .Values.gateways.enabled .Values.gateway.internal.enabled }}
@@ -89,7 +86,6 @@ metadata:
     {{- /* Default annotations for other providers */ -}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
     {{- end }}
-    "helm.sh/resource-policy": "keep"
 spec:
   gatewayClassName: istio
   {{- with .Values.gateway.internal.addresses }}
@@ -228,7 +224,6 @@ metadata:
     {{- /* Default annotations for other providers */ -}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
     {{- end }}
-    "helm.sh/resource-policy": "keep"
 spec:
   gatewayClassName: istio
   {{- with .Values.gateway.public.addresses }}
