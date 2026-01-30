@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.35.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.34.0...nullplatform-base-2.35.0) (2026-01-30)
+
+
+### Features
+
+* **base:** add k3s to supported providers list ([46dbb76](https://github.com/nullplatform/helm-charts/commit/46dbb76678a7bc4e2ba31a0c3e389d4de7bb4994))
+
+
 ## [2.34.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.33.2...nullplatform-base-2.34.0) (2026-01-30)
 
 
