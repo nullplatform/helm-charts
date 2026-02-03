@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.36.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.35.0...nullplatform-base-2.36.0) (2026-02-03)
+
+
+### Features
+
+* **charts-base:** delete hooks ([26d838d](https://github.com/nullplatform/helm-charts/commit/26d838d589783411e9d5c8ba0ac60f3268e9e0d1))
+
+
 ## [2.35.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.34.0...nullplatform-base-2.35.0) (2026-01-30)
 
 
