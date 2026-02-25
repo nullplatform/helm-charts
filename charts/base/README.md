@@ -1,6 +1,6 @@
 # nullplatform-base
 
-![Version: 2.36.0](https://img.shields.io/badge/Version-2.36.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.37.0](https://img.shields.io/badge/Version-2.37.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 
@@ -139,6 +139,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | logging.streams.mountPath | string | `"/etc/null-logs/streams-dd.conf"` |  |
 | logging.streams.subPath | string | `"streams-dd.conf"` |  |
 | logging.streamsConfigMapName | string | `"streams-dd-config"` |  |
+| logging.tolerations | list | `[]` |  |
 | metricsServer.enabled | bool | `true` |  |
 | namespaces.gateway | string | `"gateways"` |  |
 | namespaces.nullplatformApplications | string | `"nullplatform"` |  |
