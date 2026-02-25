@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.37.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.36.0...nullplatform-base-2.37.0) (2026-02-25)
+
+
+### Features
+
+* add tolerations ([600641e](https://github.com/nullplatform/helm-charts/commit/600641e8380a4e3c96891865f370fdb4714bce03))
+
+
 ## [2.36.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.35.0...nullplatform-base-2.36.0) (2026-02-03)
 
 
