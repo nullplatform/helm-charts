@@ -137,6 +137,14 @@ controlPlane:
         memory: 150Mi
 logging:
   enabled: true
+  # Tolerations allow the DaemonSet to run on nodes with taints
+  # Example:
+  # tolerations:
+  #   - operator: "Exists"
+  #   - key: "node-role.kubernetes.io/master"
+  #     operator: "Exists"
+  #     effect: "NoSchedule"
+  tolerations: []
   streams:
     enabled: false
     mountPath: "/etc/null-logs/streams-dd.conf"

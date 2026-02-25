@@ -25,6 +25,10 @@ spec:
           type: spc_t
       serviceAccountName: nullplatform-pod-metadata-reader-sa
       restartPolicy: Always
+      {{- if .Values.logging.tolerations }}
+      tolerations:
+        {{- toYaml .Values.logging.tolerations | nindent 8 }}
+      {{- end }}
       containers:
         - name: nullplatform-log-controller
           image: {{ .Values.logging.controller.image }}
