@@ -4,70 +4,150 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'charts/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+  pages: write
+  id-token: write
 
 jobs:
-  changelog:
-    uses: nullplatform/actions-nullplatform/.github/workflows/changelog-release.yml@main
-    with:
-      project-type: helm-charts
-      source-dir: charts
-      create-github-release: false
-      commit-message: 'chore(release): bump version and update changelog [skip ci]'
-    permissions:
-      contents: write
+  release-please:
+    runs-on: ubuntu-24.04
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      agent--release_created: ${{ steps.release.outputs['charts/agent--release_created'] }}
+      agent--tag_name: ${{ steps.release.outputs['charts/agent--tag_name'] }}
+      base--release_created: ${{ steps.release.outputs['charts/base--release_created'] }}
+      base--tag_name: ${{ steps.release.outputs['charts/base--tag_name'] }}
+      cert-manager-config--release_created: ${{ steps.release.outputs['charts/cert-manager-config--release_created'] }}
+      cert-manager-config--tag_name: ${{ steps.release.outputs['charts/cert-manager-config--tag_name'] }}
+      istio-metrics--release_created: ${{ steps.release.outputs['charts/istio-metrics--release_created'] }}
+      istio-metrics--tag_name: ${{ steps.release.outputs['charts/istio-metrics--tag_name'] }}
+      pr_branch: ${{ steps.release.outputs.pr && fromJSON(steps.release.outputs.pr).headBranchName || '' }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json
 
   package-and-publish:
-    needs: changelog
-    if: needs.changelog.outputs.has_changes == 'true'
+    needs: release-please
+    if: needs.release-please.outputs.releases_created == 'true'
     runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
     concurrency:
       group: "pages"
       cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.ref }}
-
-      - name: Pull latest changes
-        run: git pull origin ${GITHUB_REF#refs/heads/}
-
-      - name: Configure Git
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
 
       - name: Set up Helm
         run: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-      - name: Detect changed charts
-        id: detect-changes
+      - name: Detect released charts
+        id: detect
         run: |
-          # Find charts that were modified in the last commit (the changelog commit)
-          changed=$(git diff --name-only HEAD~1 -- charts/ | awk -F/ '/^charts\/[^/]+/ {print $1"/"$2}' | sort -u)
-          if [ -z "$changed" ]; then
-            echo "has_changes=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "has_changes=true" >> "$GITHUB_OUTPUT"
-          echo "$changed" > .changed-charts
+          mkdir -p ./releases
+          released=""
 
-          # Generate tags from Chart.yaml
-          while read -r dir; do
-            name=$(awk -F': *' '$1=="name"{print $2; exit}' "$dir/Chart.yaml")
-            version=$(awk -F': *' '$1=="version"{print $2; exit}' "$dir/Chart.yaml")
-            echo "${name}-${version}" >> .chart-tags
-          done < .changed-charts
+          if [ "${{ needs.release-please.outputs.agent--release_created }}" = "true" ]; then
+            released="${released} charts/agent"
+          fi
+          if [ "${{ needs.release-please.outputs.base--release_created }}" = "true" ]; then
+            released="${released} charts/base"
+          fi
+          if [ "${{ needs.release-please.outputs.cert-manager-config--release_created }}" = "true" ]; then
+            released="${released} charts/cert-manager-config"
+          fi
+          if [ "${{ needs.release-please.outputs.istio-metrics--release_created }}" = "true" ]; then
+            released="${released} charts/istio-metrics"
+          fi
+
+          released=$(echo "$released" | xargs)
+          echo "charts=$released" >> "$GITHUB_OUTPUT"
+          echo "Released charts: $released"
+
+      - name: Package released charts
+        run: |
+          for dir in ${{ steps.detect.outputs.charts }}; do
+            echo "Packaging $dir ..."
+            helm dependency update "$dir"
+            helm package "$dir" -d ./releases
+          done
+
+      - name: Upload chart packages to GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ needs.release-please.outputs.agent--release_created }}" = "true" ]; then
+            name=$(awk -F': *' '$1=="name"{print $2; exit}' charts/agent/Chart.yaml)
+            version=$(awk -F': *' '$1=="version"{print $2; exit}' charts/agent/Chart.yaml)
+            gh release upload "${{ needs.release-please.outputs.agent--tag_name }}" \
+              "./releases/${name}-${version}.tgz" --clobber
+          fi
+          if [ "${{ needs.release-please.outputs.base--release_created }}" = "true" ]; then
+            name=$(awk -F': *' '$1=="name"{print $2; exit}' charts/base/Chart.yaml)
+            version=$(awk -F': *' '$1=="version"{print $2; exit}' charts/base/Chart.yaml)
+            gh release upload "${{ needs.release-please.outputs.base--tag_name }}" \
+              "./releases/${name}-${version}.tgz" --clobber
+          fi
+          if [ "${{ needs.release-please.outputs.cert-manager-config--release_created }}" = "true" ]; then
+            name=$(awk -F': *' '$1=="name"{print $2; exit}' charts/cert-manager-config/Chart.yaml)
+            version=$(awk -F': *' '$1=="version"{print $2; exit}' charts/cert-manager-config/Chart.yaml)
+            gh release upload "${{ needs.release-please.outputs.cert-manager-config--tag_name }}" \
+              "./releases/${name}-${version}.tgz" --clobber
+          fi
+          if [ "${{ needs.release-please.outputs.istio-metrics--release_created }}" = "true" ]; then
+            name=$(awk -F': *' '$1=="name"{print $2; exit}' charts/istio-metrics/Chart.yaml)
+            version=$(awk -F': *' '$1=="version"{print $2; exit}' charts/istio-metrics/Chart.yaml)
+            gh release upload "${{ needs.release-please.outputs.istio-metrics--tag_name }}" \
+              "./releases/${name}-${version}.tgz" --clobber
+          fi
+
+      - name: Download chart packages from all GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Downloading .tgz assets from all GitHub Releases..."
+          gh release list --limit 100 --json tagName -q '.[].tagName' | while read -r tag; do
+            gh release download "$tag" --pattern "*.tgz" --dir ./releases --skip-existing 2>/dev/null || true
+          done
+          echo "All packages in releases/:"
+          ls -la ./releases/*.tgz 2>/dev/null || echo "No .tgz files found"
+
+      - name: Generate Helm repository index
+        run: helm repo index ./releases --url https://nullplatform.github.io/helm-charts
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './releases'
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
+
+  update-docs:
+    needs: release-please
+    if: needs.release-please.outputs.pr_branch != ''
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Release Please PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.pr_branch }}
 
       - name: Install helm-docs
-        if: steps.detect-changes.outputs.has_changes == 'true'
         run: |
           curl -sSL https://github.com/norwoodj/helm-docs/releases/download/v1.14.2/helm-docs_1.14.2_Linux_x86_64.tar.gz -o /tmp/helm-docs.tgz
           tar -xzf /tmp/helm-docs.tgz -C /tmp
@@ -75,54 +155,34 @@ jobs:
           mv /tmp/helm-docs "$HOME/bin/helm-docs"
           echo "$HOME/bin" >> "$GITHUB_PATH"
 
+      - name: Detect charts changed in PR
+        id: detect
+        run: |
+          changed=$(git diff --name-only origin/main...HEAD -- charts/ \
+            | awk -F/ '/^charts\/[^/]+/ {print $1"/"$2}' | sort -u)
+          if [ -z "$changed" ]; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          echo "$changed" > .changed-charts
+          echo "Changed charts: $(cat .changed-charts | tr '\n' ' ')"
+
       - name: Update chart README files
-        if: steps.detect-changes.outputs.has_changes == 'true'
+        if: steps.detect.outputs.has_changes == 'true'
         run: ./scripts/run-helm-docs.sh
 
       - name: Update root README
-        if: steps.detect-changes.outputs.has_changes == 'true'
+        if: steps.detect.outputs.has_changes == 'true'
         run: ./scripts/generate-root-readme.sh
 
-      - name: Package changed charts
-        if: steps.detect-changes.outputs.has_changes == 'true'
+      - name: Commit and push docs updates
+        if: steps.detect.outputs.has_changes == 'true'
         run: |
-          mkdir -p ./releases
-          while read -r dir; do
-            helm dependency update "$dir"
-            helm package "$dir" -d ./releases
-          done < .changed-charts
-
-      - name: Generate Helm repository index
-        if: steps.detect-changes.outputs.has_changes == 'true'
-        run: helm repo index ./releases --url https://nullplatform.github.io/helm-charts
-
-      - name: Push changes and tags
-        if: steps.detect-changes.outputs.has_changes == 'true'
-        run: |
-          git add charts releases README.md
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add charts/*/README.md README.md
           if ! git diff --cached --quiet; then
-            git commit -m "ci: publish chart releases [skip ci]"
-            git push origin ${GITHUB_REF#refs/heads/}
+            git commit -m "docs: update helm-docs for release"
+            git push
           fi
-
-          # Create and push tags
-          while read -r tag; do
-            if ! git rev-parse "$tag" >/dev/null 2>&1; then
-              git tag "$tag"
-            fi
-          done < .chart-tags
-          git push origin --tags
-
-      - name: Setup Pages
-        if: steps.detect-changes.outputs.has_changes == 'true'
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        if: steps.detect-changes.outputs.has_changes == 'true'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './releases'
-
-      - name: Deploy to GitHub Pages
-        if: steps.detect-changes.outputs.has_changes == 'true'
-        uses: actions/deploy-pages@v4
