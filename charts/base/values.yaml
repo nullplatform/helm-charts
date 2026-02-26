@@ -25,20 +25,23 @@ ingressControllers:
     domain: ""
 # TLS configuration
 tls:
-  required: true
+  required: false
   # Name of the TLS secret
   secretName: "wildcard-tls"
   secretPrivateName: "wildcard-tls-internal"
   # Gateway configurations
 gateway:
+  useClusterIP: true
   http:
     enabled: false
   internal:
     enabled: true
+    name: "gateway-private"
     azure_load_balancer_subnet:
     # AWS-specific configuration (EKS)
     aws:
       name: "k8s-nullplatform-internal"
+      dns_name: ""
       # Security Group ID for the internal gateway (restricts health check port 15021 to VPC CIDR)
       # If empty, the AWS LB Controller will create a default SG with 0.0.0.0/0 access
       securityGroups: ""
@@ -71,7 +74,6 @@ gateway:
     # For internal gateway, this should be set to VNet/VPC CIDR
     # Example: ["10.0.0.0/16"]
     loadBalancerSourceRanges: []
-    name: "gateway-private"
     addresses: {}
     autoscaling:
       minReplicas: 2
@@ -79,9 +81,11 @@ gateway:
     loadBalancerType: "internal"  # internal, external
   public:
     name: "gateway-public"
+    enabled: true
     # AWS-specific configuration (EKS)
     aws:
       name: "k8s-nullplatform-internet-facing"
+      dns_name: ""
       # Security Group ID for the public gateway (restricts health check port 15021 to VPC CIDR while allowing 443 from internet)
       # If empty, the AWS LB Controller will create a default SG with 0.0.0.0/0 access on all ports
       securityGroups: ""
