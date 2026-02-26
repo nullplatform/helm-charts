@@ -146,6 +146,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.release-please.outputs.pr_branch }}
+          fetch-depth: 0
 
       - name: Install helm-docs
         run: |
