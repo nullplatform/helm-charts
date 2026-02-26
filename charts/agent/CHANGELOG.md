@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.35.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.34.0...nullplatform-agent-2.35.0) (2026-02-26)
+
+
+### Features
+
+* **agent:** add github app authentication support ([5d0cd4f](https://github.com/nullplatform/helm-charts/commit/5d0cd4fc2954c69488e2274989de78c0bb2637ce))
+
 ## [2.34.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.33.1...nullplatform-agent-2.34.0) (2026-01-30)
 
 
@@ -53,4 +60,3 @@
 * **helm-charts:** fix comments ([f61f8ed](https://github.com/nullplatform/helm-charts/commit/f61f8ed5e884ce8304384f78c9e79ccf7df0ccd4))
 * **agent:** BAC-1458 imagePullPolicy set to always in the agent ([66b2ee5](https://github.com/nullplatform/helm-charts/commit/66b2ee5daf351f2c30ce01969578ff93c0205361))
 * **agent:** BAC-1406 rename agents chart ([c6187c6](https://github.com/nullplatform/helm-charts/commit/c6187c64ef7e2fdf779733427736b7b42ae96dff))
-

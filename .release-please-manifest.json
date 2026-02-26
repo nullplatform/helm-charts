@@ -1,6 +1,6 @@
 {
-  "charts/agent": "2.34.0",
-  "charts/base": "2.36.0",
+  "charts/agent": "2.35.0",
+  "charts/base": "2.37.0",
   "charts/cert-manager-config": "2.34.0",
   "charts/istio-metrics": "1.3.0"
 }

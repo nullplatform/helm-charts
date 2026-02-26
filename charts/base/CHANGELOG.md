@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.37.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.36.0...nullplatform-base-2.37.0) (2026-02-26)
+
+
+### Features
+
+* add tolerations ([600641e](https://github.com/nullplatform/helm-charts/commit/600641e8380a4e3c96891865f370fdb4714bce03))
+* **base:** add features ti gateways deploys ([33e3d5a](https://github.com/nullplatform/helm-charts/commit/33e3d5a68250f6be21eaf7ac57e91e76936a13c0))
+
 ## [2.37.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.36.0...nullplatform-base-2.37.0) (2026-02-25)
 
 
@@ -96,4 +104,3 @@
 * **base:** Honour nullplatform tools ns configuration ([a6c8740](https://github.com/nullplatform/helm-charts/commit/a6c87405500a37d17613f445157ba060b3d70eea))
 * **base:** resolve installGatewayV2Crd serviceaccount timing issue ([c9d697f](https://github.com/nullplatform/helm-charts/commit/c9d697f52f766a01278d1fc9f8144d4fc3bf7a7d))
 * **base:** BAC-1446 keep gateways on chart deletion and prevent creation if they are already created ([2a1e5eb](https://github.com/nullplatform/helm-charts/commit/2a1e5ebabd8bd970649120f48f4a6881c81873c9))
-
