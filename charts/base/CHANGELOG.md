@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.38.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.37.0...nullplatform-base-2.38.0) (2026-02-26)
+
+
+### Features
+
+* **base:** add features ti gateways deploys ([33e3d5a](https://github.com/nullplatform/helm-charts/commit/33e3d5a68250f6be21eaf7ac57e91e76936a13c0))
+
 ## [2.37.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.36.0...nullplatform-base-2.37.0) (2026-02-26)
 
 
