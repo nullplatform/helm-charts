@@ -1,9 +1,12 @@
 {{- if or (eq .Values.global.provider "aks") (eq .Values.global.provider "gke") (eq .Values.global.provider "oke") (eq .Values.global.provider "eks") }}
 {{- $secretName := "" }}
+{{- $secretPrivateName := "" }}
 {{- if .Values.tls.required  }}
 {{- $secretName = required "The 'tls.secretName' field is required" .Values.tls.secretName }}
+{{- $secretPrivateName = required "The 'tls.secretPrivateName' field is required" .Values.tls.secretPrivateName }}
 {{- else }}
 {{- $secretName = .Values.tls.secretName | default "" }}
+{{- $secretPrivateName = .Values.tls.secretPrivateName | default "" }}
 {{- end }}
 {{- if not (lookup "v1" "Namespace" "" .Values.namespaces.gateway) }}
 apiVersion: v1
@@ -21,12 +24,16 @@ metadata:
   name: {{ .Values.gateway.internal.name }}
   namespace: {{ .Values.namespaces.gateway }}
   annotations:
+    {{- if .Values.gateway.useClusterIP }}
+    networking.istio.io/service-type: ClusterIP
+    external-dns.alpha.kubernetes.io/target: {{ .Values.gateway.internal.aws.dns_name }}
+    {{- else }}
     {{- if eq .Values.global.provider "eks" }}
     {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
     service.beta.kubernetes.io/aws-load-balancer-name:  {{ .Values.gateway.internal.aws.name }}
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
     {{- else }}
-    service.beta.kubernetes.io/aws-load-balancer-name: {{ .Values.gateway.public.aws.name }}
+    service.beta.kubernetes.io/aws-load-balancer-name: {{ .Values.gateway.internal.aws.name }}
     service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
     {{- end }}
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
@@ -35,7 +42,7 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15021"
     service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/healthz/ready"
-    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "http" 
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "http"
     {{- if .Values.gateway.internal.aws.securityGroups }}
     service.beta.kubernetes.io/aws-load-balancer-security-groups: {{ .Values.gateway.internal.aws.securityGroups | quote }}
     service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: "false"
@@ -86,6 +93,7 @@ metadata:
     {{- /* Default annotations for other providers */ -}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
     {{- end }}
+    {{- end }}
 spec:
   gatewayClassName: istio
   {{- with .Values.gateway.internal.addresses }}
@@ -105,12 +113,12 @@ spec:
     - name: https
       port: 443
       protocol: HTTPS
-    {{- if $secretName }}
+    {{- if $secretPrivateName }}
       tls:
         certificateRefs:
           - group: ''
             kind: Secret
-            name: {{ .Values.tls.secretPrivateName }}
+            name: {{ $secretPrivateName }}
     {{- end }}
       allowedRoutes:
         namespaces:
@@ -154,12 +162,17 @@ spec:
       istio.io/gateway-name: {{ .Values.gateway.internal.name }}
 ---
 {{- end }}
+{{- if and .Values.gateways.enabled .Values.gateway.public.enabled }}
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
   name: {{ .Values.gateway.public.name }}
   namespace: {{ .Values.namespaces.gateway }}
   annotations:
+    {{- if .Values.gateway.useClusterIP }}
+    networking.istio.io/service-type: ClusterIP
+    external-dns.alpha.kubernetes.io/target: {{ .Values.gateway.public.aws.dns_name }}
+    {{- else }}
     {{- if eq .Values.global.provider "eks" }}
     {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
     service.beta.kubernetes.io/aws-load-balancer-name: {{ .Values.gateway.internal.aws.name }}
@@ -223,6 +236,7 @@ metadata:
     {{- else }}
     {{- /* Default annotations for other providers */ -}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- end }}
     {{- end }}
 spec:
   gatewayClassName: istio
@@ -290,4 +304,5 @@ spec:
     matchLabels:
       istio.io/gateway-name: {{ .Values.gateway.public.name }}
 ---
+{{- end }}
 {{- end }}
