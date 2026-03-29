@@ -31,7 +31,7 @@ namespace: nullplatform-tools
 args:
   - "--tags=$(TAGS)"
   - "--apikey=$(NP_API_KEY)"
-  - "--runtime=host"
+  - "--runtime=k8s"
   - "--command-executor-env=NP_API_KEY=$(NP_API_KEY)"
   - "--command-executor-debug"
   - "--webserver-enabled"
