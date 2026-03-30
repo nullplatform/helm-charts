@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.35.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-cert-manager-config-2.34.0...nullplatform-cert-manager-config-2.35.0) (2026-03-30)
+
+
+### Features
+
+* **cert-manager-config:** support both Workload Identity and Service Principal for Azure ([ca76c31](https://github.com/nullplatform/helm-charts/commit/ca76c310a96b4bd126448a57e20cf9158b71244f))
+
+
+### Bug Fixes
+
+* **cert-manager-config:** use managedIdentity.clientID for Azure Workload Identity ([5326369](https://github.com/nullplatform/helm-charts/commit/5326369211b94deeee531155283d4479599632c0))
+
 ## [2.34.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-cert-manager-config-2.33.0...nullplatform-cert-manager-config-2.34.0) (2026-01-30)
 
 
@@ -35,4 +47,3 @@
 
 * **certmanager:** fix secret ([4bf28ff](https://github.com/nullplatform/helm-charts/commit/4bf28ff2df824d7762af9fbc001395490d74d567))
 * secretName can be configured for cert manager ([2ded9dc](https://github.com/nullplatform/helm-charts/commit/2ded9dc4877af0934e80135252712f2eb277e2cb))
-
