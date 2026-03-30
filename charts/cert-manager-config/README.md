@@ -1,6 +1,6 @@
 # nullplatform-cert-manager-config
 
-![Version: 2.34.0](https://img.shields.io/badge/Version-2.34.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.35.0](https://img.shields.io/badge/Version-2.35.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for cert-manager configurations
 
@@ -19,10 +19,13 @@ helm install nullplatform-cert-manager-config nullplatform/nullplatform-cert-man
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | azure.clientID | string | `""` |  |
+| azure.clientSecret.secretKey | string | `"client-secret"` |  |
+| azure.clientSecret.secretName | string | `""` |  |
 | azure.hostedZoneName | string | `""` |  |
 | azure.resourceGroupName | string | `""` |  |
 | azure.subscriptionID | string | `""` |  |
 | azure.tenantID | string | `""` |  |
+| azure.useWorkloadIdentity | bool | `true` |  |
 | certificate.issuerRef.kind | string | `"ClusterIssuer"` |  |
 | certificate.issuerRef.name | string | `"letsencrypt-internal"` |  |
 | certificate.name | string | `"wildcard-tls-internal"` |  |
