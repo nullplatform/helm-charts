@@ -23,8 +23,8 @@ spec:
             resourceGroupName: {{ required "azure.resourceGroupName is required" .Values.azure.resourceGroupName | quote }}
             hostedZoneName: {{ .Values.hostedZoneName }}
             environment: AzurePublicCloud
-            config:
-              useWorkloadIdentityExtension: true
+            managedIdentity:
+              clientID: {{ required "azure.clientID is required" .Values.azure.clientID | quote }}
           {{- else if eq .Values.cloudProvider "cloudflare" }}
           cloudflare:
             apiTokenSecretRef:
