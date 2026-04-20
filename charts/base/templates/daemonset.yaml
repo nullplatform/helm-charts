@@ -29,6 +29,7 @@ spec:
       tolerations:
         {{- toYaml .Values.logging.tolerations | nindent 8 }}
       {{- end }}
+      {{- if .Values.logging.ensureLease }}
       initContainers:
         - name: ensure-lease
           image: bitnami/kubectl:1.31
@@ -45,6 +46,7 @@ spec:
               spec:
                 holderIdentity: ""
               EOF
+      {{- end }}
       containers:
         - name: nullplatform-log-controller
           image: {{ .Values.logging.controller.image }}
