@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.38.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.38.0...nullplatform-base-2.38.1) (2026-04-21)
+
+
+### Bug Fixes
+
+* **base:** ensure metrics-extractor lease exists before log-controller starts ([7a8b5ce](https://github.com/nullplatform/helm-charts/commit/7a8b5ced3b3c9687a2eda6a2290ee5a58d00bca0))
+* **base:** make ensure-lease init container optional via logging.ensureLease ([22222b0](https://github.com/nullplatform/helm-charts/commit/22222b091be657ed631a38bddb8e5e7409b46003))
+
 ## [2.38.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.37.0...nullplatform-base-2.38.0) (2026-02-26)
 
 
