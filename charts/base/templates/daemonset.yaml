@@ -25,6 +25,28 @@ spec:
           type: spc_t
       serviceAccountName: nullplatform-pod-metadata-reader-sa
       restartPolicy: Always
+      {{- if .Values.logging.tolerations }}
+      tolerations:
+        {{- toYaml .Values.logging.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.logging.ensureLease }}
+      initContainers:
+        - name: ensure-lease
+          image: bitnami/kubectl:1.31
+          command:
+            - /bin/sh
+            - -c
+            - |
+              kubectl apply -f - <<'EOF'
+              apiVersion: coordination.k8s.io/v1
+              kind: Lease
+              metadata:
+                name: nullplatform-metrics-extractor
+                namespace: {{ .Values.namespaces.nullplatformTools }}
+              spec:
+                holderIdentity: ""
+              EOF
+      {{- end }}
       containers:
         - name: nullplatform-log-controller
           image: {{ .Values.logging.controller.image }}

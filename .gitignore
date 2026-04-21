@@ -12,3 +12,7 @@ charts/**/charts/*
 
 # Js
 node_modules/
+
+# Release artifacts
+.changed-charts
+.chart-tags

@@ -2,7 +2,7 @@ apiVersion: v2
 name: istio-metrics
 description: Nullplatform Istio metrics enrichment for Kubernetes applications
 type: application
-version: 1.0.0
+version: 1.3.0
 appVersion: "1.0.0"
 keywords:
   - nullplatform
@@ -13,7 +13,7 @@ keywords:
   - observability
 home: https://nullplatform.com
 sources:
-  - https://github.com/nullplatform/infrastructure-nullplatform-helm-charts
+  - https://github.com/nullplatform/helm-charts
 maintainers:
   - name: Nullplatform
     email: support@nullplatform.com

@@ -20,14 +20,20 @@ spec:
             project: "{{ .Values.gcp.projectId }}"
           {{- else if eq .Values.cloudProvider "azure" }}
           azureDNS:
-            clientID: {{ .Values.azure.clientID }}
             subscriptionID: {{ .Values.azure.subscriptionID }}
-            tenantID: {{ .Values.azure.tenantID }}
             resourceGroupName: {{ .Values.azure.resourceGroupName }}
             hostedZoneName: {{ .Values.azure.hostedZoneName }}
             environment: AzurePublicCloud
-            config:
-              useWorkloadIdentityExtension: true
+            {{- if .Values.azure.useWorkloadIdentity }}
+            managedIdentity:
+              clientID: {{ required "azure.clientID is required" .Values.azure.clientID | quote }}
+            {{- else }}
+            tenantID: {{ required "azure.tenantID is required" .Values.azure.tenantID | quote }}
+            clientID: {{ required "azure.clientID is required" .Values.azure.clientID | quote }}
+            clientSecretSecretRef:
+              name: {{ required "azure.clientSecret.secretName is required" .Values.azure.clientSecret.secretName | quote }}
+              key: {{ .Values.azure.clientSecret.secretKey | default "client-secret" | quote }}
+            {{- end }}
           {{- else if eq .Values.cloudProvider "cloudflare" }}
           cloudflare:
             apiTokenSecretRef:

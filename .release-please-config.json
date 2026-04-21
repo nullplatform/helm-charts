@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "separate-pull-requests": false,
+  "tag-separator": "-",
+  "include-component-in-tag": true,
+  "packages": {
+    "charts/agent": {
+      "component": "nullplatform-agent",
+      "release-type": "helm",
+      "changelog-path": "CHANGELOG.md",
+      "include-v-in-tag": false
+    },
+    "charts/base": {
+      "component": "nullplatform-base",
+      "release-type": "helm",
+      "changelog-path": "CHANGELOG.md",
+      "include-v-in-tag": false
+    },
+    "charts/cert-manager-config": {
+      "component": "nullplatform-cert-manager-config",
+      "release-type": "helm",
+      "changelog-path": "CHANGELOG.md",
+      "include-v-in-tag": false
+    },
+    "charts/istio-metrics": {
+      "component": "istio-metrics",
+      "release-type": "helm",
+      "changelog-path": "CHANGELOG.md",
+      "include-v-in-tag": false
+    }
+  }
+}

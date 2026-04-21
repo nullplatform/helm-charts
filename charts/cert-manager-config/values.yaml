@@ -12,6 +12,10 @@ azure:
   clientID: ""
   tenantID: ""
   hostedZoneName: ""
+  useWorkloadIdentity: true
+  clientSecret:
+    secretName: ""
+    secretKey: "client-secret"
 cloudflare:
   secretName: "cloudflare-api-token-secret"
   apiToken: ""

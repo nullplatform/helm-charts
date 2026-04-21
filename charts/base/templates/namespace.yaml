@@ -6,7 +6,6 @@ metadata:
   labels:
     name: {{ .Values.namespaces.nullplatformTools }}
   annotations:
-    "helm.sh/hook": pre-install, pre-upgrade
     openshift.io/cluster-monitoring: "true"
 {{- end }}
 ---
@@ -17,7 +16,5 @@ metadata:
   name: {{ .Values.namespaces.nullplatformApplications }}
   labels:
     name: {{ .Values.namespaces.nullplatformApplications }}
-  annotations:
-    "helm.sh/hook": pre-install, pre-upgrade
 {{- end }}
 ---

@@ -41,11 +41,11 @@ configuration:
   create: true
   secretName: nullplatform-agent-secret
   values:
-    TAGS: ""
+    TAGS: "gato:negro"
     NP_LOG_LEVEL: DEBUG
     NP_API_KEY: ""
-      #example:
-    #AGENT_REPO: "https://reppo_01.gt#main,https://token@repo_01.git#main"
+      # example:
+    # AGENT_REPO: "https://reppo_01.gt#main,https://token@repo_01.git#main"
     AGENT_REPO: ""
 
 image:
@@ -136,6 +136,25 @@ priorityClass:
 #         mountPath: /root/.np
 initContainers: []
 
+githubTokenInit:
+  enabled: false
+  image: alpine:3.22.2
+  # Secret that contains GitHub App configuration
+  secretName: "github-app-secret"
+  # Keys in the secret for each value
+  secretKeys:
+    appId: "APP_ID"           # nombre de la clave en el secret
+    installationId: "INSTALLATION_ID"
+    privateKey: "PRIVATE_KEY"
+  values:
+    appId: ""
+    installationId: ""
+    privateKey: ""
+  # Directory where the repository will be cloned (shared with main container)
+  cloneDir: "nullplatform"
+  repositoryUrl: ""
+  workingDir: "/root/.np"
+
 volumes: []
 
 initScripts: []
@@ -143,7 +162,7 @@ initScripts: []
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: []
 
-#Lifecycle preStop Hook for Graceful Agent Shutdown
+# Lifecycle preStop Hook for Graceful Agent Shutdown
 lifecycle:
   preStop:
     exec:

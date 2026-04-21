@@ -1,12 +1,4 @@
-<h2 align="center">
-    <a href="https://httpie.io" target="blank_">
-        <img height="100" alt="nullplatform" src="https://nullplatform.com/favicon/android-chrome-192x192.png" />
-    </a>
-    <br>
-    <br>
-    Nullplatform Agent Helm Chart
-    <br>
-</h2>
+# nullplatform-agent
 
 This chart installs the **nullplatform agent** to operate on your behalf to operate the lifecycle of:
 * Agent-backed scopes
@@ -20,7 +12,11 @@ helm install nullplatform-agent nullplatform/nullplatform-agent \
   --set configuration.values.AGENT_REPO=$AGENT_REPO
 ```
 
-## Configuration
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| Nullplatform | <support@nullplatform.com> |  |
 
 This chart supports configuring the agent container, the runtime args it receives, and the Kubernetes resources around
 it (service account, RBAC, scheduling, and optional persistence).
@@ -106,7 +102,7 @@ export AGENT_REPO=<https://git-provider/org/repo.git#branch[,https://token@.../r
 | | `volumeMounts` | `[]` | Additional volume mounts |
 | **Lifecycle** | `lifecycle.preStop.exec.command` | `["/bin/sh","-c","pid=$(pgrep -f agent) && kill -15 $pid && sleep 30"]` | Graceful shutdown hook |
 
-## Argument and Configuration Correlations
+## Values
 
 ### Environment Variable Flow:
 - **`configuration.values`** → **Secret** → **Pod envFrom** → **`args` command-line arguments**
