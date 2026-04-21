@@ -1,6 +1,6 @@
 # nullplatform-base
 
-![Version: 2.37.0](https://img.shields.io/badge/Version-2.37.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.38.1](https://img.shields.io/badge/Version-2.38.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 
@@ -56,6 +56,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | gateway.internal.addresses | object | `{}` |  |
 | gateway.internal.autoscaling.maxReplicas | int | `10` |  |
 | gateway.internal.autoscaling.minReplicas | int | `2` |  |
+| gateway.internal.aws.dns_name | string | `""` |  |
 | gateway.internal.aws.name | string | `"k8s-nullplatform-internal"` |  |
 | gateway.internal.aws.securityGroups | string | `""` |  |
 | gateway.internal.azure.networkSecurityGroup | string | `""` |  |
@@ -75,9 +76,11 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | gateway.public.addresses | object | `{}` |  |
 | gateway.public.autoscaling.maxReplicas | int | `10` |  |
 | gateway.public.autoscaling.minReplicas | int | `2` |  |
+| gateway.public.aws.dns_name | string | `""` |  |
 | gateway.public.aws.name | string | `"k8s-nullplatform-internet-facing"` |  |
 | gateway.public.aws.securityGroups | string | `""` |  |
 | gateway.public.azure.networkSecurityGroup | string | `""` |  |
+| gateway.public.enabled | bool | `true` |  |
 | gateway.public.gcp.firewallRule | string | `""` |  |
 | gateway.public.loadBalancerSourceRanges | list | `[]` |  |
 | gateway.public.loadBalancerType | string | `"external"` |  |
@@ -89,6 +92,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | gateway.public.oci.shapeFlexMax | string | `"100"` |  |
 | gateway.public.oci.shapeFlexMin | string | `"10"` |  |
 | gateway.public.oci.subnet | string | `""` |  |
+| gateway.useClusterIP | bool | `true` |  |
 | gatewayAPI.crds.install | bool | `true` |  |
 | gatewayAPI.enabled | bool | `true` |  |
 | gateways.enabled | bool | `true` |  |
@@ -120,6 +124,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | logging.dynatrace.enabled | bool | `false` |  |
 | logging.dynatrace.environmentId | string | `""` |  |
 | logging.enabled | bool | `true` |  |
+| logging.ensureLease | bool | `false` |  |
 | logging.gelf.enabled | bool | `false` |  |
 | logging.gelf.host | string | `""` |  |
 | logging.gelf.port | string | `""` |  |
@@ -146,7 +151,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | namespaces.nullplatformTools | string | `"nullplatform-tools"` |  |
 | nullplatform.apiKey | string | `""` |  |
 | nullplatform.secretName | string | `""` |  |
-| tls.required | bool | `true` |  |
+| tls.required | bool | `false` |  |
 | tls.secretName | string | `"wildcard-tls"` |  |
 | tls.secretPrivateName | string | `"wildcard-tls-internal"` |  |
 
