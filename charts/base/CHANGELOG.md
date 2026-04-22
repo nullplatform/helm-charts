@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.38.2](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.38.1...nullplatform-base-2.38.2) (2026-04-22)
+
+
+### Bug Fixes
+
+* **base:** update bitnami/kubectl image tag from 1.31 to latest ([0257316](https://github.com/nullplatform/helm-charts/commit/025731610cc3df742bed88717961515e61fa5e92))
+
 ## [2.38.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.38.0...nullplatform-base-2.38.1) (2026-04-21)
 
 
