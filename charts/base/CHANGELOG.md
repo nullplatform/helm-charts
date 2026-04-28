@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.38.3](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.38.2...nullplatform-base-2.38.3) (2026-04-28)
+
+
+### Bug Fixes
+
+* fix kubectl docker.io/bitnami/kubectl:latest ([edde9ad](https://github.com/nullplatform/helm-charts/commit/edde9ad8d0d683a4bb9d76999f646e76db01f518))
+
 ## [2.38.2](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.38.1...nullplatform-base-2.38.2) (2026-04-22)
 
 
