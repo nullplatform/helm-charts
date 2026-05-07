@@ -1,0 +1,308 @@
+{{- if or (eq .Values.global.provider "aks") (eq .Values.global.provider "gke") (eq .Values.global.provider "oke") (eq .Values.global.provider "eks") }}
+{{- $secretName := "" }}
+{{- $secretPrivateName := "" }}
+{{- if .Values.tls.required  }}
+{{- $secretName = required "The 'tls.secretName' field is required" .Values.tls.secretName }}
+{{- $secretPrivateName = required "The 'tls.secretPrivateName' field is required" .Values.tls.secretPrivateName }}
+{{- else }}
+{{- $secretName = .Values.tls.secretName | default "" }}
+{{- $secretPrivateName = .Values.tls.secretPrivateName | default "" }}
+{{- end }}
+{{- if not (lookup "v1" "Namespace" "" .Values.namespaces.gateway) }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespaces.gateway }}
+  labels:
+    name: {{ .Values.namespaces.gateway }}
+{{- end }}
+---
+{{- if and .Values.gateways.enabled .Values.gateway.internal.enabled }}
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.internal.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    {{- if .Values.gateway.useClusterIP }}
+    networking.istio.io/service-type: ClusterIP
+    external-dns.alpha.kubernetes.io/target: {{ .Values.gateway.internal.aws.dns_name }}
+    {{- else }}
+    {{- if eq .Values.global.provider "eks" }}
+    {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/aws-load-balancer-name:  {{ .Values.gateway.internal.aws.name }}
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+    {{- else }}
+    service.beta.kubernetes.io/aws-load-balancer-name: {{ .Values.gateway.internal.aws.name }}
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    {{- end }}
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15021"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/healthz/ready"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "http"
+    {{- if .Values.gateway.internal.aws.securityGroups }}
+    service.beta.kubernetes.io/aws-load-balancer-security-groups: {{ .Values.gateway.internal.aws.securityGroups | quote }}
+    service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: "false"
+    {{- end }}
+    {{- else if eq .Values.global.provider "aks" }}
+    {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/azure-load-balancer-internal: 'true'
+    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: {{ .Values.gateway.internal.azure_load_balancer_subnet }}
+    {{- else }}
+    service.beta.kubernetes.io/azure-load-balancer-internal: 'false'
+    {{- end }}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- if .Values.gateway.internal.azure.networkSecurityGroup }}
+    service.beta.kubernetes.io/azure-load-balancer-security-groups: {{ .Values.gateway.internal.azure.networkSecurityGroup | quote }}
+    {{- end }}
+    {{- else if eq .Values.global.provider "gke" }}
+    {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
+    networking.gke.io/load-balancer-type: "Internal"
+    {{- else }}
+    networking.gke.io/load-balancer-type: "External"
+    {{- end }}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- if .Values.gateway.internal.gcp.firewallRule }}
+    # GCP firewall rule is managed externally via Terraform
+    # Firewall rule name: {{ .Values.gateway.internal.gcp.firewallRule }}
+    {{- end }}
+    {{- else if eq .Values.global.provider "oke" }}
+    {{- if eq .Values.gateway.internal.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/oci-load-balancer-internal: "true"
+    {{- else }}
+    service.beta.kubernetes.io/oci-load-balancer-internal: "false"
+    {{- end }}
+    oci.oraclecloud.com/load-balancer-type: {{ .Values.gateway.internal.oci.loadBalancerType | default "lb" | quote }}
+    service.beta.kubernetes.io/oci-load-balancer-shape: {{ .Values.gateway.internal.oci.shape | default "flexible" | quote }}
+    {{- if eq (.Values.gateway.internal.oci.shape | default "flexible") "flexible" }}
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: {{ .Values.gateway.internal.oci.shapeFlexMin | default "10" | quote }}
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: {{ .Values.gateway.internal.oci.shapeFlexMax | default "100" | quote }}
+    {{- end }}
+    {{- if .Values.gateway.internal.oci.subnet }}
+    service.beta.kubernetes.io/oci-load-balancer-subnet1: {{ .Values.gateway.internal.oci.subnet | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: {{ .Values.gateway.internal.oci.securityListManagementMode | default "None" | quote }}
+    {{- if .Values.gateway.internal.oci.networkSecurityGroupIds }}
+    oci.oraclecloud.com/oci-network-security-groups: {{ .Values.gateway.internal.oci.networkSecurityGroupIds | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/oci-load-balancer-backend-protocol: "TCP"
+    {{- else }}
+    {{- /* Default annotations for other providers */ -}}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- end }}
+    {{- end }}
+spec:
+  gatewayClassName: istio
+  {{- with .Values.gateway.internal.addresses }}
+  addresses:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  listeners:
+  {{- if .Values.gateway.http.enabled }}
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+  {{- end }}
+  {{- if .Values.tls.required }}
+    - name: https
+      port: 443
+      protocol: HTTPS
+    {{- if $secretPrivateName }}
+      tls:
+        certificateRefs:
+          - group: ''
+            kind: Secret
+            name: {{ $secretPrivateName }}
+    {{- end }}
+      allowedRoutes:
+        namespaces:
+          from: All
+  {{- end }}
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.gateway.internal.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+spec:
+  # Match the generated Deployment by reference
+  # Note: Do not use `kind: Gateway`.
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.gateway.internal.name }}-istio
+  minReplicas: {{ .Values.gateway.internal.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.gateway.internal.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.gateway.internal.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+
+spec:
+  maxUnavailable: 50%
+  selector:
+    # Match the generated Deployment by label
+    matchLabels:
+      istio.io/gateway-name: {{ .Values.gateway.internal.name }}
+---
+{{- end }}
+{{- if and .Values.gateways.enabled .Values.gateway.public.enabled }}
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.public.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    {{- if .Values.gateway.useClusterIP }}
+    networking.istio.io/service-type: ClusterIP
+    external-dns.alpha.kubernetes.io/target: {{ .Values.gateway.public.aws.dns_name }}
+    {{- else }}
+    {{- if eq .Values.global.provider "eks" }}
+    {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/aws-load-balancer-name: {{ .Values.gateway.internal.aws.name }}
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+    {{- else }}
+    service.beta.kubernetes.io/aws-load-balancer-name: {{ .Values.gateway.public.aws.name }}
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    {{- end }}
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "15021"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/healthz/ready"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "http"
+    {{- if .Values.gateway.public.aws.securityGroups }}
+    service.beta.kubernetes.io/aws-load-balancer-security-groups: {{ .Values.gateway.public.aws.securityGroups | quote }}
+    service.beta.kubernetes.io/aws-load-balancer-manage-backend-security-group-rules: "false"
+    {{- end }}
+    {{- else if eq .Values.global.provider "aks" }}
+    {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/azure-load-balancer-internal: 'true'
+    {{- else }}
+    service.beta.kubernetes.io/azure-load-balancer-internal: 'false'
+    {{- end }}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- if .Values.gateway.public.azure.networkSecurityGroup }}
+    service.beta.kubernetes.io/azure-load-balancer-security-groups: {{ .Values.gateway.public.azure.networkSecurityGroup | quote }}
+    {{- end }}
+    {{- else if eq .Values.global.provider "gke" }}
+    {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
+    networking.gke.io/load-balancer-type: "Internal"
+    {{- else }}
+    networking.gke.io/load-balancer-type: "External"
+    {{- end }}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- if .Values.gateway.public.gcp.firewallRule }}
+    # GCP firewall rule is managed externally via Terraform
+    # Firewall rule name: {{ .Values.gateway.public.gcp.firewallRule }}
+    {{- end }}
+    {{- else if eq .Values.global.provider "oke" }}
+    {{- if eq .Values.gateway.public.loadBalancerType "internal" }}
+    service.beta.kubernetes.io/oci-load-balancer-internal: "true"
+    {{- else }}
+    service.beta.kubernetes.io/oci-load-balancer-internal: "false"
+    {{- end }}
+    oci.oraclecloud.com/load-balancer-type: {{ .Values.gateway.public.oci.loadBalancerType | default "lb" | quote }}
+    service.beta.kubernetes.io/oci-load-balancer-shape: {{ .Values.gateway.public.oci.shape | default "flexible" | quote }}
+    {{- if eq (.Values.gateway.public.oci.shape | default "flexible") "flexible" }}
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: {{ .Values.gateway.public.oci.shapeFlexMin | default "10" | quote }}
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: {{ .Values.gateway.public.oci.shapeFlexMax | default "100" | quote }}
+    {{- end }}
+    {{- if .Values.gateway.public.oci.subnet }}
+    service.beta.kubernetes.io/oci-load-balancer-subnet1: {{ .Values.gateway.public.oci.subnet | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: {{ .Values.gateway.public.oci.securityListManagementMode | default "None" | quote }}
+    {{- if .Values.gateway.public.oci.networkSecurityGroupIds }}
+    oci.oraclecloud.com/oci-network-security-groups: {{ .Values.gateway.public.oci.networkSecurityGroupIds | quote }}
+    {{- end }}
+    service.beta.kubernetes.io/oci-load-balancer-backend-protocol: "TCP"
+    {{- else }}
+    {{- /* Default annotations for other providers */ -}}
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
+    {{- end }}
+    {{- end }}
+spec:
+  gatewayClassName: istio
+  {{- with .Values.gateway.public.addresses }}
+  addresses:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  listeners:
+  {{- if .Values.gateway.http.enabled }}
+    - name: http
+      port: 80
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+  {{- end }}
+  {{- if .Values.tls.required }}
+    - name: https
+      port: 443
+      protocol: HTTPS
+    {{- if $secretName }}
+      tls:
+        certificateRefs:
+          - group: ''
+            kind: Secret
+            name: {{ $secretName }}
+    {{- end }}
+      allowedRoutes:
+        namespaces:
+          from: All
+  {{- end }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.gateway.public.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+spec:
+  # Match the generated Deployment by reference
+  # Note: Do not use `kind: Gateway`.
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.gateway.public.name }}-istio
+  minReplicas: {{ .Values.gateway.public.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.gateway.public.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.gateway.public.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+
+spec:
+  maxUnavailable: 50%
+  selector:
+    # Match the generated Deployment by label
+    matchLabels:
+      istio.io/gateway-name: {{ .Values.gateway.public.name }}
+---
+{{- end }}
+{{- end }}
