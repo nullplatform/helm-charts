@@ -150,13 +150,18 @@ logging:
   #     effect: "NoSchedule"
   tolerations: []
   ensureLease: false
+  applicationLogs:
+    # Set to false to disable all application log forwarding across every provider.
+    # Only the metrics pipeline (http aggregation, system metrics) will remain active.
+    enabled: true
+  mountDockerContainers: false  # set to true when using Docker container runtime (e.g. Minikube)
   streams:
     enabled: false
     mountPath: "/etc/null-logs/streams-dd.conf"
     subPath: "streams-dd.conf"
   streamsConfigMapName: "streams-dd-config"
   controller:
-    image: "public.ecr.aws/nullplatform/k8s-logs-controller:latest"
+    image: "public.ecr.aws/nullplatform/k8s-logs-controller:beta-295461e"
     resources:
       requests:
         cpu: 100m
@@ -181,14 +186,20 @@ logging:
     matchRegex: "container.*.application"
   dynatrace:
     enabled: false
+    logsEnabled: true    # set to false to send only metrics (DYNATRACE_PERFORMANCE_METRICS_ENABLED)
+    metricsEnabled: true # set to false to send only logs
     apiKey: ""
     environmentId: ""
   datadog:
     enabled: false
+    logsEnabled: true    # set to false to send only metrics (DATADOG_PERFORMANCE_METRICS_ENABLED)
+    metricsEnabled: true # set to false to send only logs
     apiKey: ""
     region: ""
   newrelic:
     enabled: false
+    logsEnabled: true    # set to false to send only metrics (NEWRELIC_PERFORMANCE_METRICS_ENABLED)
+    metricsEnabled: true # set to false to send only logs
     licenseKey: ""
     region: ""
 # CloudWatch configuration
