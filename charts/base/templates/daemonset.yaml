@@ -95,7 +95,7 @@ spec:
           env:
             - name: NULL_LOGS_RELOAD_ENABLED
               value: 'true'
-            {{- if not ((.Values.logging.applicationLogs).enabled | default true) }}
+            {{- if and (kindIs "bool" ((.Values.logging.applicationLogs).enabled)) (not .Values.logging.applicationLogs.enabled) }}
             - name: APPLICATION_LOGS_DISABLED
               value: "true"
             {{- end }}
