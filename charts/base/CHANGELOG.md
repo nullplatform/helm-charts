@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.39.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.38.3...nullplatform-base-2.39.0) (2026-05-14)
+
+
+### Features
+
+* **base:** add per-provider log/metrics split and applicationLogs toggle ([ed6beb2](https://github.com/nullplatform/helm-charts/commit/ed6beb21aeceb3fc99f0f5407f6c164c1e655d17))
+
+
+### Bug Fixes
+
+* **base:** nil-safe guard for applicationLogs.enabled ([f37f7a3](https://github.com/nullplatform/helm-charts/commit/f37f7a392a3f75ad0d8358f6884920ba1736b3fd))
+* **base:** use kindIs to correctly detect applicationLogs.enabled=false ([27d4e0b](https://github.com/nullplatform/helm-charts/commit/27d4e0baaefb26908f4f7a95ce2d05da6801450a))
+* fix yaml lint spacing before comments in values.yaml ([a745328](https://github.com/nullplatform/helm-charts/commit/a74532854819d56d9c127f7df1bcf776415ddb97))
+
 ## [2.38.3](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.38.2...nullplatform-base-2.38.3) (2026-04-28)
 
 
