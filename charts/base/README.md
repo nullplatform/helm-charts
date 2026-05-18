@@ -1,6 +1,6 @@
 # nullplatform-base
 
-![Version: 2.39.0](https://img.shields.io/badge/Version-2.39.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.40.0](https://img.shields.io/badge/Version-2.40.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 
@@ -113,7 +113,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | ingressControllers.public.name | string | `"internet-facing"` |  |
 | ingressControllers.public.scope | string | `"External"` |  |
 | logging.applicationLogs.enabled | bool | `true` |  |
-| logging.controller.image | string | `"public.ecr.aws/nullplatform/k8s-logs-controller:beta-295461e"` |  |
+| logging.controller.image | string | `"public.ecr.aws/nullplatform/k8s-logs-controller:1.4.0"` |  |
 | logging.controller.resources.limits.cpu | string | `"700m"` |  |
 | logging.controller.resources.limits.memory | string | `"300Mi"` |  |
 | logging.controller.resources.requests.cpu | string | `"100m"` |  |
