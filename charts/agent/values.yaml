@@ -28,6 +28,10 @@ statefulset:
 
 namespace: nullplatform-tools
 
+# If true, creates the namespace if it does not already exist.
+# Set to false when the namespace is managed externally (e.g., by Tofu/Terraform).
+createNamespace: true
+
 args:
   - "--tags=$(TAGS)"
   - "--apikey=$(NP_API_KEY)"
