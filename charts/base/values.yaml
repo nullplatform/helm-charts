@@ -161,7 +161,7 @@ logging:
     subPath: "streams-dd.conf"
   streamsConfigMapName: "streams-dd-config"
   controller:
-    image: "public.ecr.aws/nullplatform/k8s-logs-controller:beta-295461e"
+    image: "public.ecr.aws/nullplatform/k8s-logs-controller:1.4.0"
     resources:
       requests:
         cpu: 100m
