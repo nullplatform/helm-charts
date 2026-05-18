@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.40.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.39.0...nullplatform-base-2.40.0) (2026-05-18)
+
+
+### Features
+
+* new release of logs controller ([eae2486](https://github.com/nullplatform/helm-charts/commit/eae2486ce349de524656091a59ba8ba1a716e858))
+
 ## [2.39.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.38.3...nullplatform-base-2.39.0) (2026-05-14)
 
 
