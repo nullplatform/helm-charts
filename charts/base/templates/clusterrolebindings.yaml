@@ -38,21 +38,3 @@ subjects:
   - kind: Group
     name: np:pod-reader
     apiGroup: rbac.authorization.k8s.io
----
-{{- if .Values.global.installGatewayV2Crd }}
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: nullplatform-crd-installer-binding
-  annotations:
-    "helm.sh/hook": "pre-install,pre-upgrade"
-    "helm.sh/hook-weight": "-5"
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: nullplatform-crd-installer
-subjects:
-  - kind: ServiceAccount
-    name: nullplatform-crd-installer-sa
-    namespace: {{ .Release.Namespace }}
-{{- end }}
