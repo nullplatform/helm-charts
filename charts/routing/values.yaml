@@ -1,0 +1,117 @@
+global:
+  installGatewayV2Crd: true
+  # Kubernetes provider (options: "eks", "gke", "aks", "aro", "oke", "k3s")
+  provider: "eks"
+  # AWS region (applicable for EKS provider)
+  awsRegion: "us-east-1"
+# Namespace configurations
+namespaces:
+  nullplatformTools: "nullplatform-tools"
+  gateway: "gateways"
+
+ingressControllers:
+  public:
+    name: "internet-facing"
+    enabled: true
+    scope: External
+    domain: ""
+  private:
+    name: "internal"
+    enabled: true
+    scope: Internal
+    domain: ""
+# TLS configuration
+tls:
+  required: true
+  # Name of the TLS secret
+  secretName: "wildcard-tls"
+  secretPrivateName: "wildcard-tls-internal"
+  # Gateway configurations
+gateway:
+  useClusterIP: true
+  http:
+    enabled: false
+  internal:
+    enabled: true
+    name: "gateway-private"
+    azure_load_balancer_subnet:
+    # AWS-specific configuration (EKS)
+    aws:
+      name: "k8s-nullplatform-internal"
+      dns_name: ""
+      # Security Group ID for the internal gateway (restricts health check port 15021 to VPC CIDR)
+      # If empty, the AWS LB Controller will create a default SG with 0.0.0.0/0 access
+      securityGroups: ""
+    # Azure-specific configuration (AKS)
+    azure:
+      # Network Security Group ID for the internal gateway
+      # If empty, Azure will create default rules
+      networkSecurityGroup: ""
+      # DNS target for external-dns (private LB IP or hostname). Leave empty if not needed.
+      dns_name: ""
+    # GCP-specific configuration (GKE)
+    gcp:
+      # Firewall rule name for the internal gateway
+      firewallRule: ""
+      # DNS target for external-dns. Leave empty if not needed.
+      dns_name: ""
+    # OCI-specific configuration (OKE)
+    oci:
+      loadBalancerType: "lb"
+      shape: "flexible"
+      shapeFlexMin: "10"
+      shapeFlexMax: "100"
+      subnet: ""
+      securityListManagementMode: "None"
+      networkSecurityGroupIds: ""
+    loadBalancerSourceRanges: []
+    addresses: {}
+    autoscaling:
+      minReplicas: 2
+      maxReplicas: 10
+    loadBalancerType: "internal"
+  public:
+    name: "gateway-public"
+    enabled: true
+    # AWS-specific configuration (EKS)
+    aws:
+      name: "k8s-nullplatform-internet-facing"
+      dns_name: ""
+      securityGroups: ""
+    # Azure-specific configuration (AKS)
+    azure:
+      networkSecurityGroup: ""
+      # DNS target for external-dns (public LB IP or hostname). Leave empty if not needed.
+      dns_name: ""
+    # GCP-specific configuration (GKE)
+    gcp:
+      firewallRule: ""
+      # DNS target for external-dns. Leave empty if not needed.
+      dns_name: ""
+    # OCI-specific configuration (OKE)
+    oci:
+      loadBalancerType: "lb"
+      shape: "flexible"
+      shapeFlexMin: "10"
+      shapeFlexMax: "100"
+      subnet: ""
+      securityListManagementMode: "None"
+      networkSecurityGroupIds: ""
+    loadBalancerSourceRanges: []
+    addresses: {}
+    autoscaling:
+      minReplicas: 2
+      maxReplicas: 10
+    loadBalancerType: "external"
+gateways:
+  enabled: true
+gatewayAPI:
+  enabled: true
+  crds:
+    install: true
+envoy:
+  filters:
+    # Preserve client-supplied X-Request-ID at the gateway (for end-to-end tracing
+    # when upstream CDN/LB already generates the request id).
+    preserveExternalRequestId:
+      enabled: false

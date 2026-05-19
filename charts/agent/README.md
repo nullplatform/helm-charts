@@ -1,6 +1,6 @@
 # nullplatform-agent
 
-![Version: 2.34.0](https://img.shields.io/badge/Version-2.34.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.35.0](https://img.shields.io/badge/Version-2.35.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
 
@@ -47,8 +47,21 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | configuration.values.AGENT_REPO | string | `""` |  |
 | configuration.values.NP_API_KEY | string | `""` |  |
 | configuration.values.NP_LOG_LEVEL | string | `"DEBUG"` |  |
-| configuration.values.TAGS | string | `""` |  |
+| configuration.values.TAGS | string | `"gato:negro"` |  |
+| createNamespace | bool | `true` |  |
 | fullnameOverride | string | `""` |  |
+| githubTokenInit.cloneDir | string | `"nullplatform"` |  |
+| githubTokenInit.enabled | bool | `false` |  |
+| githubTokenInit.image | string | `"alpine:3.22.2"` |  |
+| githubTokenInit.repositoryUrl | string | `""` |  |
+| githubTokenInit.secretKeys.appId | string | `"APP_ID"` |  |
+| githubTokenInit.secretKeys.installationId | string | `"INSTALLATION_ID"` |  |
+| githubTokenInit.secretKeys.privateKey | string | `"PRIVATE_KEY"` |  |
+| githubTokenInit.secretName | string | `"github-app-secret"` |  |
+| githubTokenInit.values.appId | string | `""` |  |
+| githubTokenInit.values.installationId | string | `""` |  |
+| githubTokenInit.values.privateKey | string | `""` |  |
+| githubTokenInit.workingDir | string | `"/root/.np"` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"public.ecr.aws/nullplatform/controlplane-agent"` |  |
 | image.tag | string | `"latest"` |  |
