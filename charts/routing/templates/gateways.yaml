@@ -29,6 +29,7 @@ metadata:
   name: {{ .Values.gateway.internal.name }}
   namespace: {{ .Values.namespaces.gateway }}
   annotations:
+    helm.sh/resource-policy: keep
     {{- if .Values.gateway.useClusterIP }}
     networking.istio.io/service-type: ClusterIP
     {{- if $internalDnsTarget }}
@@ -154,6 +155,8 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ .Values.gateway.internal.name }}
   namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   maxUnavailable: 50%
   selector:
@@ -176,6 +179,7 @@ metadata:
   name: {{ .Values.gateway.public.name }}
   namespace: {{ .Values.namespaces.gateway }}
   annotations:
+    helm.sh/resource-policy: keep
     {{- if .Values.gateway.useClusterIP }}
     networking.istio.io/service-type: ClusterIP
     {{- if $publicDnsTarget }}
@@ -300,6 +304,8 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ .Values.gateway.public.name }}
   namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   maxUnavailable: 50%
   selector:
