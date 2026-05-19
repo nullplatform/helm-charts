@@ -103,10 +103,15 @@ gateway:
       minReplicas: 2
       maxReplicas: 10
     loadBalancerType: "external"
-# Nullplatform configurations
 gateways:
   enabled: true
 gatewayAPI:
   enabled: true
   crds:
     install: true
+envoy:
+  filters:
+    # Preserve client-supplied X-Request-ID at the gateway (for end-to-end tracing
+    # when upstream CDN/LB already generates the request id).
+    preserveExternalRequestId:
+      enabled: false
