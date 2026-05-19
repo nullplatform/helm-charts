@@ -76,6 +76,11 @@ spec:
               name: containers
             - mountPath: /etc/null-logs/dynamic
               name: logs-config
+            {{- if .Values.logging.mountDockerContainers }}
+            - mountPath: /var/lib/docker/containers
+              name: docker-containers
+              readOnly: true
+            {{- end }}
             {{- if .Values.logging.streams.enabled }}
             - name: streams-config-vol
               mountPath: {{ .Values.logging.streams.mountPath | default "/etc/null-logs/streams-dd.conf" }}
@@ -90,6 +95,10 @@ spec:
           env:
             - name: NULL_LOGS_RELOAD_ENABLED
               value: 'true'
+            {{- if and (kindIs "bool" ((.Values.logging.applicationLogs).enabled)) (not .Values.logging.applicationLogs.enabled) }}
+            - name: APPLICATION_LOGS_DISABLED
+              value: "true"
+            {{- end }}
             {{- if .Values.logging.gelf.enabled }}
             - name: GELF_LOGS_ENABLED
               value: 'true'
@@ -100,9 +109,9 @@ spec:
             {{- end }}
             {{- if .Values.logging.dynatrace.enabled }}
             - name: DYNATRACE_LOGS_ENABLED
-              value: 'true'
+              value: {{ .Values.logging.dynatrace.logsEnabled | quote }}
             - name: DYNATRACE_PERFORMANCE_METRICS_ENABLED
-              value: 'true'
+              value: {{ .Values.logging.dynatrace.metricsEnabled | quote }}
             {{- end }}
             - name: LOG_RESERVE_DATA
               value: 'False'
@@ -110,9 +119,9 @@ spec:
               value: message
             {{- if .Values.logging.datadog.enabled }}
             - name: DATADOG_LOGS_ENABLED
-              value: 'true'
+              value: {{ .Values.logging.datadog.logsEnabled | quote }}
             - name: DATADOG_PERFORMANCE_METRICS_ENABLED
-              value: 'true'
+              value: {{ .Values.logging.datadog.metricsEnabled | quote }}
             {{- if .Values.logging.datadog.region }}
             - name: DATADOG_REGION
               value: {{ .Values.logging.datadog.region | quote }}
@@ -125,9 +134,9 @@ spec:
             {{- end }}
             {{- if .Values.logging.newrelic.enabled }}
             - name: NEWRELIC_LOGS_ENABLED
-              value: "true"
+              value: {{ .Values.logging.newrelic.logsEnabled | quote }}
             - name: NEWRELIC_PERFORMANCE_METRICS_ENABLED
-              value: "true"
+              value: {{ .Values.logging.newrelic.metricsEnabled | quote }}
             - name: NEWRELIC_LICENSE_KEY
               value: {{ .Values.logging.newrelic.licenseKey | quote }}
             {{- if .Values.logging.newrelic.region }}
@@ -203,6 +212,11 @@ spec:
         - name: streams-config-vol
           configMap:
             name: {{ .Values.logging.streamsConfigMapName | default "streams-dd-config" }}
+        {{- end }}
+        {{- if .Values.logging.mountDockerContainers }}
+        - name: docker-containers
+          hostPath:
+            path: /var/lib/docker/containers
         {{- end }}
 
 {{- end}}

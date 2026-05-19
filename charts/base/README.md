@@ -1,6 +1,6 @@
 # nullplatform-base
 
-![Version: 2.38.3](https://img.shields.io/badge/Version-2.38.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.40.0](https://img.shields.io/badge/Version-2.40.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 
@@ -112,17 +112,22 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | ingressControllers.public.enabled | bool | `true` |  |
 | ingressControllers.public.name | string | `"internet-facing"` |  |
 | ingressControllers.public.scope | string | `"External"` |  |
-| logging.controller.image | string | `"public.ecr.aws/nullplatform/k8s-logs-controller:latest"` |  |
+| logging.applicationLogs.enabled | bool | `true` |  |
+| logging.controller.image | string | `"public.ecr.aws/nullplatform/k8s-logs-controller:1.4.0"` |  |
 | logging.controller.resources.limits.cpu | string | `"700m"` |  |
 | logging.controller.resources.limits.memory | string | `"300Mi"` |  |
 | logging.controller.resources.requests.cpu | string | `"100m"` |  |
 | logging.controller.resources.requests.memory | string | `"200Mi"` |  |
 | logging.datadog.apiKey | string | `""` |  |
 | logging.datadog.enabled | bool | `false` |  |
+| logging.datadog.logsEnabled | bool | `true` |  |
+| logging.datadog.metricsEnabled | bool | `true` |  |
 | logging.datadog.region | string | `""` |  |
 | logging.dynatrace.apiKey | string | `""` |  |
 | logging.dynatrace.enabled | bool | `false` |  |
 | logging.dynatrace.environmentId | string | `""` |  |
+| logging.dynatrace.logsEnabled | bool | `true` |  |
+| logging.dynatrace.metricsEnabled | bool | `true` |  |
 | logging.enabled | bool | `true` |  |
 | logging.ensureLease | bool | `false` |  |
 | logging.gelf.enabled | bool | `false` |  |
@@ -135,8 +140,11 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | logging.loki.password | string | `""` |  |
 | logging.loki.port | string | `""` |  |
 | logging.loki.user | string | `""` |  |
+| logging.mountDockerContainers | bool | `false` |  |
 | logging.newrelic.enabled | bool | `false` |  |
 | logging.newrelic.licenseKey | string | `""` |  |
+| logging.newrelic.logsEnabled | bool | `true` |  |
+| logging.newrelic.metricsEnabled | bool | `true` |  |
 | logging.newrelic.region | string | `""` |  |
 | logging.prometheus.enabled | bool | `false` |  |
 | logging.prometheus.exporterPort | int | `2021` |  |
