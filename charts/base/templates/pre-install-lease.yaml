@@ -1,0 +1,28 @@
+{{- if .Values.logging.ensureLease }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ensure-nullplatform-lease
+  namespace: {{ .Values.namespaces.nullplatformTools }}
+  annotations:
+    "helm.sh/hook": "pre-install,pre-upgrade"
+spec:
+  template:
+    spec:
+      serviceAccountName: nullplatform-lease-installer-sa
+      containers:
+      - name: ensure-lease
+        image: docker.io/bitnami/kubectl:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            kubectl apply -f - <<'EOF'
+            apiVersion: coordination.k8s.io/v1
+            kind: Lease
+            metadata:
+              name: nullplatform-metrics-extractor
+              namespace: {{ .Values.namespaces.nullplatformTools }}
+            EOF
+      restartPolicy: OnFailure
+{{- end }}
