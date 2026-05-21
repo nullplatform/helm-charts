@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.40.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.40.0...nullplatform-base-2.40.1) (2026-05-21)
+
+
+### Bug Fixes
+
+* **base:** replace ensureLease init container with pre-install hook Job ([e172807](https://github.com/nullplatform/helm-charts/commit/e17280774a5daa903e7170bbf5db996476a0a1d4))
+
 ## [2.40.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.39.0...nullplatform-base-2.40.0) (2026-05-18)
 
 
