@@ -94,6 +94,9 @@ gateway:
       # Network Security Group ID for the public gateway
       # If empty, Azure will create default rules
       networkSecurityGroup: ""
+      # Subnet name for the internal LB (only used when loadBalancerType is "internal")
+      # If empty, Azure picks the subnet automatically
+      subnet: ""
     # GCP-specific configuration (GKE)
     gcp:
       # Firewall rule name for the public gateway
