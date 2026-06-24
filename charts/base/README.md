@@ -1,6 +1,6 @@
 # nullplatform-base
 
-![Version: 2.40.1](https://img.shields.io/badge/Version-2.40.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.41.0](https://img.shields.io/badge/Version-2.41.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 
@@ -80,6 +80,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | gateway.public.aws.name | string | `"k8s-nullplatform-internet-facing"` |  |
 | gateway.public.aws.securityGroups | string | `""` |  |
 | gateway.public.azure.networkSecurityGroup | string | `""` |  |
+| gateway.public.azure.subnet | string | `""` |  |
 | gateway.public.enabled | bool | `true` |  |
 | gateway.public.gcp.firewallRule | string | `""` |  |
 | gateway.public.loadBalancerSourceRanges | list | `[]` |  |
