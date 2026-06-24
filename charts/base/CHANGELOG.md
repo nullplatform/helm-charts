@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.41.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.40.1...nullplatform-base-2.41.0) (2026-06-24)
+
+
+### Features
+
+* **base:** support azure subnet annotation for public gateway ([c35d1ca](https://github.com/nullplatform/helm-charts/commit/c35d1ca5004135c6e578807a648c0eb640ea21df))
+
 ## [2.40.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.40.0...nullplatform-base-2.40.1) (2026-05-21)
 
 
