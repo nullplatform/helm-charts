@@ -182,3 +182,40 @@ imagePullSecret:
   # registry: ""
   # username: ""
   # password: ""
+
+# ── Worker orchestration ─────────────────────────────────────────────────────
+# The agent spawns package workers (lean gRPC servers) and streams actions to
+# them over gRPC — no separate controller. This block controls how workers
+# deploy; per-package overrides let you tune any field per package.
+worker:
+  # backend: kubernetes (agent creates Deployment+Service per package) |
+  #          docker (agent runs host containers)
+  backend: kubernetes
+  # namespace workers are created in (empty = the agent's namespace)
+  namespace: ""
+  # gRPC port every worker listens on (NP_GRPC_LISTEN)
+  grpcPort: 50051
+  # ── pod template applied to every worker ──
+  serviceAccount: ""        # SA for worker pods (empty = namespace default)
+  nodeSelector: {}
+  labels: {}
+  imagePullSecrets: []      # names of existing pull secrets
+  env: {}                   # env added to every worker
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+  # ── per-package overrides, keyed by package slug (any field above) ──
+  overrides: {}
+    # postgres:
+    #   replicas: 2
+    #   resources:
+    #     limits: { memory: "512Mi" }
+    #   nodeSelector: { workload: db }
+  # RBAC letting the agent manage worker Deployments/Services/Pods/ConfigMaps in
+  # `namespace`. Enable when you scope the agent's own RBAC down from cluster-wide.
+  rbac:
+    create: false
