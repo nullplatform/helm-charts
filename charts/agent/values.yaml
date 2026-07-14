@@ -191,6 +191,17 @@ worker:
   # backend: kubernetes (agent creates Deployment+Service per package) |
   #          docker (agent runs host containers)
   backend: kubernetes
+  # security between the agent and its workers:
+  #   mtls     – agent mints a per-process CA, hands each worker a cert, and dials
+  #              with a client cert (only the agent can call the worker, encrypted).
+  #              No external CA / cert-manager / service mesh. (default, recommended)
+  #   insecure – plaintext, no auth. Only if the path is already secured elsewhere.
+  security: mtls
+  # NetworkPolicy so ONLY the agent may reach worker pods (needs a CNI that
+  # enforces NetworkPolicy — Calico/Cilium/EKS/GKE/AKS). Defense in depth on top
+  # of mTLS. Applies to the kubernetes backend.
+  networkPolicy:
+    create: true
   # namespace workers are created in (empty = the agent's namespace)
   namespace: ""
   # gRPC port every worker listens on (NP_GRPC_LISTEN)
