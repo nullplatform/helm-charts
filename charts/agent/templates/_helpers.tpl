@@ -80,10 +80,8 @@ The agent reads these (os.Getenv) to pick the backend and shape worker pods.
   value: {{ .backend | default "kubernetes" | quote }}
 - name: NP_WORKER_SECURITY
   value: {{ .security | default "mtls" | quote }}
-{{- if .namespace }}
 - name: NP_WORKER_NAMESPACE
-  value: {{ .namespace | quote }}
-{{- end }}
+  value: {{ .namespace | default $.Values.namespace | quote }}
 {{- if .serviceAccount }}
 - name: NP_WORKER_SERVICE_ACCOUNT
   value: {{ .serviceAccount | quote }}
