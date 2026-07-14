@@ -60,3 +60,69 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Join a map into "k1=v1,k2=v2" for the agent's NP_WORKER_* env vars.
+*/}}
+{{- define "agent.kvJoin" -}}
+{{- $pairs := list -}}
+{{- range $k, $v := . -}}{{- $pairs = append $pairs (printf "%s=%s" $k $v) -}}{{- end -}}
+{{- join "," $pairs -}}
+{{- end -}}
+
+{{/*
+Render the worker orchestrator config as NP_WORKER_* env for the agent container.
+The agent reads these (os.Getenv) to pick the backend and shape worker pods.
+*/}}
+{{- define "agent.workerEnv" -}}
+{{- with .Values.worker }}
+- name: NP_WORKER_BACKEND
+  value: {{ .backend | default "kubernetes" | quote }}
+{{- if .namespace }}
+- name: NP_WORKER_NAMESPACE
+  value: {{ .namespace | quote }}
+{{- end }}
+{{- if .serviceAccount }}
+- name: NP_WORKER_SERVICE_ACCOUNT
+  value: {{ .serviceAccount | quote }}
+{{- end }}
+{{- if .nodeSelector }}
+- name: NP_WORKER_NODE_SELECTOR
+  value: {{ include "agent.kvJoin" .nodeSelector | quote }}
+{{- end }}
+{{- if .labels }}
+- name: NP_WORKER_LABELS
+  value: {{ include "agent.kvJoin" .labels | quote }}
+{{- end }}
+{{- if .imagePullSecrets }}
+- name: NP_WORKER_IMAGE_PULL_SECRETS
+  value: {{ join "," .imagePullSecrets | quote }}
+{{- end }}
+{{- if .env }}
+- name: NP_WORKER_ENV
+  value: {{ include "agent.kvJoin" .env | quote }}
+{{- end }}
+{{- with .resources }}
+{{- with .requests }}
+{{- if .cpu }}
+- name: NP_WORKER_CPU_REQUEST
+  value: {{ .cpu | quote }}
+{{- end }}
+{{- if .memory }}
+- name: NP_WORKER_MEM_REQUEST
+  value: {{ .memory | quote }}
+{{- end }}
+{{- end }}
+{{- with .limits }}
+{{- if .cpu }}
+- name: NP_WORKER_CPU_LIMIT
+  value: {{ .cpu | quote }}
+{{- end }}
+{{- if .memory }}
+- name: NP_WORKER_MEM_LIMIT
+  value: {{ .memory | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end -}}

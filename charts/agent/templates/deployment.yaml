@@ -151,6 +151,7 @@ spec:
             - name: INIT_SCRIPTS_CONFIGMAP
               value: "init-scripts-{{ .Release.Name }}"
             {{- end }}
+            {{- include "agent.workerEnv" . | nindent 12 }}
           envFrom:
             - secretRef:
                 name: {{ .Values.configuration.secretName }}-{{ .Release.Name }}
