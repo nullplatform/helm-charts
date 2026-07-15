@@ -33,20 +33,22 @@ args:
   - "--apikey=$(NP_API_KEY)"
   - "--runtime=host"
   - "--command-executor-env=NP_API_KEY=$(NP_API_KEY)"
-  - "--command-executor-debug"
   - "--webserver-enabled"
-  - "--command-executor-git-command-repos $(AGENT_REPO)"
+# Optional extra args. Add git-command-repos ONLY if you use them, as two
+# separate list items so an empty value can't corrupt flag parsing:
+#   - "--command-executor-git-command-repos"
+#   - "$(AGENT_REPO)"
+# And "--command-executor-debug" only when debugging (verbose; off by default).
+extraArgs: []
 
 configuration:
   create: true
   secretName: nullplatform-agent-secret
   values:
-    TAGS: "gato:negro"
-    NP_LOG_LEVEL: DEBUG
+    # Set the tags the platform routes to this agent (e.g. "package:my-scope").
+    TAGS: ""
+    NP_LOG_LEVEL: INFO
     NP_API_KEY: ""
-      # example:
-    # AGENT_REPO: "https://reppo_01.gt#main,https://token@repo_01.git#main"
-    AGENT_REPO: ""
 
 image:
   repository: public.ecr.aws/nullplatform/controlplane-agent
@@ -63,15 +65,24 @@ serviceAccount:
   name: nullplatform-agent
   # Set to true for cluster-wide access (ClusterRole), false for namespace-scoped access (Role)
   clusterWide: true
+  # Scoped to what the agent actually needs: orchestrating worker
+  # Deployments/Services/Pods/Secrets/ConfigMaps and reading pod logs. Extend
+  # `rules` here if your deployment uses agent features that need more access —
+  # this is deliberately NOT cluster-admin (`*/*/*`) by default.
   role:
     rules:
-      - apiGroups:
-          - '*'
-          - ""
-        resources:
-          - '*'
-        verbs:
-          - '*'
+      - apiGroups: ["apps"]
+        resources: ["deployments"]
+        verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+      - apiGroups: [""]
+        resources: ["services", "pods", "configmaps", "secrets"]
+        verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+      - apiGroups: [""]
+        resources: ["pods/log"]
+        verbs: ["get", "list"]
+      - apiGroups: [""]
+        resources: ["events"]
+        verbs: ["create", "patch"]
 
 podAnnotations:
   name: nullplatform-agent
@@ -206,12 +217,31 @@ worker:
   namespace: ""
   # gRPC port every worker listens on (NP_GRPC_LISTEN)
   grpcPort: 50051
-  # ── pod template applied to every worker ──
-  serviceAccount: ""        # SA for worker pods (empty = namespace default)
+  # ── the workers this agent serves (rendered as NP_WORKERS) ──
+  # Each entry is one worker: package + version + image, plus a FEW optional
+  # per-worker overrides for when a worker's deployment differs (its own
+  # serviceAccount/permissions, resources, env, namespace, …). Anything omitted
+  # inherits the shared defaults below. The agent matches a package-exec's
+  # (package, version) here: exact (package, version) wins, else the package's
+  # no-version entry. Leave empty for a single-package agent pinning
+  # NP_WORKER_IMAGE instead.
+  workers: []
+    # - package: my-scope
+    #   version: "0.0.7"
+    #   image: ghcr.io/org/my-scope:0.0.7
+    #   serviceAccount: my-scope-sa      # this worker's own permissions
+    # - package: heavy-scope
+    #   version: "1.2.0"
+    #   image: ghcr.io/org/heavy:1.2.0
+    #   serviceAccount: heavy-sa
+    #   resources: { limits: { memory: "1Gi" } }
+  # ── shared defaults inherited by every worker (override per-worker above) ──
+  serviceAccount: ""        # default SA for worker pods (empty = namespace default)
   nodeSelector: {}
   labels: {}
   imagePullSecrets: []      # names of existing pull secrets
-  env: {}                   # env added to every worker
+  env: {}                   # extra env for every worker (NP_API_KEY + the cluster
+                            # CA trust are handled by the agent automatically)
   resources:
     requests:
       cpu: "50m"
@@ -219,14 +249,7 @@ worker:
     limits:
       cpu: "500m"
       memory: "256Mi"
-  # ── per-package overrides, keyed by package slug (any field above) ──
-  overrides: {}
-    # postgres:
-    #   replicas: 2
-    #   resources:
-    #     limits: { memory: "512Mi" }
-    #   nodeSelector: { workload: db }
-  # RBAC letting the agent manage worker Deployments/Services/Pods/ConfigMaps in
+  # RBAC letting the agent manage worker Deployments/Services/Pods/Secrets in
   # `namespace`. Enable when you scope the agent's own RBAC down from cluster-wide.
   rbac:
     create: false
