@@ -82,6 +82,10 @@ The agent reads these (os.Getenv) to pick the backend and shape worker pods.
   value: {{ .security | default "mtls" | quote }}
 - name: NP_WORKER_NAMESPACE
   value: {{ .namespace | default $.Values.namespace | quote }}
+{{- if .workers }}
+- name: NP_WORKERS
+  value: {{ .workers | toJson | quote }}
+{{- end }}
 {{- if .serviceAccount }}
 - name: NP_WORKER_SERVICE_ACCOUNT
   value: {{ .serviceAccount | quote }}
