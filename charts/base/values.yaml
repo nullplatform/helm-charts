@@ -218,6 +218,14 @@ cloudwatch:
     enabled: true
   accessLogs:
     enabled: false
+  # ServiceAccount settings for the logs controller (nullplatform-pod-metadata-reader-sa).
+  # Annotations are only rendered when cloudwatch.enabled is true. Set the IRSA role
+  # ARN here to let the logs controller reach CloudWatch via a scoped IAM role instead
+  # of the node instance role, e.g.:
+  #   annotations:
+  #     eks.amazonaws.com/role-arn: arn:aws:iam::<account-id>:role/<role-name>
+  serviceAccount:
+    annotations: {}
 # Metrics server configuration
 metricsServer:
   enabled: true
