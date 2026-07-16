@@ -43,6 +43,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | cloudwatch.performanceMetrics.enabled | bool | `true` |  |
 | cloudwatch.region | string | `"us-east-1"` |  |
 | cloudwatch.retentionDays | int | `7` |  |
+| cloudwatch.serviceAccount.annotations | object | `{}` | Annotations added to the logs controller ServiceAccount (nullplatform-pod-metadata-reader-sa) when cloudwatch.enabled is true; set eks.amazonaws.com/role-arn here to use IRSA |
 | controlPlane.agent.image | string | `"public.ecr.aws/nullplatform/controlplane-agent:latest"` |  |
 | controlPlane.agent.resources.limits.cpu | string | `"100m"` |  |
 | controlPlane.agent.resources.limits.memory | string | `"150Mi"` |  |
