@@ -1,6 +1,6 @@
 # nullplatform-base
 
-![Version: 2.41.0](https://img.shields.io/badge/Version-2.41.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.42.0](https://img.shields.io/badge/Version-2.42.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 
@@ -43,7 +43,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | cloudwatch.performanceMetrics.enabled | bool | `true` |  |
 | cloudwatch.region | string | `"us-east-1"` |  |
 | cloudwatch.retentionDays | int | `7` |  |
-| cloudwatch.serviceAccount.annotations | object | `{}` | Annotations added to the logs controller ServiceAccount (nullplatform-pod-metadata-reader-sa) when cloudwatch.enabled is true; set eks.amazonaws.com/role-arn here to use IRSA |
+| cloudwatch.serviceAccount.annotations | object | `{}` |  |
 | controlPlane.agent.image | string | `"public.ecr.aws/nullplatform/controlplane-agent:latest"` |  |
 | controlPlane.agent.resources.limits.cpu | string | `"100m"` |  |
 | controlPlane.agent.resources.limits.memory | string | `"150Mi"` |  |
