@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.42.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.41.0...nullplatform-base-2.42.0) (2026-07-16)
+
+
+### Features
+
+* **base:** support IRSA annotations on logs controller SA when cloudwatch enabled ([f9213dd](https://github.com/nullplatform/helm-charts/commit/f9213dd2e4c3703a7cc8c68f7d17e623e4e84bf3))
+
 ## [2.41.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.40.1...nullplatform-base-2.41.0) (2026-06-24)
 
 
