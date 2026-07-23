@@ -82,10 +82,19 @@ The agent reads these (os.Getenv) to pick the backend and shape worker pods.
   value: {{ .security | default "mtls" | quote }}
 - name: NP_WORKER_NAMESPACE
   value: {{ .namespace | default $.Values.namespace | quote }}
-{{- if .workers }}
-- name: NP_WORKERS
-  value: {{ .workers | toJson | quote }}
+{{- if .allowedRegistries }}
+- name: NP_ALLOWED_REGISTRIES
+  value: {{ join "," .allowedRegistries | quote }}
 {{- end }}
+{{- if .pins }}
+- name: NP_WORKERS
+  value: {{ .pins | toJson | quote }}
+{{- end }}
+{{- if .rules }}
+- name: NP_WORKER_RULES
+  value: {{ .rules | toJson | quote }}
+{{- end }}
+{{- with .defaults }}
 {{- if .serviceAccount }}
 - name: NP_WORKER_SERVICE_ACCOUNT
   value: {{ .serviceAccount | quote }}
@@ -128,5 +137,6 @@ The agent reads these (os.Getenv) to pick the backend and shape worker pods.
 {{- end }}
 {{- end }}
 {{- end }}
-{{- end }}
+{{- end }}{{/* end with .defaults */}}
+{{- end }}{{/* end with .Values.worker */}}
 {{- end -}}

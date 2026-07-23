@@ -196,8 +196,12 @@ imagePullSecret:
 
 # ── Worker orchestration ─────────────────────────────────────────────────────
 # The agent spawns package workers (lean gRPC servers) and streams actions to
-# them over gRPC — no separate controller. This block controls how workers
-# deploy; per-package overrides let you tune any field per package.
+# them over gRPC — no separate controller.
+#
+# Priority when a package-exec arrives:
+#   pins (an exact worker you control, trusted)  >  rules (config for a matched
+#   class)  >  defaults (every worker).  allowedRegistries gates every image that
+#   is resolved DYNAMICALLY (i.e. not from a pin) — deny-by-default.
 worker:
   # backend: kubernetes (agent creates Deployment+Service per package) |
   #          docker (agent runs host containers)
@@ -217,38 +221,57 @@ worker:
   namespace: ""
   # gRPC port every worker listens on (NP_GRPC_LISTEN)
   grpcPort: 50051
-  # ── the workers this agent serves (rendered as NP_WORKERS) ──
-  # Each entry is one worker: package + version + image, plus a FEW optional
-  # per-worker overrides for when a worker's deployment differs (its own
-  # serviceAccount/permissions, resources, env, namespace, …). Anything omitted
-  # inherits the shared defaults below. The agent matches a package-exec's
-  # (package, version) here: exact (package, version) wins, else the package's
-  # no-version entry. Leave empty for a single-package agent pinning
-  # NP_WORKER_IMAGE instead.
-  workers: []
+
+  # ── allowedRegistries — the guardrail (rendered as NP_ALLOWED_REGISTRIES) ──
+  # Deny-by-default: a worker whose image is resolved DYNAMICALLY from the action
+  # (not pinned below) only spawns when its image matches one of these globs.
+  # '*' matches any characters, including '/'. An empty list means nothing
+  # dynamic runs (only pins do) — set this, or every package-exec is refused.
+  allowedRegistries: []
+    # - "ghcr.io/your-org/*"
+    # - "*.dkr.ecr.us-east-1.amazonaws.com/your-org/*"
+
+  # ── defaults — config inherited by EVERY worker (rendered as NP_WORKER_*) ──
+  defaults:
+    serviceAccount: ""      # default SA for worker pods (empty = namespace default)
+    nodeSelector: {}
+    labels: {}
+    imagePullSecrets: []    # names of existing pull secrets
+    env: {}                 # extra env for every worker (NP_API_KEY + the cluster
+                            # CA trust are handled by the agent automatically)
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "64Mi"
+      limits:
+        cpu: "500m"
+        memory: "256Mi"
+
+  # ── rules — config for a matched CLASS of dynamic workers (NP_WORKER_RULES) ──
+  # First match wins. `match` globs the image registry/repository, the package
+  # slug, and/or the version; an empty field is a wildcard and an empty match is
+  # a catch-all. A rule supplies pod config only — the image stays dynamic.
+  rules: []
+    # - match: { registry: "*.dkr.ecr.us-east-1.amazonaws.com/*" }
+    #   imagePullSecrets: [ecr-pull]
+    # - match: { package: "heavy-*" }
+    #   resources: { limits: { memory: "2Gi" } }
+
+  # ── pins — EXACT workers you control (rendered as NP_WORKERS) ──
+  # Highest priority, and a pin's image is TRUSTED (bypasses allowedRegistries).
+  # Matched by exact (package, version), else the package's no-version pin. Each
+  # pin may carry its own per-worker overrides (own serviceAccount/RBAC, resources,
+  # env, namespace, …); anything omitted inherits `defaults`.
+  pins: []
     # - package: my-scope
     #   version: "0.0.7"
     #   image: ghcr.io/org/my-scope:0.0.7
-    #   serviceAccount: my-scope-sa      # this worker's own permissions
+    #   serviceAccount: my-scope-sa
     # - package: heavy-scope
     #   version: "1.2.0"
     #   image: ghcr.io/org/heavy:1.2.0
-    #   serviceAccount: heavy-sa
     #   resources: { limits: { memory: "1Gi" } }
-  # ── shared defaults inherited by every worker (override per-worker above) ──
-  serviceAccount: ""        # default SA for worker pods (empty = namespace default)
-  nodeSelector: {}
-  labels: {}
-  imagePullSecrets: []      # names of existing pull secrets
-  env: {}                   # extra env for every worker (NP_API_KEY + the cluster
-                            # CA trust are handled by the agent automatically)
-  resources:
-    requests:
-      cpu: "50m"
-      memory: "64Mi"
-    limits:
-      cpu: "500m"
-      memory: "256Mi"
+
   # RBAC letting the agent manage worker Deployments/Services/Pods/Secrets in
   # `namespace`. Enable when you scope the agent's own RBAC down from cluster-wide.
   rbac:
