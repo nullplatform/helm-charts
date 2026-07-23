@@ -65,24 +65,15 @@ serviceAccount:
   name: nullplatform-agent
   # Set to true for cluster-wide access (ClusterRole), false for namespace-scoped access (Role)
   clusterWide: true
-  # Scoped to what the agent actually needs: orchestrating worker
-  # Deployments/Services/Pods/Secrets/ConfigMaps and reading pod logs. Extend
-  # `rules` here if your deployment uses agent features that need more access —
-  # this is deliberately NOT cluster-admin (`*/*/*`) by default.
   role:
     rules:
-      - apiGroups: ["apps"]
-        resources: ["deployments"]
-        verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-      - apiGroups: [""]
-        resources: ["services", "pods", "configmaps", "secrets"]
-        verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-      - apiGroups: [""]
-        resources: ["pods/log"]
-        verbs: ["get", "list"]
-      - apiGroups: [""]
-        resources: ["events"]
-        verbs: ["create", "patch"]
+      - apiGroups:
+          - '*'
+          - ""
+        resources:
+          - '*'
+        verbs:
+          - '*'
 
 podAnnotations:
   name: nullplatform-agent
