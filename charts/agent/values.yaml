@@ -33,22 +33,20 @@ args:
   - "--apikey=$(NP_API_KEY)"
   - "--runtime=host"
   - "--command-executor-env=NP_API_KEY=$(NP_API_KEY)"
+  - "--command-executor-debug"
   - "--webserver-enabled"
-# Optional extra args. Add git-command-repos ONLY if you use them, as two
-# separate list items so an empty value can't corrupt flag parsing:
-#   - "--command-executor-git-command-repos"
-#   - "$(AGENT_REPO)"
-# And "--command-executor-debug" only when debugging (verbose; off by default).
-extraArgs: []
+  - "--command-executor-git-command-repos $(AGENT_REPO)"
 
 configuration:
   create: true
   secretName: nullplatform-agent-secret
   values:
-    # Set the tags the platform routes to this agent (e.g. "package:my-scope").
-    TAGS: ""
-    NP_LOG_LEVEL: INFO
+    TAGS: "gato:negro"
+    NP_LOG_LEVEL: DEBUG
     NP_API_KEY: ""
+      # example:
+    # AGENT_REPO: "https://reppo_01.gt#main,https://token@repo_01.git#main"
+    AGENT_REPO: ""
 
 image:
   repository: public.ecr.aws/nullplatform/controlplane-agent
