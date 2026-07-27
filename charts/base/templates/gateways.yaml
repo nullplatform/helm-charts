@@ -157,9 +157,10 @@ metadata:
 spec:
   maxUnavailable: 50%
   selector:
-    # Match the generated Deployment by label
+    # Selects the gateway PODS by the label the Gateway API controller sets on them:
+    # the Gateway's own name, not the "-istio" Deployment name. Same key as istio-metrics.
     matchLabels:
-      istio.io/gateway-name: {{ .Values.gateway.internal.name }}
+      gateway.networking.k8s.io/gateway-name: {{ .Values.gateway.internal.name }}
 ---
 {{- end }}
 {{- if and .Values.gateways.enabled .Values.gateway.public.enabled }}
@@ -303,9 +304,10 @@ metadata:
 spec:
   maxUnavailable: 50%
   selector:
-    # Match the generated Deployment by label
+    # Selects the gateway PODS by the label the Gateway API controller sets on them:
+    # the Gateway's own name, not the "-istio" Deployment name. Same key as istio-metrics.
     matchLabels:
-      istio.io/gateway-name: {{ .Values.gateway.public.name }}
+      gateway.networking.k8s.io/gateway-name: {{ .Values.gateway.public.name }}
 ---
 {{- end }}
 {{- end }}
