@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.36.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.35.0...nullplatform-agent-2.36.0) (2026-07-30)
+
+
+### Features
+
+* **agent chart:** allowedRegistries guardrail + rules/defaults/pins ([fb01923](https://github.com/nullplatform/helm-charts/commit/fb01923dc29ff93aa20762345808ec2584d5d0b2))
+* **agent chart:** worker mTLS + NetworkPolicy, secure by default ([5f39261](https://github.com/nullplatform/helm-charts/commit/5f3926132bcd3d5f5f91a862d45ab9f0c2bbdd2b))
+* **agent chart:** worker orchestration config + scoped worker RBAC ([7a63c80](https://github.com/nullplatform/helm-charts/commit/7a63c804e5e60c60e54614cf2b0502ca00468247))
+* **agent:** multi-worker registry, secretKeyRef api key, scoped RBAC ([59bf737](https://github.com/nullplatform/helm-charts/commit/59bf73761f86b80f22d4dea8f5a625383a1ef44b))
+* **agent:** plumb worker.* values into the agent as NP_WORKER_* env ([7c79e01](https://github.com/nullplatform/helm-charts/commit/7c79e01f531763b257efd1f64d1da2a025932f9d))
+
+
+### Bug Fixes
+
+* **agent chart:** always set NP_WORKER_NAMESPACE (default = agent namespace) ([aed0465](https://github.com/nullplatform/helm-charts/commit/aed046556582e312774e8ea1fc3c203c037d84d8))
+
+
+### Reverts
+
+* **agent chart:** keep the agent's default RBAC unchanged (retrocompat) ([b92b741](https://github.com/nullplatform/helm-charts/commit/b92b7410ecd7a9bcdc69eaaa601ad3d8765bf9ab))
+
 ## [2.35.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.34.0...nullplatform-agent-2.35.0) (2026-02-26)
 
 

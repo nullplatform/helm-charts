@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.43.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.42.0...nullplatform-base-2.43.0) (2026-07-30)
+
+
+### Features
+
+* **base:** bump logs controller image to v1.5.0 ([afde2e7](https://github.com/nullplatform/helm-charts/commit/afde2e7ae9a51b75defe65e6fcba39c68f5808b8))
+
 ## [2.42.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.41.0...nullplatform-base-2.42.0) (2026-07-16)
 
 
