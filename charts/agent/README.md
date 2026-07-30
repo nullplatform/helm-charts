@@ -1,6 +1,6 @@
 # nullplatform-agent
 
-![Version: 2.34.0](https://img.shields.io/badge/Version-2.34.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.36.0](https://img.shields.io/badge/Version-2.36.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
 
@@ -47,8 +47,20 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | configuration.values.AGENT_REPO | string | `""` |  |
 | configuration.values.NP_API_KEY | string | `""` |  |
 | configuration.values.NP_LOG_LEVEL | string | `"DEBUG"` |  |
-| configuration.values.TAGS | string | `""` |  |
+| configuration.values.TAGS | string | `"gato:negro"` |  |
 | fullnameOverride | string | `""` |  |
+| githubTokenInit.cloneDir | string | `"nullplatform"` |  |
+| githubTokenInit.enabled | bool | `false` |  |
+| githubTokenInit.image | string | `"alpine:3.22.2"` |  |
+| githubTokenInit.repositoryUrl | string | `""` |  |
+| githubTokenInit.secretKeys.appId | string | `"APP_ID"` |  |
+| githubTokenInit.secretKeys.installationId | string | `"INSTALLATION_ID"` |  |
+| githubTokenInit.secretKeys.privateKey | string | `"PRIVATE_KEY"` |  |
+| githubTokenInit.secretName | string | `"github-app-secret"` |  |
+| githubTokenInit.values.appId | string | `""` |  |
+| githubTokenInit.values.installationId | string | `""` |  |
+| githubTokenInit.values.privateKey | string | `""` |  |
+| githubTokenInit.workingDir | string | `"/root/.np"` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"public.ecr.aws/nullplatform/controlplane-agent"` |  |
 | image.tag | string | `"latest"` |  |
@@ -96,6 +108,24 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | tolerations[1].tolerationSeconds | int | `300` |  |
 | volumeMounts | list | `[]` |  |
 | volumes | list | `[]` |  |
+| worker.allowedRegistries | list | `[]` |  |
+| worker.backend | string | `"kubernetes"` |  |
+| worker.defaults.env | object | `{}` |  |
+| worker.defaults.imagePullSecrets | list | `[]` |  |
+| worker.defaults.labels | object | `{}` |  |
+| worker.defaults.nodeSelector | object | `{}` |  |
+| worker.defaults.resources.limits.cpu | string | `"500m"` |  |
+| worker.defaults.resources.limits.memory | string | `"256Mi"` |  |
+| worker.defaults.resources.requests.cpu | string | `"50m"` |  |
+| worker.defaults.resources.requests.memory | string | `"64Mi"` |  |
+| worker.defaults.serviceAccount | string | `""` |  |
+| worker.grpcPort | int | `50051` |  |
+| worker.namespace | string | `""` |  |
+| worker.networkPolicy.create | bool | `true` |  |
+| worker.pins | list | `[]` |  |
+| worker.rbac.create | bool | `false` |  |
+| worker.rules | list | `[]` |  |
+| worker.security | string | `"mtls"` |  |
 | workloadType | string | `"deployment"` |  |
 
 ----------------------------------------------
