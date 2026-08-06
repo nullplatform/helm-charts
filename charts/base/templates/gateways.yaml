@@ -15,6 +15,11 @@ metadata:
   name: {{ .Values.namespaces.gateway }}
   labels:
     name: {{ .Values.namespaces.gateway }}
+  annotations:
+    # The lookup above renders this Namespace only while it is absent, so the
+    # very next upgrade drops it from the manifest and Helm deletes it -- taking
+    # the Gateways, HPAs and PDBs inside it along. This keeps it alive.
+    helm.sh/resource-policy: keep
 {{- end }}
 ---
 {{- if and .Values.gateways.enabled .Values.gateway.internal.enabled }}
