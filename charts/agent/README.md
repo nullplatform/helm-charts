@@ -1,6 +1,6 @@
 # nullplatform-agent
 
-![Version: 2.36.0](https://img.shields.io/badge/Version-2.36.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.37.0](https://img.shields.io/badge/Version-2.37.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
 
@@ -120,12 +120,14 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | worker.defaults.resources.requests.memory | string | `"64Mi"` |  |
 | worker.defaults.serviceAccount | string | `""` |  |
 | worker.grpcPort | int | `50051` |  |
+| worker.idleTTL | string | `""` |  |
 | worker.namespace | string | `""` |  |
-| worker.networkPolicy.create | bool | `true` |  |
+| worker.networkPolicy.create | bool | `false` |  |
+| worker.patches | list | `[]` |  |
 | worker.pins | list | `[]` |  |
 | worker.rbac.create | bool | `false` |  |
 | worker.rules | list | `[]` |  |
-| worker.security | string | `"mtls"` |  |
+| worker.security | string | `"insecure"` |  |
 | workloadType | string | `"deployment"` |  |
 
 ----------------------------------------------
