@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.37.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.36.0...nullplatform-agent-2.37.0) (2026-08-07)
+
+
+### Features
+
+* **agent:** worker patches, per-install isolation, idle reaper, insecure default ([abba9e4](https://github.com/nullplatform/helm-charts/commit/abba9e45cb6e05664f4635b93a8c8cda1e4a4ce7))
+
 ## [2.36.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.35.0...nullplatform-agent-2.36.0) (2026-07-30)
 
 
