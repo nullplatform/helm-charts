@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.43.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.43.0...nullplatform-base-2.43.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* **base:** stop the namespaces from deleting themselves on upgrade ([ca796ca](https://github.com/nullplatform/helm-charts/commit/ca796caa7be72fae0c2ec8b5cb9343f6758faa91))
+
 ## [2.43.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.42.0...nullplatform-base-2.43.0) (2026-07-30)
 
 
