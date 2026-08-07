@@ -79,9 +79,14 @@ The agent reads these (os.Getenv) to pick the backend and shape worker pods.
 - name: NP_WORKER_BACKEND
   value: {{ .backend | default "kubernetes" | quote }}
 - name: NP_WORKER_SECURITY
-  value: {{ .security | default "mtls" | quote }}
+  value: {{ .security | default "insecure" | quote }}
 - name: NP_WORKER_NAMESPACE
   value: {{ .namespace | default $.Values.namespace | quote }}
+# Stable per-install identity: this agent only ever manages workers labelled with
+# it, so two agents in one cluster never collide on worker names or talk to each
+# other's workers. The release name is constant across pod restarts.
+- name: NP_AGENT_INSTANCE
+  value: {{ $.Release.Name | quote }}
 {{- if .allowedRegistries }}
 - name: NP_ALLOWED_REGISTRIES
   value: {{ join "," .allowedRegistries | quote }}
@@ -93,6 +98,14 @@ The agent reads these (os.Getenv) to pick the backend and shape worker pods.
 {{- if .rules }}
 - name: NP_WORKER_RULES
   value: {{ .rules | toJson | quote }}
+{{- end }}
+{{- if .patches }}
+- name: NP_WORKER_PATCHES
+  value: {{ .patches | toJson | quote }}
+{{- end }}
+{{- if .idleTTL }}
+- name: NP_WORKER_IDLE_TTL
+  value: {{ .idleTTL | quote }}
 {{- end }}
 {{- with .defaults }}
 {{- if .serviceAccount }}
