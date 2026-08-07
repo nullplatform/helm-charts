@@ -196,16 +196,18 @@ worker:
   #          docker (agent runs host containers)
   backend: kubernetes
   # security between the agent and its workers:
+  #   insecure – plaintext, no auth (default). Fine when the network path is
+  #              already isolated (a private cluster, a mesh, or the opt-in
+  #              NetworkPolicy below).
   #   mtls     – agent mints a per-process CA, hands each worker a cert, and dials
   #              with a client cert (only the agent can call the worker, encrypted).
-  #              No external CA / cert-manager / service mesh. (default, recommended)
-  #   insecure – plaintext, no auth. Only if the path is already secured elsewhere.
-  security: mtls
-  # NetworkPolicy so ONLY the agent may reach worker pods (needs a CNI that
-  # enforces NetworkPolicy — Calico/Cilium/EKS/GKE/AKS). Defense in depth on top
-  # of mTLS. Applies to the kubernetes backend.
+  #              No external CA / cert-manager / service mesh. Opt in for it.
+  security: insecure
+  # Opt-in NetworkPolicy so ONLY the agent may reach worker pods (needs a CNI that
+  # enforces it — Calico/Cilium/EKS/GKE/AKS). Off by default; turn it on for
+  # network-level isolation (esp. with security: insecure). k8s backend only.
   networkPolicy:
-    create: true
+    create: false
   # namespace workers are created in (empty = the agent's namespace)
   namespace: ""
   # gRPC port every worker listens on (NP_GRPC_LISTEN)
@@ -220,7 +222,38 @@ worker:
     # - "ghcr.io/your-org/*"
     # - "*.dkr.ecr.us-east-1.amazonaws.com/your-org/*"
 
-  # ── defaults — config inherited by EVERY worker (rendered as NP_WORKER_*) ──
+  # ── patches — the standard way to shape workers (rendered as NP_WORKER_PATCHES) ──
+  # Preferred over `defaults`/`rules` below. Each entry patches ONLY the workers
+  # whose package/version matches `target` (glob; an empty/omitted target matches
+  # EVERY worker — that's the base, replacing `defaults`). The patch itself is
+  # standard Kubernetes patching of the worker Pod — no bespoke language:
+  #   merge: <partial Pod>        strategic-merge, like `kubectl patch --type=merge`
+  #   json:  [{op,path,value}]    RFC-6902,      like `kubectl patch --type=json`
+  # The kubernetes backend applies the patch to the Pod; the docker backend takes
+  # the subset it can honor (the `worker` container's image/command/env/resources)
+  # and ignores pod-only fields (serviceAccountName, nodeSelector, …).
+  patches: []
+    # - target: { package: "scopes-lambda" }        # optional: version: "0.0.2"
+    #   merge:
+    #     spec:
+    #       serviceAccountName: np-agent-sa
+    #       containers:
+    #         - name: worker
+    #           resources: { limits: { memory: "2Gi" } }
+    #           env:
+    #             - { name: ASSUME_ROLE_ARN_DEFAULT, value: "arn:aws:iam::123:role/lambda" }
+    # - target: {}                                    # every worker (the base)
+    #   json:
+    #     - { op: add, path: "/metadata/labels/team", value: "platform" }
+
+  # ── idleTTL — reap idle workers (rendered as NP_WORKER_IDLE_TTL) ──
+  # A worker idle this long is deleted: 0 in-flight, dynamic (a pin is NEVER
+  # reaped), past one TTL of its own life, and not labelled
+  # nullplatform.com/keep-alive. Empty = disabled (workers live until the agent or
+  # their namespace is torn down). Go duration, e.g. "30m", "2h".
+  idleTTL: ""
+
+  # ── defaults — base config for EVERY worker (LEGACY — prefer `patches` above) ──
   defaults:
     serviceAccount: ""      # default SA for worker pods (empty = namespace default)
     nodeSelector: {}
@@ -236,7 +269,7 @@ worker:
         cpu: "500m"
         memory: "256Mi"
 
-  # ── rules — config for a matched CLASS of dynamic workers (NP_WORKER_RULES) ──
+  # ── rules — config for a matched CLASS of dynamic workers (LEGACY — prefer `patches`) ──
   # First match wins. `match` globs the image registry/repository, the package
   # slug, and/or the version; an empty field is a wildcard and an empty match is
   # a catch-all. A rule supplies pod config only — the image stays dynamic.
