@@ -108,6 +108,10 @@ spec:
             - name: DATADOG_REGION
               value: {{ .Values.logging.datadog.region | quote }}
             {{- end }}
+            {{- if (.Values.logging.datadog).logsAnnotation }}
+            - name: DATADOG_LOGS_ANNOTATION
+              value: {{ .Values.logging.datadog.logsAnnotation | quote }}
+            {{- end }}
             - name: DATADOG_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -133,6 +137,13 @@ spec:
               value: {{ .Values.cloudwatch.region | quote }}
             - name: CLOUDWATCH_LOGS_ENABLED
               value: {{ .Values.cloudwatch.logs.enabled | quote }}
+            {{- /* Omitted when empty so the logs controller keeps its own default,
+                   nullplatform.logs.cloudwatch. Emitting an empty string instead would
+                   fail the controller's annotation-key validation and crashloop it. */}}
+            {{- if (.Values.cloudwatch.logs).annotation }}
+            - name: CLOUDWATCH_LOGS_ANNOTATION
+              value: {{ .Values.cloudwatch.logs.annotation | quote }}
+            {{- end }}
             - name: CLOUDWATCH_PERFORMANCE_METRICS_ENABLED
               value: {{ .Values.cloudwatch.performanceMetrics.enabled | quote }}
             - name: CLOUDWATCH_CUSTOM_METRICS_ENABLED
