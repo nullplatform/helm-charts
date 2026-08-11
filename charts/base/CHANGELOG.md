@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.43.2](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.43.1...nullplatform-base-2.43.2) (2026-08-11)
+
+
+### Bug Fixes
+
+* **base:** omit the azure internal LB subnet annotation when unset ([cf1fa95](https://github.com/nullplatform/helm-charts/commit/cf1fa95051e32c496423ecd30a98b1ead142aef4))
+
 ## [2.43.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.43.0...nullplatform-base-2.43.1) (2026-08-07)
 
 
