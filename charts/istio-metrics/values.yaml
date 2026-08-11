@@ -66,6 +66,7 @@ gateway:
 exporter:
   enabled: true
   image: "python:3.11-slim"
+  # Port the exporter listens on; must match prometheus.server.extraScrapeConfigs' target port above
   port: 9101
   resources:
     requests:
