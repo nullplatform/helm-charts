@@ -5,6 +5,19 @@ on:
     branches:
       - main
 
+# Serializes consecutive pushes to main so release-please never has two runs
+# racing over the same release PR's state. Without this, two pushes landing
+# within the ~45s auto-merge window can overlap: one run merges/creates a
+# release PR while another, already mid-flight, tries to update the PR that
+# just got merged and fails with "the pull request cannot be reopened"
+# (observed live on 2026-08-07, PR #169/#170). cancel-in-progress: false
+# queues the newer push instead of cancelling the in-flight one, since
+# cancelling could interrupt a release-please run partway through mutating
+# GitHub state (tags, releases, PR labels).
+concurrency:
+  group: main-branch-push
+  cancel-in-progress: false
+
 permissions:
   contents: write
   pull-requests: write
