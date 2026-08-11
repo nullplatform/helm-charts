@@ -10,3 +10,9 @@ jobs:
     secrets:
       app-id: ${{ secrets.APP_RELEASE_ID }}
       app-private-key: ${{ secrets.APP_RELEASE_PRIVATE_KEY }}
+    # This repo only allows rebase merges (Settings > General > Pull Requests
+    # has "Allow merge commits" and "Allow squash merging" both off) --
+    # the reusable workflow's default merge_method ("merge") fails with
+    # "GraphQL: Merge commits are not allowed on this repository."
+    with:
+      merge_method: rebase
