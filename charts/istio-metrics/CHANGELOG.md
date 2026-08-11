@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/nullplatform/helm-charts/compare/istio-metrics-1.3.0...istio-metrics-1.3.1) (2026-08-11)
+
+
+### Bug Fixes
+
+* **istio-metrics:** document the exporter port dependency ([84111dc](https://github.com/nullplatform/helm-charts/commit/84111dc36c759b1aa268a500dbd895f282db8865))
+
 ## [1.3.0](https://github.com/nullplatform/helm-charts/compare/istio-metrics-1.2.0...istio-metrics-1.3.0) (2026-01-30)
 
 
@@ -41,4 +48,3 @@
 * **helm-charts:** fix comments ([f61f8ed](https://github.com/nullplatform/helm-charts/commit/f61f8ed5e884ce8304384f78c9e79ccf7df0ccd4))
 * **istio-metrics:** removed keys ([7cf3504](https://github.com/nullplatform/helm-charts/commit/7cf3504448c78fa54915feed6fdd83e45f4718c6))
 * **istio-metrics:** added enabled property to gateway.public ([499db1e](https://github.com/nullplatform/helm-charts/commit/499db1e8a03ba8f2481475dccb9fc8bb496fe7be))
-
