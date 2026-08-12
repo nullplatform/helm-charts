@@ -62,16 +62,13 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Name of the Secret holding one GitHub App private key per org. An explicit
-githubApps.secret.name always wins, so an existing (externally managed) Secret
-can be referenced; otherwise the chart-created name is derived from the release.
+Name of the EXISTING Secret holding one GitHub App private key per org. The chart
+never creates it: key material must be provisioned out of band (external-secrets,
+Vault, SOPS, by hand) so a PEM never passes through Helm values. Validation
+guarantees this is set whenever an org reads its key from a file.
 */}}
 {{- define "agent.githubAppsSecretName" -}}
-{{- if .Values.githubApps.secret.name -}}
 {{- .Values.githubApps.secret.name -}}
-{{- else -}}
-{{- printf "nullplatform-agent-github-apps-%s" .Release.Name -}}
-{{- end -}}
 {{- end -}}
 
 {{/*
@@ -84,7 +81,9 @@ fails at `helm template` instead of crash-looping a pod.
 {{- if not .Values.githubApps.apps -}}
 {{- fail "githubApps.enabled is true but githubApps.apps is empty: add one entry per GitHub org" -}}
 {{- end -}}
-{{- $create := .Values.githubApps.secret.create -}}
+{{- if .Values.githubApps.secret.create -}}
+{{- fail "githubApps.secret.create is no longer supported: the chart never creates a Secret holding private keys. Provision the Secret out of band (external-secrets, Vault, SOPS) and reference it with githubApps.secret.name" -}}
+{{- end -}}
 {{- $secretName := .Values.githubApps.secret.name -}}
 {{- $seen := dict -}}
 {{- range $i, $app := .Values.githubApps.apps -}}
@@ -99,21 +98,15 @@ fails at `helm template` instead of crash-looping a pod.
   {{- fail (printf "githubApps.apps: duplicate entry for org %s; one entry per org" $org) -}}
   {{- end -}}
   {{- $_ := set $seen $org true -}}
+  {{- if $app.privateKey -}}
+  {{- fail (printf "githubApps.apps[%d] (org %s): privateKey is not supported — a PEM must never be a chart parameter. Put the key in a Secret in the cluster and reference it with githubApps.secret.name + privateKeySecretKey, or use privateKeySsmParameter" $i $org) -}}
+  {{- end -}}
   {{- if $app.privateKeySsmParameter -}}
-    {{- if or $app.privateKey $app.privateKeySecretKey -}}
-    {{- fail (printf "githubApps.apps[%d] (org %s): privateKeySsmParameter cannot be combined with privateKey or privateKeySecretKey; pick one key source" $i $org) -}}
+    {{- if $app.privateKeySecretKey -}}
+    {{- fail (printf "githubApps.apps[%d] (org %s): privateKeySsmParameter cannot be combined with privateKeySecretKey; pick one key source" $i $org) -}}
     {{- end -}}
-  {{- else if $create -}}
-    {{- if not $app.privateKey -}}
-    {{- fail (printf "githubApps.apps[%d] (org %s): githubApps.secret.create is true, so privateKey (the PEM) is required; use privateKeySecretKey with secret.create=false to reference an existing Secret, or privateKeySsmParameter to read the key from AWS SSM" $i $org) -}}
-    {{- end -}}
-  {{- else -}}
-    {{- if $app.privateKey -}}
-    {{- fail (printf "githubApps.apps[%d] (org %s): privateKey is set but githubApps.secret.create is false, so nothing would store it; set secret.create=true or reference an existing Secret with privateKeySecretKey" $i $org) -}}
-    {{- end -}}
-    {{- if not $secretName -}}
-    {{- fail (printf "githubApps.apps[%d] (org %s): needs a private key file, so githubApps.secret.name must name an existing Secret (or set secret.create=true, or use privateKeySsmParameter)" $i $org) -}}
-    {{- end -}}
+  {{- else if not $secretName -}}
+  {{- fail (printf "githubApps.apps[%d] (org %s): reads its private key from a file, so githubApps.secret.name must name an existing Secret in the cluster (or use privateKeySsmParameter)" $i $org) -}}
   {{- end -}}
 {{- end -}}
 {{- end -}}
