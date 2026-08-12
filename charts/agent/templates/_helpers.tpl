@@ -62,6 +62,109 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Name of the Secret holding one GitHub App private key per org. An explicit
+githubApps.secret.name always wins, so an existing (externally managed) Secret
+can be referenced; otherwise the chart-created name is derived from the release.
+*/}}
+{{- define "agent.githubAppsSecretName" -}}
+{{- if .Values.githubApps.secret.name -}}
+{{- .Values.githubApps.secret.name -}}
+{{- else -}}
+{{- printf "nullplatform-agent-github-apps-%s" .Release.Name -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Validate githubApps. Renders nothing; aborts the render with an actionable
+message. This mirrors the agent's own boot-time validation, so a bad values file
+fails at `helm template` instead of crash-looping a pod.
+*/}}
+{{- define "agent.githubAppsValidate" -}}
+{{- if .Values.githubApps.enabled -}}
+{{- if not .Values.githubApps.apps -}}
+{{- fail "githubApps.enabled is true but githubApps.apps is empty: add one entry per GitHub org" -}}
+{{- end -}}
+{{- $create := .Values.githubApps.secret.create -}}
+{{- $secretName := .Values.githubApps.secret.name -}}
+{{- $seen := dict -}}
+{{- range $i, $app := .Values.githubApps.apps -}}
+  {{- if not $app.org -}}
+  {{- fail (printf "githubApps.apps[%d]: org is required" $i) -}}
+  {{- end -}}
+  {{- if not $app.appId -}}
+  {{- fail (printf "githubApps.apps[%d] (org %s): appId is required" $i $app.org) -}}
+  {{- end -}}
+  {{- $org := lower $app.org -}}
+  {{- if hasKey $seen $org -}}
+  {{- fail (printf "githubApps.apps: duplicate entry for org %s; one entry per org" $org) -}}
+  {{- end -}}
+  {{- $_ := set $seen $org true -}}
+  {{- if $app.privateKeySsmParameter -}}
+    {{- if or $app.privateKey $app.privateKeySecretKey -}}
+    {{- fail (printf "githubApps.apps[%d] (org %s): privateKeySsmParameter cannot be combined with privateKey or privateKeySecretKey; pick one key source" $i $org) -}}
+    {{- end -}}
+  {{- else if $create -}}
+    {{- if not $app.privateKey -}}
+    {{- fail (printf "githubApps.apps[%d] (org %s): githubApps.secret.create is true, so privateKey (the PEM) is required; use privateKeySecretKey with secret.create=false to reference an existing Secret, or privateKeySsmParameter to read the key from AWS SSM" $i $org) -}}
+    {{- end -}}
+  {{- else -}}
+    {{- if $app.privateKey -}}
+    {{- fail (printf "githubApps.apps[%d] (org %s): privateKey is set but githubApps.secret.create is false, so nothing would store it; set secret.create=true or reference an existing Secret with privateKeySecretKey" $i $org) -}}
+    {{- end -}}
+    {{- if not $secretName -}}
+    {{- fail (printf "githubApps.apps[%d] (org %s): needs a private key file, so githubApps.secret.name must name an existing Secret (or set secret.create=true, or use privateKeySsmParameter)" $i $org) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Render the per-org GitHub App config as the agent's NP_GITHUB_APPS env var. The
+agent's --github-app flag is repeatable and Kubernetes can only substitute
+$(VAR) inside a single argument value, so the env var is the only way a chart can
+pass N orgs. Entries are separated by ";", fields within an entry by ",".
+Only paths, ids and parameter names are rendered here — never key material.
+*/}}
+{{- define "agent.githubAppsEnv" -}}
+{{- include "agent.githubAppsValidate" . -}}
+{{- if .Values.githubApps.enabled -}}
+{{- $mountPath := .Values.githubApps.mountPath -}}
+{{- $entries := list -}}
+{{- range .Values.githubApps.apps -}}
+  {{- $org := lower .org -}}
+  {{- $fields := list (printf "org=%s" $org) (printf "app-id=%s" (.appId | toString)) -}}
+  {{- if .installationId -}}
+  {{- $fields = append $fields (printf "installation-id=%s" (.installationId | toString)) -}}
+  {{- end -}}
+  {{- if .privateKeySsmParameter -}}
+  {{- $fields = append $fields (printf "private-key-ssm-parameter=%s" .privateKeySsmParameter) -}}
+  {{- else -}}
+  {{- $fields = append $fields (printf "private-key=%s/%s" $mountPath (.privateKeySecretKey | default (printf "%s.pem" $org))) -}}
+  {{- end -}}
+  {{- $entries = append $entries (join "," $fields) -}}
+{{- end -}}
+- name: NP_GITHUB_APPS
+  value: {{ join ";" $entries | quote }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+"true" when at least one org reads its private key from a file, meaning the
+Secret has to be mounted. Empty when every org uses AWS SSM, so no key material
+touches the cluster at all.
+*/}}
+{{- define "agent.githubAppsNeedsKeyVolume" -}}
+{{- $needs := false -}}
+{{- if .Values.githubApps.enabled -}}
+{{- range .Values.githubApps.apps -}}
+{{- if not .privateKeySsmParameter -}}{{- $needs = true -}}{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- if $needs -}}true{{- end -}}
+{{- end -}}
+
+{{/*
 Join a map into "k1=v1,k2=v2" for the agent's NP_WORKER_* env vars.
 */}}
 {{- define "agent.kvJoin" -}}
