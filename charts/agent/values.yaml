@@ -152,31 +152,26 @@ initContainers: []
 # Rendered as the NP_GITHUB_APPS env var, because the agent's --github-app flag
 # is repeatable and Kubernetes can only substitute $(VAR) inside a single
 # argument value.
-#
-# A private key is NEVER a chart parameter. The chart never receives, templates
-# or creates PEM material: it only references it. There are exactly two sources,
-# and both can be mixed across orgs:
-#
-#   1. A Secret that already exists in the cluster (`secret.name` +
-#      `apps[].privateKeySecretKey`), created out of band — external-secrets,
-#      Vault, SOPS, or by hand. The chart mounts it read-only.
-#   2. An AWS SSM SecureString parameter (`apps[].privateKeySsmParameter`), read
-#      by the agent at boot. Nothing is stored in the cluster at all.
 githubApps:
   # -- Enable per-org GitHub App auth for command repos.
   enabled: false
   secret:
-    # -- Name of an EXISTING Secret in the cluster holding one PEM per org, one
-    # key per org (see `apps[].privateKeySecretKey`). The chart only mounts it;
-    # it never creates it, so the key material never passes through Helm values.
-    # Required when at least one org reads its key from a file rather than SSM.
+    # -- Create the Secret holding the PEMs from `apps[].privateKey`.
+    # DEV/TESTING ONLY: it puts private keys in values.yaml. In production leave
+    # this false and reference an existing Secret (managed by external-secrets,
+    # SOPS, or created out of band) via `secret.name` + `apps[].privateKeySecretKey`.
+    create: false
+    # -- Name of the Secret holding one PEM per org. Required when `create` is
+    # false and any org reads its key from a file. When `create` is true and this
+    # is empty it defaults to "nullplatform-agent-github-apps-<release>".
     name: ""
   # -- Read-only mount point for the PEM files inside the agent container.
   mountPath: /etc/nullplatform/github-apps
   # -- One entry per GitHub organization. Each needs `org` and `appId`, plus
-  # exactly one key source: `privateKeySecretKey` (a key inside
-  # `githubApps.secret.name`) or `privateKeySsmParameter` (an AWS SSM
-  # SecureString, needs IRSA on the serviceAccount). `installationId` is
+  # exactly one key source: `privateKeySecretKey` (a file from the Secret),
+  # `privateKeySsmParameter` (read from AWS SSM, needs IRSA on the
+  # serviceAccount, no key material in the cluster), or `privateKey` (the PEM
+  # inline, dev only, requires `secret.create: true`). `installationId` is
   # optional: when set the agent skips the installation lookup; when omitted it
   # resolves the installation from the org.
   apps: []
