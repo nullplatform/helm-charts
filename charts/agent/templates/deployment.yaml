@@ -136,11 +136,16 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if or .Values.volumeMounts .Values.githubTokenInit.enabled }}
+          {{- if or .Values.volumeMounts .Values.githubTokenInit.enabled (include "agent.githubAppsNeedsKeyVolume" .) }}
           volumeMounts:
             {{- if .Values.githubTokenInit.enabled }}
             - name: repos-storage
               mountPath: {{ .Values.githubTokenInit.workingDir }}
+            {{- end }}
+            {{- if include "agent.githubAppsNeedsKeyVolume" . }}
+            - name: github-app-keys
+              mountPath: {{ .Values.githubApps.mountPath }}
+              readOnly: true
             {{- end }}
             {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
@@ -152,16 +157,23 @@ spec:
               value: "init-scripts-{{ .Release.Name }}"
             {{- end }}
             {{- include "agent.workerEnv" . | nindent 12 }}
+            {{- include "agent.githubAppsEnv" . | nindent 12 }}
           envFrom:
             - secretRef:
                 name: {{ .Values.configuration.secretName }}-{{ .Release.Name }}
           lifecycle:
             {{- toYaml .Values.lifecycle | nindent 12 }}
-      {{- if or .Values.volumes .Values.githubTokenInit.enabled }}
+      {{- if or .Values.volumes .Values.githubTokenInit.enabled (include "agent.githubAppsNeedsKeyVolume" .) }}
       volumes:
         {{- if .Values.githubTokenInit.enabled }}
         - name: repos-storage
           emptyDir: {}
+        {{- end }}
+        {{- if include "agent.githubAppsNeedsKeyVolume" . }}
+        - name: github-app-keys
+          secret:
+            secretName: {{ include "agent.githubAppsSecretName" . }}
+            defaultMode: 0400
         {{- end }}
         {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
