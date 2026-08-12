@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.44.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.43.2...nullplatform-base-2.44.0) (2026-08-12)
+
+
+### Features
+
+* **base:** bump logs controller image to v1.6.0 ([b948c54](https://github.com/nullplatform/helm-charts/commit/b948c5456e7bfacade57ae06ee62278af89635c7))
+* **base:** expose the logs controller routing annotation ([2c89f9e](https://github.com/nullplatform/helm-charts/commit/2c89f9ef183bde767d009d169fb16dbec5e113d8))
+
 ## [2.43.2](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.43.1...nullplatform-base-2.43.2) (2026-08-11)
 
 
