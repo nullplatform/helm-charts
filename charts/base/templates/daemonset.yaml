@@ -31,8 +31,8 @@ spec:
       {{- end }}
       containers:
         - name: nullplatform-log-controller
-          image: {{ .Values.logging.controller.image }}
-          imagePullPolicy: Always
+          image: "{{ .Values.logging.controller.image.repository }}:{{ .Values.logging.controller.image.tag }}"
+          imagePullPolicy: {{ .Values.logging.controller.image.pullPolicy }}
           {{- if .Values.logging.controller.resources }}
           resources:
             {{- toYaml .Values.logging.controller.resources | nindent 12 }}

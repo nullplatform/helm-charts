@@ -12,7 +12,8 @@ spec:
       serviceAccountName: nullplatform-lease-installer-sa
       containers:
       - name: ensure-lease
-        image: docker.io/bitnami/kubectl:latest
+        image: "{{ .Values.preInstallJobs.image.repository }}:{{ .Values.preInstallJobs.image.tag }}"
+        imagePullPolicy: {{ .Values.preInstallJobs.image.pullPolicy }}
         command:
           - /bin/sh
           - -c

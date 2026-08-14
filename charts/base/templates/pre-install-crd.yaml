@@ -11,7 +11,8 @@ spec:
       serviceAccountName: nullplatform-crd-installer-sa
       containers:
       - name: install-crds
-        image: docker.io/bitnami/kubectl:latest
+        image: "{{ .Values.preInstallJobs.image.repository }}:{{ .Values.preInstallJobs.image.tag }}"
+        imagePullPolicy: {{ .Values.preInstallJobs.image.pullPolicy }}
         command:
           - /bin/sh
           - -c

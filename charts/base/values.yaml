@@ -134,7 +134,10 @@ nullplatform:
 controlPlane:
   enabled: false
   agent:
-    image: "public.ecr.aws/nullplatform/controlplane-agent:latest"
+    image:
+      repository: public.ecr.aws/nullplatform/controlplane-agent
+      tag: latest
+      pullPolicy: Always
     resources:
       requests:
         cpu: 50m
@@ -164,7 +167,10 @@ logging:
     subPath: "streams-dd.conf"
   streamsConfigMapName: "streams-dd-config"
   controller:
-    image: "public.ecr.aws/nullplatform/k8s-logs-controller:1.6.0"
+    image:
+      repository: public.ecr.aws/nullplatform/k8s-logs-controller
+      tag: "1.6.0"
+      pullPolicy: Always
     resources:
       requests:
         cpu: 100m
@@ -254,6 +260,12 @@ imagePullSecrets:
   registry: ""
   username: ""
   password: ""
+# Image used by the pre-install/pre-upgrade hook Jobs (gateway API CRD install, lease bootstrap)
+preInstallJobs:
+  image:
+    repository: docker.io/bitnami/kubectl
+    tag: latest
+    pullPolicy: Always
 envoy:
   filters:
     preserveExternalRequestId:
