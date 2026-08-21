@@ -61,7 +61,7 @@ spec:
           volumeMounts:
             {{- if include "agent.githubAppsNeedsKeyVolume" . }}
             - name: github-app-keys
-              mountPath: {{ .Values.githubApps.mountPath }}
+              mountPath: {{ .Values.github.mountPath }}
               readOnly: true
             {{- end }}
             {{- with .Values.volumeMounts }}
@@ -86,7 +86,7 @@ spec:
         - name: github-app-keys
           secret:
             secretName: {{ include "agent.githubAppsSecretName" . }}
-            defaultMode: 0400
+            defaultMode: 0444
         {{- end }}
         {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}

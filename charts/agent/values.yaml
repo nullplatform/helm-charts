@@ -136,25 +136,11 @@ priorityClass:
 #         mountPath: /root/.np
 initContainers: []
 
-# ── GitHub App authentication for command repos ──────────────────────────────
-# Command repos normally carry their credential inside the URL
-# (https://<token>@github.com/org/repo.git). That token is static: when it
-# expires, clones and pulls fail until the agent is restarted. With githubApps
-# the agent mints short-lived installation tokens itself and renews them before
-# they expire.
-#
-# Credentials are configured PER ORGANIZATION — each org has its own App ID and
-# its own private key, so a key can only ever mint tokens for the orgs it was
-# explicitly bound to. There is no global App: an org that is not listed here
-# keeps using whatever credential its repo URL carries, and the agent logs a
-# warning naming it.
-#
-# Rendered as the NP_GITHUB_APPS env var, because the agent's --github-app flag
-# is repeatable and Kubernetes can only substitute $(VAR) inside a single
-# argument value.
-githubApps:
-  # -- Enable per-org GitHub App auth for command repos.
-  enabled: false
+# -- GitHub credentials used to clone the command repos, one set per GitHub
+# organization. Each org declares its own App ID and its own private key, so a
+# key can only ever mint tokens for the orgs it is bound to. Orgs that are not
+# listed here keep using whatever credential their repo URL carries.
+github:
   secret:
     # -- Create the Secret holding the PEMs from `apps[].privateKey`.
     # DEV/TESTING ONLY: it puts private keys in values.yaml. In production leave
@@ -167,13 +153,13 @@ githubApps:
     name: ""
   # -- Read-only mount point for the PEM files inside the agent container.
   mountPath: /etc/nullplatform/github-apps
-  # -- One entry per GitHub organization. Each needs `org` and `appId`, plus
-  # exactly one key source: `privateKeySecretKey` (a file from the Secret),
-  # `privateKeySsmParameter` (read from AWS SSM, needs IRSA on the
-  # serviceAccount, no key material in the cluster), or `privateKey` (the PEM
-  # inline, dev only, requires `secret.create: true`). `installationId` is
-  # optional: when set the agent skips the installation lookup; when omitted it
-  # resolves the installation from the org.
+  # -- One entry per GitHub organization; empty means no GitHub App auth. Each
+  # entry needs `org` and `appId`, plus exactly one key source:
+  # `privateKeySecretKey` (a file from the Secret), `privateKeySsmParameter`
+  # (read from AWS SSM, needs IRSA on the serviceAccount, no key material in the
+  # cluster), or `privateKey` (the PEM inline, dev only, requires
+  # `secret.create: true`). `installationId` is optional: when set the agent
+  # skips the installation lookup; when omitted it resolves it from the org.
   apps: []
   #  - org: acme-core
   #    appId: "123456"
@@ -182,30 +168,6 @@ githubApps:
   #  - org: acme-labs
   #    appId: "654321"
   #    privateKeySsmParameter: /np/gh/acme-labs-key
-
-# -- DEPRECATED: superseded by `githubApps`, which the agent implements natively
-# (per-org installation tokens, renewed before they expire). This init container
-# mints a single token with openssl/jq and clones once, so the token is never
-# refreshed and only one installationId is supported. Still functional; it will
-# be removed in a future major version.
-githubTokenInit:
-  enabled: false
-  image: alpine:3.22.2
-  # Secret that contains GitHub App configuration
-  secretName: "github-app-secret"
-  # Keys in the secret for each value
-  secretKeys:
-    appId: "APP_ID"           # nombre de la clave en el secret
-    installationId: "INSTALLATION_ID"
-    privateKey: "PRIVATE_KEY"
-  values:
-    appId: ""
-    installationId: ""
-    privateKey: ""
-  # Directory where the repository will be cloned (shared with main container)
-  cloneDir: "nullplatform"
-  repositoryUrl: ""
-  workingDir: "/root/.np"
 
 volumes: []
 
