@@ -136,24 +136,34 @@ priorityClass:
 #         mountPath: /root/.np
 initContainers: []
 
-githubTokenInit:
-  enabled: false
-  image: alpine:3.22.2
-  # Secret that contains GitHub App configuration
-  secretName: "github-app-secret"
-  # Keys in the secret for each value
-  secretKeys:
-    appId: "APP_ID"           # nombre de la clave en el secret
-    installationId: "INSTALLATION_ID"
-    privateKey: "PRIVATE_KEY"
-  values:
-    appId: ""
-    installationId: ""
-    privateKey: ""
-  # Directory where the repository will be cloned (shared with main container)
-  cloneDir: "nullplatform"
-  repositoryUrl: ""
-  workingDir: "/root/.np"
+# -- GitHub credentials for cloning the command repos: one set per GitHub
+# organization, each with its own App ID and private key. Orgs not listed here
+# keep using the credential embedded in their repo URL.
+github:
+  secret:
+    # -- Create the Secret holding the PEMs from `apps[].privateKey`. Dev only:
+    # the keys live in values.yaml. In production leave this false and point
+    # `secret.name` at an existing Secret.
+    create: false
+    # -- Existing Secret holding one PEM per org. Required when `create` is false
+    # and any org reads its key from a file. Defaults to
+    # "nullplatform-agent-github-apps-<release>" when `create` is true.
+    name: ""
+  # -- Read-only mount point for the PEM files inside the agent container.
+  mountPath: /etc/nullplatform/github-apps
+  # -- One entry per GitHub organization; empty disables GitHub App auth. Each
+  # entry takes `org`, `appId` and one key source: `privateKeySecretKey` (a file
+  # from the Secret), `privateKeySsmParameter` (AWS SSM, needs IRSA on the
+  # serviceAccount) or `privateKey` (inline PEM, requires `secret.create: true`).
+  # `installationId` is optional; when unset it is resolved from the org.
+  apps: []
+  #  - org: acme-core
+  #    appId: "123456"
+  #    installationId: "78901234"
+  #    privateKeySecretKey: acme-core.pem   # defaults to "<org>.pem"
+  #  - org: acme-labs
+  #    appId: "654321"
+  #    privateKeySsmParameter: /np/gh/acme-labs-key
 
 volumes: []
 

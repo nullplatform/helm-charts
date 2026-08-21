@@ -57,9 +57,16 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
+          {{- if or .Values.volumeMounts (include "agent.githubAppsNeedsKeyVolume" .) }}
           volumeMounts:
+            {{- if include "agent.githubAppsNeedsKeyVolume" . }}
+            - name: github-app-keys
+              mountPath: {{ .Values.github.mountPath }}
+              readOnly: true
+            {{- end }}
+            {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
+            {{- end }}
           {{- end }}
           env:
             {{- if .Values.initScripts }}
@@ -67,14 +74,23 @@ spec:
               value: "init-scripts-{{ .Release.Name }}"
             {{- end }}
             {{- include "agent.workerEnv" . | nindent 12 }}
+            {{- include "agent.githubAppsEnv" . | nindent 12 }}
           envFrom:
             - secretRef:
                 name: {{ .Values.configuration.secretName }}-{{ .Release.Name }}
           lifecycle:
             {{- toYaml .Values.lifecycle | nindent 12 }}
-      {{- with .Values.volumes }}
+      {{- if or .Values.volumes (include "agent.githubAppsNeedsKeyVolume" .) }}
       volumes:
+        {{- if include "agent.githubAppsNeedsKeyVolume" . }}
+        - name: github-app-keys
+          secret:
+            secretName: {{ include "agent.githubAppsSecretName" . }}
+            defaultMode: 0444
+        {{- end }}
+        {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

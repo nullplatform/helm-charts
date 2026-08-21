@@ -62,6 +62,109 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+Fail the render when githubTokenInit is set. It was removed in favour of
+github.apps, and Helm would otherwise ignore it silently.
+*/}}
+{{- define "agent.githubTokenInitRemoved" -}}
+{{- if .Values.githubTokenInit -}}
+{{- fail "githubTokenInit was removed: the agent now mints per-org GitHub App installation tokens natively and renews them, instead of an init container minting one token that never refreshes. Move each App to a `github.apps` entry (see values.yaml) and drop the githubTokenInit block." -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Name of the Secret holding one GitHub App private key per org:
+github.secret.name when set, otherwise a name derived from the release.
+*/}}
+{{- define "agent.githubAppsSecretName" -}}
+{{- if .Values.github.secret.name -}}
+{{- .Values.github.secret.name -}}
+{{- else -}}
+{{- printf "nullplatform-agent-github-apps-%s" .Release.Name -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Validate github.apps. Renders nothing; calls fail on the first invalid entry.
+An empty list is valid.
+*/}}
+{{- define "agent.githubAppsValidate" -}}
+{{- $create := .Values.github.secret.create -}}
+{{- $secretName := .Values.github.secret.name -}}
+{{- $seen := dict -}}
+{{- range $i, $app := .Values.github.apps -}}
+  {{- if not $app.org -}}
+  {{- fail (printf "github.apps[%d]: org is required" $i) -}}
+  {{- end -}}
+  {{- if not $app.appId -}}
+  {{- fail (printf "github.apps[%d] (org %s): appId is required" $i $app.org) -}}
+  {{- end -}}
+  {{- $org := lower $app.org -}}
+  {{- if hasKey $seen $org -}}
+  {{- fail (printf "github.apps: duplicate entry for org %s; one entry per org" $org) -}}
+  {{- end -}}
+  {{- $_ := set $seen $org true -}}
+  {{- if $app.privateKeySsmParameter -}}
+    {{- if or $app.privateKey $app.privateKeySecretKey -}}
+    {{- fail (printf "github.apps[%d] (org %s): privateKeySsmParameter cannot be combined with privateKey or privateKeySecretKey; pick one key source" $i $org) -}}
+    {{- end -}}
+  {{- else if $create -}}
+    {{- if not $app.privateKey -}}
+    {{- fail (printf "github.apps[%d] (org %s): github.secret.create is true, so privateKey (the PEM) is required; use privateKeySecretKey with secret.create=false to reference an existing Secret, or privateKeySsmParameter to read the key from AWS SSM" $i $org) -}}
+    {{- end -}}
+  {{- else -}}
+    {{- if $app.privateKey -}}
+    {{- fail (printf "github.apps[%d] (org %s): privateKey is set but github.secret.create is false, so nothing would store it; set secret.create=true or reference an existing Secret with privateKeySecretKey" $i $org) -}}
+    {{- end -}}
+    {{- if not $secretName -}}
+    {{- fail (printf "github.apps[%d] (org %s): needs a private key file, so github.secret.name must name an existing Secret (or set secret.create=true, or use privateKeySsmParameter)" $i $org) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Render github.apps as the agent's NP_GITHUB_APPS env var: entries separated by
+";", fields within an entry by ",". Emits paths, ids and parameter names only,
+never key material. An env var rather than args because --github-app is
+repeatable and Kubernetes substitutes $(VAR) only inside a single arg value.
+*/}}
+{{- define "agent.githubAppsEnv" -}}
+{{- include "agent.githubTokenInitRemoved" . -}}
+{{- include "agent.githubAppsValidate" . -}}
+{{- $mountPath := .Values.github.mountPath -}}
+{{- $entries := list -}}
+{{- range .Values.github.apps -}}
+  {{- $org := lower .org -}}
+  {{- $fields := list (printf "org=%s" $org) (printf "app-id=%s" (.appId | toString)) -}}
+  {{- if .installationId -}}
+  {{- $fields = append $fields (printf "installation-id=%s" (.installationId | toString)) -}}
+  {{- end -}}
+  {{- if .privateKeySsmParameter -}}
+  {{- $fields = append $fields (printf "private-key-ssm-parameter=%s" .privateKeySsmParameter) -}}
+  {{- else -}}
+  {{- $fields = append $fields (printf "private-key=%s/%s" $mountPath (.privateKeySecretKey | default (printf "%s.pem" $org))) -}}
+  {{- end -}}
+  {{- $entries = append $entries (join "," $fields) -}}
+{{- end -}}
+{{- if $entries -}}
+- name: NP_GITHUB_APPS
+  value: {{ join ";" $entries | quote }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+"true" when at least one org reads its private key from a file, meaning the
+Secret has to be mounted. Empty otherwise.
+*/}}
+{{- define "agent.githubAppsNeedsKeyVolume" -}}
+{{- $needs := false -}}
+{{- range .Values.github.apps -}}
+{{- if not .privateKeySsmParameter -}}{{- $needs = true -}}{{- end -}}
+{{- end -}}
+{{- if $needs -}}true{{- end -}}
+{{- end -}}
+
+{{/*
 Join a map into "k1=v1,k2=v2" for the agent's NP_WORKER_* env vars.
 */}}
 {{- define "agent.kvJoin" -}}
