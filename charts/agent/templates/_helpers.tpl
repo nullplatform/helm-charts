@@ -62,9 +62,8 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Abort when the removed githubTokenInit surface is still set. Helm silently
-ignores unknown values, so without this a release that still enables it would
-just lose its init container on upgrade — a breakage with no error attached.
+Fail the render when githubTokenInit is set. It was removed in favour of
+github.apps, and Helm would otherwise ignore it silently.
 */}}
 {{- define "agent.githubTokenInitRemoved" -}}
 {{- if .Values.githubTokenInit -}}
@@ -73,9 +72,8 @@ just lose its init container on upgrade — a breakage with no error attached.
 {{- end -}}
 
 {{/*
-Name of the Secret holding one GitHub App private key per org. An explicit
-github.secret.name always wins, so an existing (externally managed) Secret can
-be referenced; otherwise the chart-created name is derived from the release.
+Name of the Secret holding one GitHub App private key per org:
+github.secret.name when set, otherwise a name derived from the release.
 */}}
 {{- define "agent.githubAppsSecretName" -}}
 {{- if .Values.github.secret.name -}}
@@ -86,10 +84,8 @@ be referenced; otherwise the chart-created name is derived from the release.
 {{- end -}}
 
 {{/*
-Validate github.apps. Renders nothing; aborts the render with an actionable
-message. This mirrors the agent's own boot-time validation, so a bad values file
-fails at `helm template` instead of crash-looping a pod. An empty apps list is
-simply the feature turned off, so the range below is a no-op.
+Validate github.apps. Renders nothing; calls fail on the first invalid entry.
+An empty list is valid.
 */}}
 {{- define "agent.githubAppsValidate" -}}
 {{- $create := .Values.github.secret.create -}}
@@ -127,11 +123,10 @@ simply the feature turned off, so the range below is a no-op.
 {{- end -}}
 
 {{/*
-Render the per-org GitHub App config as the agent's NP_GITHUB_APPS env var. The
-agent's --github-app flag is repeatable and Kubernetes can only substitute
-$(VAR) inside a single argument value, so the env var is the only way a chart can
-pass N orgs. Entries are separated by ";", fields within an entry by ",".
-Only paths, ids and parameter names are rendered here — never key material.
+Render github.apps as the agent's NP_GITHUB_APPS env var: entries separated by
+";", fields within an entry by ",". Emits paths, ids and parameter names only,
+never key material. An env var rather than args because --github-app is
+repeatable and Kubernetes substitutes $(VAR) only inside a single arg value.
 */}}
 {{- define "agent.githubAppsEnv" -}}
 {{- include "agent.githubTokenInitRemoved" . -}}
@@ -159,8 +154,7 @@ Only paths, ids and parameter names are rendered here — never key material.
 
 {{/*
 "true" when at least one org reads its private key from a file, meaning the
-Secret has to be mounted. Empty when every org uses AWS SSM, so no key material
-touches the cluster at all.
+Secret has to be mounted. Empty otherwise.
 */}}
 {{- define "agent.githubAppsNeedsKeyVolume" -}}
 {{- $needs := false -}}
