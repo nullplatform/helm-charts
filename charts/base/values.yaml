@@ -1,6 +1,9 @@
 # Global settings
 global:
   installGatewayV2Crd: true
+  # Git ref (tag or commit) of kubernetes-sigs/gateway-api to install when installGatewayV2Crd is true.
+  # Applied on every install/upgrade, so bumping this reconciles the cluster's CRDs to that ref.
+  gatewayApiCrdRef: "444631bfe06f3bcca5d0eadf1857eac1d369421d"
   # Kubernetes provider (options: "eks", "gke", "aks", "aro", "oke", "k3s")
   provider: "eks"
   # AWS region (applicable for EKS provider)

@@ -16,7 +16,6 @@ spec:
           - /bin/sh
           - -c
           - |
-            kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null || \
-            { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=444631bfe06f3bcca5d0eadf1857eac1d369421d" | kubectl apply -f -; }
+            kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref={{ .Values.global.gatewayApiCrdRef }}" | kubectl apply --server-side -f -
       restartPolicy: OnFailure
 {{- end }}
