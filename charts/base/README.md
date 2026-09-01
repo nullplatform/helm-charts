@@ -64,6 +64,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | gateway.internal.azure.networkSecurityGroup | string | `""` |  |
 | gateway.internal.azure_load_balancer_subnet | string | `nil` |  |
 | gateway.internal.enabled | bool | `true` |  |
+| gateway.internal.extraListeners | list | `[]` | Additional HTTPS listeners on port 443, each with its own hostname and TLS secret, selected via SNI |
 | gateway.internal.gcp.firewallRule | string | `""` |  |
 | gateway.internal.loadBalancerSourceRanges | list | `[]` |  |
 | gateway.internal.loadBalancerType | string | `"internal"` |  |
@@ -84,6 +85,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | gateway.public.azure.networkSecurityGroup | string | `""` |  |
 | gateway.public.azure.subnet | string | `""` |  |
 | gateway.public.enabled | bool | `true` |  |
+| gateway.public.extraListeners | list | `[]` | Additional HTTPS listeners on port 443, each with its own hostname and TLS secret, selected via SNI |
 | gateway.public.gcp.firewallRule | string | `""` |  |
 | gateway.public.loadBalancerSourceRanges | list | `[]` |  |
 | gateway.public.loadBalancerType | string | `"external"` |  |

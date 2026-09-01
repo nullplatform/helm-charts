@@ -131,6 +131,20 @@ spec:
         namespaces:
           from: All
   {{- end }}
+  {{- range .Values.gateway.internal.extraListeners }}
+    - name: {{ .name }}
+      port: 443
+      protocol: HTTPS
+      hostname: {{ .hostname | quote }}
+      tls:
+        certificateRefs:
+          - group: ''
+            kind: Secret
+            name: {{ .secretName }}
+      allowedRoutes:
+        namespaces:
+          from: All
+  {{- end }}
 
 ---
 apiVersion: autoscaling/v2
@@ -277,6 +291,20 @@ spec:
             kind: Secret
             name: {{ $secretName }}
     {{- end }}
+      allowedRoutes:
+        namespaces:
+          from: All
+  {{- end }}
+  {{- range .Values.gateway.public.extraListeners }}
+    - name: {{ .name }}
+      port: 443
+      protocol: HTTPS
+      hostname: {{ .hostname | quote }}
+      tls:
+        certificateRefs:
+          - group: ''
+            kind: Secret
+            name: {{ .secretName }}
       allowedRoutes:
         namespaces:
           from: All
