@@ -1,6 +1,6 @@
 # nullplatform-agent
 
-![Version: 2.37.0](https://img.shields.io/badge/Version-2.37.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
 
@@ -49,18 +49,11 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | configuration.values.NP_LOG_LEVEL | string | `"DEBUG"` |  |
 | configuration.values.TAGS | string | `"gato:negro"` |  |
 | fullnameOverride | string | `""` |  |
-| githubTokenInit.cloneDir | string | `"nullplatform"` |  |
-| githubTokenInit.enabled | bool | `false` |  |
-| githubTokenInit.image | string | `"alpine:3.22.2"` |  |
-| githubTokenInit.repositoryUrl | string | `""` |  |
-| githubTokenInit.secretKeys.appId | string | `"APP_ID"` |  |
-| githubTokenInit.secretKeys.installationId | string | `"INSTALLATION_ID"` |  |
-| githubTokenInit.secretKeys.privateKey | string | `"PRIVATE_KEY"` |  |
-| githubTokenInit.secretName | string | `"github-app-secret"` |  |
-| githubTokenInit.values.appId | string | `""` |  |
-| githubTokenInit.values.installationId | string | `""` |  |
-| githubTokenInit.values.privateKey | string | `""` |  |
-| githubTokenInit.workingDir | string | `"/root/.np"` |  |
+| github | object | `{"apps":[],"mountPath":"/etc/nullplatform/github-apps","secret":{"create":false,"name":""}}` | GitHub credentials for cloning the command repos: one set per GitHub organization, each with its own App ID and private key. Orgs not listed here keep using the credential embedded in their repo URL. |
+| github.apps | list | `[]` | One entry per GitHub organization; empty disables GitHub App auth. Each entry takes `org`, `appId` and one key source: `privateKeySecretKey` (a file from the Secret), `privateKeySsmParameter` (AWS SSM, needs IRSA on the serviceAccount) or `privateKey` (inline PEM, requires `secret.create: true`). `installationId` is optional; when unset it is resolved from the org. |
+| github.mountPath | string | `"/etc/nullplatform/github-apps"` | Read-only mount point for the PEM files inside the agent container. |
+| github.secret.create | bool | `false` | Create the Secret holding the PEMs from `apps[].privateKey`. Dev only: the keys live in values.yaml. In production leave this false and point `secret.name` at an existing Secret. |
+| github.secret.name | string | `""` | Existing Secret holding one PEM per org. Required when `create` is false and any org reads its key from a file. Defaults to "nullplatform-agent-github-apps-<release>" when `create` is true. |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"public.ecr.aws/nullplatform/controlplane-agent"` |  |
 | image.tag | string | `"latest"` |  |
