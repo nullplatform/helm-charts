@@ -16,6 +16,6 @@ spec:
           - /bin/sh
           - -c
           - |
-            kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref={{ .Values.global.gatewayApiCrdRef }}" | kubectl apply --server-side -f -
+            kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref={{ .Values.global.gatewayApiCrdRef }}" | kubectl apply --server-side --force-conflicts -f -
       restartPolicy: OnFailure
 {{- end }}
