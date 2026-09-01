@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.44.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.0...nullplatform-base-2.44.1) (2026-09-01)
+
+
+### Bug Fixes
+
+* **base:** default gatewayApiCrdRef to v1.3.0, matching Istio 1.27 ([88b2114](https://github.com/nullplatform/helm-charts/commit/88b211443ff1028414c5fbfb116b1cbf4e364510))
+* **base:** force-conflicts on the Gateway API CRD apply ([3d0e28d](https://github.com/nullplatform/helm-charts/commit/3d0e28d9b5fdd058694ade6fd3533ff790b8ab94))
+* **base:** make gateway API CRD ref configurable and reconcile on upgrade ([8ac08a6](https://github.com/nullplatform/helm-charts/commit/8ac08a670b82d261ed38c149e97da2aa12717998))
+
 ## [2.44.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.43.2...nullplatform-base-2.44.0) (2026-08-12)
 
 

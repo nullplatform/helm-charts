@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.0.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.37.0...nullplatform-agent-3.0.0) (2026-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* **agent:** githubTokenInit is removed. It signed the JWT with openssl/jq in an init container, minted one token and cloned once, so the token was never renewed and only a single installationId was supported; the agent now mints per-org installation tokens natively and renews them before they expire. Helm silently ignores unknown values, so a render that still sets githubTokenInit now aborts with a message pointing at `github.apps` -- otherwise the init container would just disappear from a live release with no error attached.
+
+### Features
+
+* **agent:** per-org GitHub App credentials for command repos ([d6cfcb4](https://github.com/nullplatform/helm-charts/commit/d6cfcb4e9f3299e468627bd9869efb0328834808))
+* **agent:** rename githubApps to github, drop githubTokenInit ([df03f38](https://github.com/nullplatform/helm-charts/commit/df03f383acbd11ade761fbd51a6f24ac4a7c7d16))
+* **agent:** require GitHub App PEMs to come from a cluster Secret or SSM ([8e88f81](https://github.com/nullplatform/helm-charts/commit/8e88f81c5780fd0fba6b359bf7f3703a828f0be6))
+
 ## [2.37.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.36.0...nullplatform-agent-2.37.0) (2026-08-07)
 
 
