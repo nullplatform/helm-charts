@@ -83,6 +83,16 @@ gateway:
       minReplicas: 2
       maxReplicas: 10
     loadBalancerType: "internal"  # internal, external
+    # Additional HTTPS listeners on port 443, each with its own hostname and
+    # TLS secret, selected via SNI. Useful when different subsets of routed
+    # hostnames are covered by different certificates (disjoint SANs) that
+    # can't be served by tls.secretPrivateName alone. Ignored if empty.
+    # Example:
+    #   extraListeners:
+    #     - name: https-extra
+    #       hostname: "*.extra.example.com"
+    #       secretName: "wildcard-tls-extra"
+    extraListeners: []
   public:
     name: "gateway-public"
     enabled: true
@@ -130,6 +140,16 @@ gateway:
       minReplicas: 2
       maxReplicas: 10
     loadBalancerType: "external"  # internal, external
+    # Additional HTTPS listeners on port 443, each with its own hostname and
+    # TLS secret, selected via SNI. Useful when different subsets of routed
+    # hostnames are covered by different certificates (disjoint SANs) that
+    # can't be served by tls.secretName alone. Ignored if empty.
+    # Example:
+    #   extraListeners:
+    #     - name: https-extra
+    #       hostname: "*.extra.example.com"
+    #       secretName: "wildcard-tls-extra"
+    extraListeners: []
 # Nullplatform configurations
 nullplatform:
   apiKey: ""
