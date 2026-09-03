@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.44.2](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.1...nullplatform-base-2.44.2) (2026-09-03)
+
+
+### Bug Fixes
+
+* **base:** pin CRD installer image and grant admissionregistration RBAC ([345ce19](https://github.com/nullplatform/helm-charts/commit/345ce191861c8e795b0e4d7c7841ebd5dbcd581a))
+
 ## [2.44.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.0...nullplatform-base-2.44.1) (2026-09-01)
 
 
