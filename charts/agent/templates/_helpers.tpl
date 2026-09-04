@@ -181,8 +181,10 @@ The agent reads these (os.Getenv) to pick the backend and shape worker pods.
 {{- with .Values.worker }}
 - name: NP_WORKER_BACKEND
   value: {{ .backend | default "kubernetes" | quote }}
+{{- /* mtls unless the caller opts out. The docker backend never receives TLS
+     material, so it stays insecure rather than failing every dial. */}}
 - name: NP_WORKER_SECURITY
-  value: {{ .security | default "insecure" | quote }}
+  value: {{ .security | default (ternary "mtls" "insecure" (eq (.backend | default "kubernetes") "kubernetes")) | quote }}
 - name: NP_WORKER_NAMESPACE
   value: {{ .namespace | default $.Values.namespace | quote }}
 # Stable per-install identity: this agent only ever manages workers labelled with
