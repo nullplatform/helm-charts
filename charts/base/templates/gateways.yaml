@@ -114,7 +114,7 @@ spec:
       protocol: HTTP
       allowedRoutes:
         namespaces:
-          from: All
+          from: Same
   {{- end }}
   {{- if .Values.tls.required }}
     - name: https
@@ -131,6 +131,26 @@ spec:
         namespaces:
           from: All
   {{- end }}
+{{- if and .Values.gateway.http.enabled .Values.tls.required }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .Values.gateway.internal.name }}-http-redirect
+  namespace: {{ .Values.namespaces.gateway }}
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.gateway.internal.name }}
+      sectionName: http
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+{{- end }}
 
 ---
 apiVersion: autoscaling/v2
@@ -264,7 +284,7 @@ spec:
       protocol: HTTP
       allowedRoutes:
         namespaces:
-          from: All
+          from: Same
   {{- end }}
   {{- if .Values.tls.required }}
     - name: https
@@ -281,6 +301,26 @@ spec:
         namespaces:
           from: All
   {{- end }}
+{{- if and .Values.gateway.http.enabled .Values.tls.required }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .Values.gateway.public.name }}-http-redirect
+  namespace: {{ .Values.namespaces.gateway }}
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ .Values.gateway.public.name }}
+      sectionName: http
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+{{- end }}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
