@@ -134,7 +134,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | logging.dynatrace.logsEnabled | bool | `true` |  |
 | logging.dynatrace.metricsEnabled | bool | `true` |  |
 | logging.enabled | bool | `true` |  |
-| logging.ensureLease | bool | `false` |  |
+| logging.ensureLease | bool | `true` | Keeps the nullplatform-metrics-extractor Lease in place across upgrades. The log controller only reads and renews it; if the Lease is missing no pod can take the leader lock and scope metrics stop being extracted. Leave it on. |
 | logging.gelf.enabled | bool | `false` |  |
 | logging.gelf.host | string | `""` |  |
 | logging.gelf.port | string | `""` |  |
