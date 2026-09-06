@@ -136,16 +136,11 @@ nullplatform:
   secretName: ""  # If provided will mount it from an existing secret
 # Logging configurations
 controlPlane:
+  # Only gates the nullplatform-secret Secret (built from nullplatform.apiKey).
+  # The control plane agent itself is installed by the nullplatform-agent chart;
+  # the sidecar this chart used to run from controlPlane.agent.image was removed
+  # in ddf5332, so there is no image to configure here anymore.
   enabled: false
-  agent:
-    image: "public.ecr.aws/nullplatform/controlplane-agent:latest"
-    resources:
-      requests:
-        cpu: 50m
-        memory: 100Mi
-      limits:
-        cpu: 100m
-        memory: 150Mi
 logging:
   enabled: true
   # Tolerations allow the DaemonSet to run on nodes with taints

@@ -45,12 +45,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | cloudwatch.region | string | `"us-east-1"` |  |
 | cloudwatch.retentionDays | int | `7` |  |
 | cloudwatch.serviceAccount.annotations | object | `{}` |  |
-| controlPlane.agent.image | string | `"public.ecr.aws/nullplatform/controlplane-agent:latest"` |  |
-| controlPlane.agent.resources.limits.cpu | string | `"100m"` |  |
-| controlPlane.agent.resources.limits.memory | string | `"150Mi"` |  |
-| controlPlane.agent.resources.requests.cpu | string | `"50m"` |  |
-| controlPlane.agent.resources.requests.memory | string | `"100Mi"` |  |
-| controlPlane.enabled | bool | `false` |  |
+| controlPlane.enabled | bool | `false` | Only gates the nullplatform-secret Secret (built from nullplatform.apiKey). The control plane agent itself is installed by the nullplatform-agent chart; the sidecar this chart used to run from controlPlane.agent.image was removed in ddf5332, so there is no image to configure here anymore. |
 | customConf.configMapName | string | `""` |  |
 | customConf.enabled | bool | `false` |  |
 | envoy.filters.preserveExternalRequestId.enabled | bool | `false` |  |
