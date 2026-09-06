@@ -156,7 +156,10 @@ logging:
   #     operator: "Exists"
   #     effect: "NoSchedule"
   tolerations: []
-  ensureLease: false
+  # Keeps the nullplatform-metrics-extractor Lease in place across upgrades. The
+  # log controller only reads and renews it; if the Lease is missing no pod can
+  # take the leader lock and scope metrics stop being extracted. Leave it on.
+  ensureLease: true
   applicationLogs:
     # Set to false to disable all application log forwarding across every provider.
     # Only the metrics pipeline (http aggregation, system metrics) will remain active.

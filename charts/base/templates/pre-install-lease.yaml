@@ -5,14 +5,21 @@ metadata:
   name: ensure-nullplatform-lease
   namespace: {{ .Values.namespaces.nullplatformTools }}
   annotations:
-    "helm.sh/hook": "pre-install,pre-upgrade"
+    # post-upgrade, not pre-upgrade: Helm deletes the Lease that releases
+    # installed with <= 2.40.0 still track (it left the regular manifest when it
+    # became a pre-install hook) while applying the upgrade, i.e. AFTER any
+    # pre-upgrade hook ran. Only a hook that runs after that step can put it back.
+    # kubectl apply is idempotent, so on releases that already have the Lease
+    # this is a no-op and the current holder keeps the lock.
+    "helm.sh/hook": "pre-install,post-upgrade"
+    "helm.sh/hook-delete-policy": "before-hook-creation,hook-succeeded"
 spec:
   template:
     spec:
       serviceAccountName: nullplatform-lease-installer-sa
       containers:
       - name: ensure-lease
-        image: docker.io/bitnami/kubectl:latest
+        image: docker.io/bitnamilegacy/kubectl:1.31.4
         command:
           - /bin/sh
           - -c
