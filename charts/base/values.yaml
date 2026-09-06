@@ -130,17 +130,7 @@ gateway:
       minReplicas: 2
       maxReplicas: 10
     loadBalancerType: "external"  # internal, external
-# Nullplatform configurations
-nullplatform:
-  apiKey: ""
-  secretName: ""  # If provided will mount it from an existing secret
 # Logging configurations
-controlPlane:
-  # Only gates the nullplatform-secret Secret (built from nullplatform.apiKey).
-  # The control plane agent itself is installed by the nullplatform-agent chart;
-  # the sidecar this chart used to run from controlPlane.agent.image was removed
-  # in ddf5332, so there is no image to configure here anymore.
-  enabled: false
 logging:
   enabled: true
   # Tolerations allow the DaemonSet to run on nodes with taints

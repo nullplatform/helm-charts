@@ -45,7 +45,6 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | cloudwatch.region | string | `"us-east-1"` |  |
 | cloudwatch.retentionDays | int | `7` |  |
 | cloudwatch.serviceAccount.annotations | object | `{}` |  |
-| controlPlane.enabled | bool | `false` | Only gates the nullplatform-secret Secret (built from nullplatform.apiKey). The control plane agent itself is installed by the nullplatform-agent chart; the sidecar this chart used to run from controlPlane.agent.image was removed in ddf5332, so there is no image to configure here anymore. |
 | customConf.configMapName | string | `""` |  |
 | customConf.enabled | bool | `false` |  |
 | envoy.filters.preserveExternalRequestId.enabled | bool | `false` |  |
@@ -157,8 +156,6 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | namespaces.gateway | string | `"gateways"` |  |
 | namespaces.nullplatformApplications | string | `"nullplatform"` |  |
 | namespaces.nullplatformTools | string | `"nullplatform-tools"` |  |
-| nullplatform.apiKey | string | `""` |  |
-| nullplatform.secretName | string | `""` |  |
 | tls.required | bool | `false` |  |
 | tls.secretName | string | `"wildcard-tls"` |  |
 | tls.secretPrivateName | string | `"wildcard-tls-internal"` |  |
