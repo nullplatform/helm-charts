@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.44.5](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.4...nullplatform-base-2.44.5) (2026-09-07)
+
+
+### Bug Fixes
+
+* **base:** standardize loadBalancerType comment format in values.yaml ([8fd685f](https://github.com/nullplatform/helm-charts/commit/8fd685fe38b690ef7bed2a6f1e87b167ea95839f))
+
 ## [2.44.4](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.3...nullplatform-base-2.44.4) (2026-09-07)
 
 
