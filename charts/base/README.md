@@ -1,6 +1,6 @@
 # nullplatform-base
 
-![Version: 2.44.3](https://img.shields.io/badge/Version-2.44.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 2.44.4](https://img.shields.io/badge/Version-2.44.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 A Helm chart for deploying the nullplatform base dependencies applications using Kubernetes
 
@@ -134,7 +134,7 @@ helm install nullplatform-base nullplatform/nullplatform-base
 | logging.dynatrace.logsEnabled | bool | `true` |  |
 | logging.dynatrace.metricsEnabled | bool | `true` |  |
 | logging.enabled | bool | `true` |  |
-| logging.ensureLease | bool | `true` | Keeps the nullplatform-metrics-extractor Lease in place across upgrades. The log controller only reads and renews it; if the Lease is missing no pod can take the leader lock and scope metrics stop being extracted. Leave it on. |
+| logging.ensureLease | bool | `true` |  |
 | logging.gelf.enabled | bool | `false` |  |
 | logging.gelf.host | string | `""` |  |
 | logging.gelf.port | string | `""` |  |
