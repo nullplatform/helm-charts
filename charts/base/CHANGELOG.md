@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.44.3](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.2...nullplatform-base-2.44.3) (2026-09-07)
+
+
+### Bug Fixes
+
+* **base:** redirect plaintext HTTP to HTTPS instead of serving apps ([aba3ec1](https://github.com/nullplatform/helm-charts/commit/aba3ec1f09fdecfa8d0d9102058e2ef4cd41b71a))
+
 ## [2.44.2](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.1...nullplatform-base-2.44.2) (2026-09-03)
 
 
