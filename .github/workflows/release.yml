@@ -39,24 +39,9 @@ jobs:
       istio-metrics--tag_name: ${{ steps.release.outputs['charts/istio-metrics--tag_name'] }}
       pr_branch: ${{ steps.release.outputs.pr && fromJSON(steps.release.outputs.pr).headBranchName || '' }}
     steps:
-      # release-please must open/update its PR as an app with write access to
-      # the repo, not the default GITHUB_TOKEN (github-actions[bot]). Since
-      # this repo is public, GitHub gates pull_request-triggered workflows
-      # (Validate Commits, auto-merge-release-pr) behind manual approval for
-      # any actor without recognized write access, and github-actions[bot]
-      # doesn't have one — every release PR update was landing in
-      # "action_required" with no jobs run until someone approved it by hand.
-      - name: Generate app token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.APP_RELEASE_ID }}
-          private-key: ${{ secrets.APP_RELEASE_PRIVATE_KEY }}
-
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          token: ${{ steps.app-token.outputs.token }}
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
 
@@ -170,22 +155,11 @@ jobs:
     if: needs.release-please.outputs.pr_branch != ''
     runs-on: ubuntu-24.04
     steps:
-      # Same app token as the release-please job: pushing this commit as
-      # github-actions[bot] would re-trigger the approval gate on the PR's
-      # pull_request workflows (see comment above the release-please job).
-      - name: Generate app token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.APP_RELEASE_ID }}
-          private-key: ${{ secrets.APP_RELEASE_PRIVATE_KEY }}
-
       - name: Checkout Release Please PR branch
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.release-please.outputs.pr_branch }}
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Install helm-docs
         run: |
@@ -218,11 +192,9 @@ jobs:
 
       - name: Commit and push docs updates
         if: steps.detect.outputs.has_changes == 'true'
-        env:
-          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
         run: |
-          git config user.email "${APP_SLUG}[bot]@users.noreply.github.com"
-          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
           git add charts/*/README.md README.md
           if ! git diff --cached --quiet; then
             git commit -m "docs: update helm-docs for release"
