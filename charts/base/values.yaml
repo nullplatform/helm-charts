@@ -3,8 +3,10 @@ global:
   installGatewayV2Crd: true
   # Git ref (tag or commit) of kubernetes-sigs/gateway-api to install when installGatewayV2Crd is true.
   # Applied on every install/upgrade, so bumping this reconciles the cluster's CRDs to that ref.
-  # v1.3.0 is what Istio 1.27 documents installing; re-check istio.io's version-pinned docs when bumping Istio.
-  gatewayApiCrdRef: "v1.3.0"
+  # v1.5.1 is what Istio 1.30 documents installing; re-check istio.io's version-pinned docs when bumping Istio.
+  # Istio 1.30's release notes warn that upgrading Istio without also upgrading these CRDs leaves
+  # TLSRoute and ReferenceGrant invisible to istiod.
+  gatewayApiCrdRef: "v1.5.1"
   # Kubernetes provider (options: "eks", "gke", "aks", "aro", "oke", "k3s")
   provider: "eks"
   # AWS region (applicable for EKS provider)
