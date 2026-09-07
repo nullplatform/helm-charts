@@ -82,7 +82,7 @@ gateway:
     autoscaling:
       minReplicas: 2
       maxReplicas: 10
-    loadBalancerType: "internal"  # internal, external
+    loadBalancerType: "internal"  # Load balancer type (options: "internal", "external")
   public:
     name: "gateway-public"
     enabled: true
@@ -129,7 +129,7 @@ gateway:
     autoscaling:
       minReplicas: 2
       maxReplicas: 10
-    loadBalancerType: "external"  # internal, external
+    loadBalancerType: "external"  # Load balancer type (options: "internal", "external")
 # Logging configurations
 logging:
   enabled: true
