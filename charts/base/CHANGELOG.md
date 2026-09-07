@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.44.4](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.3...nullplatform-base-2.44.4) (2026-09-07)
+
+
+### Bug Fixes
+
+* **base:** recreate the metrics-extractor lease after every upgrade ([49cce7d](https://github.com/nullplatform/helm-charts/commit/49cce7de081514e703c9d1bf10216d564bd4e1d5))
+
 ## [2.44.3](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.2...nullplatform-base-2.44.3) (2026-09-07)
 
 
