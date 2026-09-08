@@ -120,7 +120,7 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | worker.pins | list | `[]` |  |
 | worker.rbac.create | bool | `false` |  |
 | worker.rules | list | `[]` |  |
-| worker.security | string | `"insecure"` |  |
+| worker.security | string | `"plaintext"` |  |
 | workloadType | string | `"deployment"` |  |
 
 ----------------------------------------------
