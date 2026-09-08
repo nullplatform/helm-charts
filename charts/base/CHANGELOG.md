@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.44.6](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.5...nullplatform-base-2.44.6) (2026-09-08)
+
+
+### Bug Fixes
+
+* **base:** default gatewayApiCrdRef to v1.5.1, matching Istio 1.30 ([ae6c2aa](https://github.com/nullplatform/helm-charts/commit/ae6c2aa5e30a86db25d9f11ff494373dddcb65c6))
+
 ## [2.44.5](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.4...nullplatform-base-2.44.5) (2026-09-07)
 
 
