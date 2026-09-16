@@ -1,4 +1,4 @@
-{{- if or (eq .Values.global.provider "aks") (eq .Values.global.provider "gke") (eq .Values.global.provider "oke") (eq .Values.global.provider "eks") }}
+{{- if or (eq .Values.global.provider "aks") (eq .Values.global.provider "gke") (eq .Values.global.provider "oke") (eq .Values.global.provider "eks") (eq .Values.global.provider "generic") }}
 {{- $secretName := "" }}
 {{- $secretPrivateName := "" }}
 {{- if .Values.tls.required  }}
@@ -97,7 +97,7 @@ metadata:
     {{- end }}
     service.beta.kubernetes.io/oci-load-balancer-backend-protocol: "TCP"
     {{- else }}
-    {{- /* Default annotations for other providers */ -}}
+    {{- /* Default annotations for other providers */}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
     {{- end }}
     {{- end }}
@@ -267,7 +267,7 @@ metadata:
     {{- end }}
     service.beta.kubernetes.io/oci-load-balancer-backend-protocol: "TCP"
     {{- else }}
-    {{- /* Default annotations for other providers */ -}}
+    {{- /* Default annotations for other providers */}}
     service.beta.kubernetes.io/port_443_health-probe_protocol: "tcp"
     {{- end }}
     {{- end }}

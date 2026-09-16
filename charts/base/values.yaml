@@ -7,7 +7,9 @@ global:
   # Istio 1.30's release notes warn that upgrading Istio without also upgrading these CRDs leaves
   # TLSRoute and ReferenceGrant invisible to istiod.
   gatewayApiCrdRef: "v1.5.1"
-  # Kubernetes provider (options: "eks", "gke", "aks", "aro", "oke", "k3s")
+  # Kubernetes provider (options: "eks", "gke", "aks", "aro", "oke", "k3s", "generic")
+  # "generic" renders Gateways with no cloud-specific LB annotations, for self-managed/on-premise
+  # clusters; pin gateway.*.addresses and set gateway.useClusterIP: false to assign the LB IP.
   provider: "eks"
   # AWS region (applicable for EKS provider)
   awsRegion: "us-east-1"
