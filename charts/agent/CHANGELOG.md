@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.0.0...nullplatform-agent-3.1.0) (2026-09-16)
+
+
+### Features
+
+* **agent:** worker.security plaintext replaces insecure (alias kept) ([c5402da](https://github.com/nullplatform/helm-charts/commit/c5402dabe3f13adf8d5a297b5c800a0e679f450d))
+
 ## [3.0.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-2.37.0...nullplatform-agent-3.0.0) (2026-09-01)
 
 
