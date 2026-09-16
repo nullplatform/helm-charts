@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.44.7](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.6...nullplatform-base-2.44.7) (2026-09-16)
+
+
+### Bug Fixes
+
+* **base:** render Gateways for a "generic" provider ([73923b2](https://github.com/nullplatform/helm-charts/commit/73923b288c3181c00e55893ad2e2ce9014001406))
+
 ## [2.44.6](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.5...nullplatform-base-2.44.6) (2026-09-08)
 
 
