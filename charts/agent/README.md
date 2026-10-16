@@ -1,6 +1,6 @@
 # nullplatform-agent
 
-![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 3.2.0](https://img.shields.io/badge/Version-3.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
 
@@ -68,7 +68,8 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | nameOverride | string | `""` |  |
 | namespace | string | `"nullplatform-tools"` |  |
 | nodeSelector | object | `{}` |  |
-| podAnnotations.name | string | `"nullplatform-agent"` |  |
+| podAnnotations | object | `{"cluster-autoscaler.kubernetes.io/safe-to-evict":"false","karpenter.sh/do-not-disrupt":"true","name":"nullplatform-agent"}` | Pod annotations. The defaults keep node autoscalers from evicting the agent to consolidate or scale down its node: an eviction kills the actions running on it (a deploy fails mid-way and leaves its resources behind). Each autoscaler reads its own key and ignores the other, and a cluster without them ignores both: `karpenter.sh/do-not-disrupt` for Karpenter (EKS Auto Mode, AKS node auto-provisioning) and `cluster-autoscaler.kubernetes.io/safe-to-evict` for Cluster Autoscaler (EKS managed node groups, AKS, GKE). With Karpenter the agent's node is then never consolidated or expired; give the NodePool a `terminationGracePeriod` if its nodes must still rotate. |
+| podDisruptionBudget | object | `{"enabled":false}` | Optional PodDisruptionBudget for the agent. Off by default: with a single replica a budget that allows no eviction blocks node drains and cluster upgrades, so the chart refuses `maxUnavailable: 0` and a `minAvailable` that is not below the replica count. Set either minAvailable or maxUnavailable; with neither, the budget uses maxUnavailable: 1. |
 | podLabels.name | string | `"nullplatform-agent"` |  |
 | podSecurityContext | object | `{}` |  |
 | priorityClass.enabled | bool | `true` |  |
@@ -87,10 +88,12 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | serviceAccount.role.rules[0].apiGroups[1] | string | `""` |  |
 | serviceAccount.role.rules[0].resources[0] | string | `"*"` |  |
 | serviceAccount.role.rules[0].verbs[0] | string | `"*"` |  |
+| startupProbe | object | `{"failureThreshold":30,"httpGet":{"path":"/health","port":8080},"periodSeconds":10}` | Holds off the liveness and readiness probes until the agent first answers /health, which it does only after cloning every command repo. Without it the liveness probe kills the container after ~30s on a slow clone and the pod restarts, re-cloning from scratch each time. The default allows up to 5 minutes. |
 | statefulset.podManagementPolicy | string | `"OrderedReady"` |  |
 | statefulset.serviceName | string | `"nullplatform-agent"` |  |
 | statefulset.updateStrategy.type | string | `"RollingUpdate"` |  |
 | statefulset.volumeClaimTemplates | list | `[]` |  |
+| terminationGracePeriodSeconds | int | `60` | Seconds the agent gets to stop after SIGTERM. Keep it above the preStop hook's sleep (30s by default) so the hook can finish before the kill. |
 | tolerations[0].effect | string | `"NoExecute"` |  |
 | tolerations[0].key | string | `"node.kubernetes.io/not-ready"` |  |
 | tolerations[0].operator | string | `"Exists"` |  |
