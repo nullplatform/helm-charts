@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.1.0...nullplatform-agent-3.2.0) (2026-10-16)
+
+
+### Features
+
+* **agent:** keep autoscalers from evicting the agent mid-action ([9beccde](https://github.com/nullplatform/helm-charts/commit/9beccded70d399a1f87fed3b499f73e13e01a2f8))
+
 ## [3.1.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.0.0...nullplatform-agent-3.1.0) (2026-09-16)
 
 
