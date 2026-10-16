@@ -1,0 +1,38 @@
+{{- with .Values.podDisruptionBudget }}
+{{- if .enabled }}
+{{- /*
+A budget that allows no voluntary eviction at all blocks every node drain: cluster
+upgrades, autoscaler scale-down and maintenance stall on the agent's node instead of
+just waiting for it. Fail the render rather than install that silently.
+*/}}
+{{- $replicas := int $.Values.replicaCount }}
+{{- if $.Values.autoscaling.enabled }}
+{{- $replicas = int $.Values.autoscaling.minReplicas }}
+{{- end }}
+{{- if and (hasKey . "minAvailable") (hasKey . "maxUnavailable") (not (kindIs "invalid" .minAvailable)) (not (kindIs "invalid" .maxUnavailable)) }}
+{{- fail "podDisruptionBudget: set either minAvailable or maxUnavailable, not both" }}
+{{- end }}
+{{- if and (not (kindIs "invalid" .maxUnavailable)) (not (kindIs "string" .maxUnavailable)) (eq (int .maxUnavailable) 0) }}
+{{- fail "podDisruptionBudget.maxUnavailable: 0 blocks every eviction of the agent, so node drains and cluster upgrades would hang. Use maxUnavailable >= 1, or minAvailable below the replica count." }}
+{{- end }}
+{{- if and (not (kindIs "invalid" .minAvailable)) (not (kindIs "string" .minAvailable)) (ge (int .minAvailable) $replicas) }}
+{{- fail (printf "podDisruptionBudget.minAvailable (%d) must be lower than the replica count (%d), otherwise no eviction is ever allowed and node drains hang" (int .minAvailable) $replicas) }}
+{{- end }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nullplatform-agent-{{ $.Release.Name }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    {{- include "agent.labels" $ | nindent 4 }}
+spec:
+  {{- if not (kindIs "invalid" .minAvailable) }}
+  minAvailable: {{ .minAvailable }}
+  {{- else }}
+  maxUnavailable: {{ .maxUnavailable | default 1 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "agent.selectorLabels" $ | nindent 6 }}
+{{- end }}
+{{- end }}
