@@ -73,8 +73,19 @@ serviceAccount:
         verbs:
           - '*'
 
+# -- Pod annotations. The defaults keep node autoscalers from evicting the agent
+# to consolidate or scale down its node: an eviction kills the actions running
+# on it (a deploy fails mid-way and leaves its resources behind). Each
+# autoscaler reads its own key and ignores the other, and a cluster without
+# them ignores both: `karpenter.sh/do-not-disrupt` for Karpenter (EKS Auto Mode,
+# AKS node auto-provisioning) and `cluster-autoscaler.kubernetes.io/safe-to-evict`
+# for Cluster Autoscaler (EKS managed node groups, AKS, GKE). With Karpenter the
+# agent's node is then never consolidated or expired; give the NodePool a
+# `terminationGracePeriod` if its nodes must still rotate.
 podAnnotations:
   name: nullplatform-agent
+  karpenter.sh/do-not-disrupt: "true"
+  cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
 podLabels:
   name: nullplatform-agent
 
@@ -99,6 +110,31 @@ readinessProbe:
   httpGet:
     path: /health
     port: 8080
+
+# -- Holds off the liveness and readiness probes until the agent first answers
+# /health, which it does only after cloning every command repo. Without it the
+# liveness probe kills the container after ~30s on a slow clone and the pod
+# restarts, re-cloning from scratch each time. The default allows up to 5 minutes.
+startupProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  periodSeconds: 10
+  failureThreshold: 30
+
+# -- Seconds the agent gets to stop after SIGTERM. Keep it above the preStop
+# hook's sleep (30s by default) so the hook can finish before the kill.
+terminationGracePeriodSeconds: 60
+
+# -- Optional PodDisruptionBudget for the agent. Off by default: with a single
+# replica a budget that allows no eviction blocks node drains and cluster
+# upgrades, so the chart refuses `maxUnavailable: 0` and a `minAvailable` that
+# is not below the replica count. Set either minAvailable or maxUnavailable;
+# with neither, the budget uses maxUnavailable: 1.
+podDisruptionBudget:
+  enabled: false
+  # minAvailable: 1
+  # maxUnavailable: 1
 
 autoscaling:
   enabled: false
