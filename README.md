@@ -76,8 +76,9 @@ Examples:
 
 ## Tooling
 
-Install yamllint for local YAML validation:
+The pre-commit hook runs `helm lint` on every chart with staged changes (the same
+check CI runs on pull requests). Install Helm to get it locally:
 
 ```bash
-pip install yamllint
+brew install helm
 ```
