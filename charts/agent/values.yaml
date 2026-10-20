@@ -122,9 +122,19 @@ startupProbe:
   periodSeconds: 10
   failureThreshold: 30
 
-# -- Seconds the agent gets to stop after SIGTERM. Keep it above the preStop
-# hook's sleep (30s by default) so the hook can finish before the kill.
-terminationGracePeriodSeconds: 60
+# -- Seconds the agent gets to stop after SIGTERM before it is killed. It has to
+# fit the shutdown drain plus the disconnect that follows, so the chart refuses
+# a value that is not at least 10s above shutdownDrainTimeoutSeconds.
+terminationGracePeriodSeconds: 120
+
+# -- Seconds the agent waits on SIGTERM for the commands it is running to finish
+# and report their result before it disconnects (NP_SHUTDOWN_DRAIN_TIMEOUT,
+# agent >= 0.14.0). Commands still running after that are re-delivered by the
+# platform to the next agent, so size it to your longest action (a
+# start-blue-green takes ~70s). 0 disables the wait. A NP_SHUTDOWN_DRAIN_TIMEOUT
+# in configuration.values takes precedence and skips the check against
+# terminationGracePeriodSeconds.
+shutdownDrainTimeoutSeconds: 90
 
 # -- Optional PodDisruptionBudget for the agent. Off by default: with a single
 # replica a budget that allows no eviction blocks node drains and cluster
