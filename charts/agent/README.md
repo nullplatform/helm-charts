@@ -1,6 +1,6 @@
 # nullplatform-agent
 
-![Version: 3.2.0](https://img.shields.io/badge/Version-3.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 3.3.0](https://img.shields.io/badge/Version-3.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
 
@@ -88,12 +88,13 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | serviceAccount.role.rules[0].apiGroups[1] | string | `""` |  |
 | serviceAccount.role.rules[0].resources[0] | string | `"*"` |  |
 | serviceAccount.role.rules[0].verbs[0] | string | `"*"` |  |
+| shutdownDrainTimeoutSeconds | int | `90` | Seconds the agent waits on SIGTERM for the commands it is running to finish and report their result before it disconnects (NP_SHUTDOWN_DRAIN_TIMEOUT, agent >= 0.14.0). Commands still running after that are re-delivered by the platform to the next agent, so size it to your longest action (a start-blue-green takes ~70s). 0 disables the wait. A NP_SHUTDOWN_DRAIN_TIMEOUT in configuration.values takes precedence and skips the check against terminationGracePeriodSeconds. |
 | startupProbe | object | `{"failureThreshold":30,"httpGet":{"path":"/health","port":8080},"periodSeconds":10}` | Holds off the liveness and readiness probes until the agent first answers /health, which it does only after cloning every command repo. Without it the liveness probe kills the container after ~30s on a slow clone and the pod restarts, re-cloning from scratch each time. The default allows up to 5 minutes. |
 | statefulset.podManagementPolicy | string | `"OrderedReady"` |  |
 | statefulset.serviceName | string | `"nullplatform-agent"` |  |
 | statefulset.updateStrategy.type | string | `"RollingUpdate"` |  |
 | statefulset.volumeClaimTemplates | list | `[]` |  |
-| terminationGracePeriodSeconds | int | `60` | Seconds the agent gets to stop after SIGTERM. Keep it above the preStop hook's sleep (30s by default) so the hook can finish before the kill. |
+| terminationGracePeriodSeconds | int | `120` | Seconds the agent gets to stop after SIGTERM before it is killed. It has to fit the shutdown drain plus the disconnect that follows, so the chart refuses a value that is not at least 10s above shutdownDrainTimeoutSeconds. |
 | tolerations[0].effect | string | `"NoExecute"` |  |
 | tolerations[0].key | string | `"node.kubernetes.io/not-ready"` |  |
 | tolerations[0].operator | string | `"Exists"` |  |
