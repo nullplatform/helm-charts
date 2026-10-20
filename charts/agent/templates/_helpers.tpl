@@ -174,6 +174,28 @@ Join a map into "k1=v1,k2=v2" for the agent's NP_WORKER_* env vars.
 {{- end -}}
 
 {{/*
+Render shutdownDrainTimeoutSeconds as NP_SHUTDOWN_DRAIN_TIMEOUT, unless
+configuration.values already sets it (an explicit env entry would override the
+secret's envFrom). The drain has to end before the kill: without
+terminationGracePeriodSeconds the pod gets Kubernetes' default of 30s.
+*/}}
+{{- define "agent.shutdownEnv" -}}
+{{- $drain := .Values.shutdownDrainTimeoutSeconds }}
+{{- if and (not (kindIs "invalid" $drain)) (not (hasKey (.Values.configuration.values | default dict) "NP_SHUTDOWN_DRAIN_TIMEOUT")) }}
+{{- $drain = int $drain }}
+{{- if lt $drain 0 }}
+{{- fail (printf "shutdownDrainTimeoutSeconds: %d is not valid; use 0 to disable the drain" $drain) }}
+{{- end }}
+{{- $grace := int (.Values.terminationGracePeriodSeconds | default 30) }}
+{{- if gt (add $drain 10) $grace }}
+{{- fail (printf "shutdownDrainTimeoutSeconds (%d) must be at least 10s below terminationGracePeriodSeconds (%d): the agent is killed when the grace period runs out, cutting the drain and the disconnect after it" $drain $grace) }}
+{{- end }}
+- name: NP_SHUTDOWN_DRAIN_TIMEOUT
+  value: {{ printf "%ds" $drain | quote }}
+{{- end }}
+{{- end -}}
+
+{{/*
 Render the worker orchestrator config as NP_WORKER_* env for the agent container.
 The agent reads these (os.Getenv) to pick the backend and shape worker pods.
 */}}
