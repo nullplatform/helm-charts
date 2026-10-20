@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.2.0...nullplatform-agent-3.3.0) (2026-10-20)
+
+
+### Features
+
+* **agent:** size the shutdown drain to fit long actions ([bb412e0](https://github.com/nullplatform/helm-charts/commit/bb412e02b5f56bd1887aa9f291c1f64808c85dbc))
+
 ## [3.2.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.1.0...nullplatform-agent-3.2.0) (2026-10-16)
 
 
