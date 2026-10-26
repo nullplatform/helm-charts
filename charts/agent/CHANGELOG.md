@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.5.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.4.0...nullplatform-agent-3.5.0) (2026-10-26)
+
+
+### Features
+
+* **agent:** raise the workers' CPU limit to 1 ([12952d5](https://github.com/nullplatform/helm-charts/commit/12952d5f9167cc1ad3eb5b5c05c68ae0522041f7))
+
 ## [3.4.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.3.0...nullplatform-agent-3.4.0) (2026-10-26)
 
 
