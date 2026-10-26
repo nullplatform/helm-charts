@@ -1,6 +1,6 @@
 # nullplatform-agent
 
-![Version: 3.4.0](https://img.shields.io/badge/Version-3.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 3.5.0](https://img.shields.io/badge/Version-3.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
 
@@ -111,7 +111,7 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | worker.defaults.imagePullSecrets | list | `[]` |  |
 | worker.defaults.labels | object | `{}` |  |
 | worker.defaults.nodeSelector | object | `{}` |  |
-| worker.defaults.resources.limits.cpu | string | `"500m"` |  |
+| worker.defaults.resources.limits.cpu | string | `"1"` |  |
 | worker.defaults.resources.limits.memory | string | `"2Gi"` |  |
 | worker.defaults.resources.requests.cpu | string | `"100m"` |  |
 | worker.defaults.resources.requests.memory | string | `"256Mi"` |  |
