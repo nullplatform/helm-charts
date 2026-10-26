@@ -1,6 +1,6 @@
 # nullplatform-agent
 
-![Version: 3.3.0](https://img.shields.io/badge/Version-3.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 3.4.0](https://img.shields.io/badge/Version-3.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
 
@@ -77,7 +77,7 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | readinessProbe.httpGet.path | string | `"/health"` |  |
 | readinessProbe.httpGet.port | int | `8080` |  |
 | replicaCount | int | `1` |  |
-| resources | object | `{}` |  |
+| resources | object | `{"limits":{"memory":"1Gi"},"requests":{"cpu":"100m","memory":"256Mi"}}` | Agent container resources. From load tests on t3.medium nodes (64 secrets per deploy): the agent idles at 14-47Mi and, with the parameters-provider value cache, peaks under 143Mi and ~600m; without the cache it went past 2.29Gi and took its node down. The request reflects real use, and the 1Gi memory limit is the safety ceiling: an excess OOM-restarts the agent instead of starving the node. No CPU limit: the spikes are short (~600m for ~2s), and throttling the process that fills the cache delays every retrieve waiting on it. |
 | securityContext | object | `{}` |  |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.automount | bool | `true` |  |
@@ -112,9 +112,9 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | worker.defaults.labels | object | `{}` |  |
 | worker.defaults.nodeSelector | object | `{}` |  |
 | worker.defaults.resources.limits.cpu | string | `"500m"` |  |
-| worker.defaults.resources.limits.memory | string | `"256Mi"` |  |
-| worker.defaults.resources.requests.cpu | string | `"50m"` |  |
-| worker.defaults.resources.requests.memory | string | `"64Mi"` |  |
+| worker.defaults.resources.limits.memory | string | `"2Gi"` |  |
+| worker.defaults.resources.requests.cpu | string | `"100m"` |  |
+| worker.defaults.resources.requests.memory | string | `"256Mi"` |  |
 | worker.defaults.serviceAccount | string | `""` |  |
 | worker.grpcPort | int | `50051` |  |
 | worker.idleTTL | string | `""` |  |
