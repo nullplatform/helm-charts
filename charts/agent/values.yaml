@@ -336,12 +336,16 @@ worker:
     # containers worker idles at ~201Mi and workers that run tofu use 1.5Gi or
     # more, so the limit covers tofu while the requests reflect idle use and
     # several workers fit on a node. Resize a single package with a patch.
+    # The CPU limit is 1, not 500m: in a deploy on api-private the containers
+    # worker was throttled in 47% of its CPU periods (65s in all) at 500m, since
+    # tofu and aws-cli run in short bursts. The scheduler counts the request,
+    # not the limit, so this fits no fewer workers per node.
     resources:
       requests:
         cpu: "100m"
         memory: "256Mi"
       limits:
-        cpu: "500m"
+        cpu: "1"
         memory: "2Gi"
 
   # ── rules — config for a matched CLASS of dynamic workers (LEGACY — prefer `patches`) ──
