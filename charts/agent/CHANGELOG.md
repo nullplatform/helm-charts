@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.3.0...nullplatform-agent-3.4.0) (2026-10-26)
+
+
+### Features
+
+* **agent:** default resources for the agent and its workers ([6615d47](https://github.com/nullplatform/helm-charts/commit/6615d4722499df2eb14e9db5fbd9d677f82af7eb))
+
 ## [3.3.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.2.0...nullplatform-agent-3.3.0) (2026-10-20)
 
 
