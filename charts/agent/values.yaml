@@ -100,7 +100,20 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-resources: {}
+# -- Agent container resources. From load tests on t3.medium nodes (64 secrets
+# per deploy): the agent idles at 14-47Mi and, with the parameters-provider
+# value cache, peaks under 143Mi and ~600m; without the cache it went past
+# 2.29Gi and took its node down. The request reflects real use, and the 1Gi
+# memory limit is the safety ceiling: an excess OOM-restarts the agent instead
+# of starving the node. No CPU limit: the spikes are short (~600m for ~2s), and
+# throttling the process that fills the cache delays every retrieve waiting on
+# it.
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    memory: "1Gi"
 
 livenessProbe:
   httpGet:
@@ -318,13 +331,18 @@ worker:
     imagePullSecrets: []    # names of existing pull secrets
     env: {}                 # extra env for every worker (NP_API_KEY + the cluster
                             # CA trust are handled by the agent automatically)
+    # The same for every worker, whatever its package (kubernetes backend: the
+    # base of the pod, before patches). Load tests on t3.medium nodes: the
+    # containers worker idles at ~201Mi and workers that run tofu use 1.5Gi or
+    # more, so the limit covers tofu while the requests reflect idle use and
+    # several workers fit on a node. Resize a single package with a patch.
     resources:
       requests:
-        cpu: "50m"
-        memory: "64Mi"
+        cpu: "100m"
+        memory: "256Mi"
       limits:
         cpu: "500m"
-        memory: "256Mi"
+        memory: "2Gi"
 
   # ── rules — config for a matched CLASS of dynamic workers (LEGACY — prefer `patches`) ──
   # First match wins. `match` globs the image registry/repository, the package
