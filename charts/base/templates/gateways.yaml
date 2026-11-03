@@ -114,7 +114,8 @@ spec:
       protocol: HTTP
       allowedRoutes:
         namespaces:
-          from: Same
+          {{- /* Without TLS there is no https listener, so app routes must bind here. */}}
+          from: {{ ternary "Same" "All" .Values.tls.required }}
   {{- end }}
   {{- if .Values.tls.required }}
     - name: https
@@ -284,7 +285,8 @@ spec:
       protocol: HTTP
       allowedRoutes:
         namespaces:
-          from: Same
+          {{- /* Without TLS there is no https listener, so app routes must bind here. */}}
+          from: {{ ternary "Same" "All" .Values.tls.required }}
   {{- end }}
   {{- if .Values.tls.required }}
     - name: https
