@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.44.8](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.7...nullplatform-base-2.44.8) (2026-11-04)
+
+
+### Bug Fixes
+
+* **base:** let app routes bind to the http listener when TLS is off ([a90042f](https://github.com/nullplatform/helm-charts/commit/a90042f45388f52cc19cba8276fc7efd148c6b34))
+
 ## [2.44.7](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.6...nullplatform-base-2.44.7) (2026-09-16)
 
 
