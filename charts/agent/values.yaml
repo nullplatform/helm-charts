@@ -180,6 +180,17 @@ tolerations:
 
 affinity: {}
 
+# -- Spread the agent's replicas across nodes. `enabled: true` alone spreads them
+# by kubernetes.io/hostname with ScheduleAnyway; `constraints` replaces that
+# default, and an entry without a labelSelector gets the agent's selector labels.
+# The chart refuses it when the agent never runs more than one replica.
+topologySpreadConstraints:
+  enabled: false
+  constraints: []
+  #  - maxSkew: 1
+  #    topologyKey: topology.kubernetes.io/zone
+  #    whenUnsatisfiable: DoNotSchedule
+
 priorityClass:
   enabled: true
   value: 500000
