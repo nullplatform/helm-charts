@@ -112,6 +112,9 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with include "agent.topologySpreadConstraints" . }}
+      {{- . | nindent 6 }}
+      {{- end }}
   {{- with .Values.statefulset.volumeClaimTemplates }}
   volumeClaimTemplates:
     {{- toYaml . | nindent 4 }}

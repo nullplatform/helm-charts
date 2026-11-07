@@ -282,3 +282,40 @@ The agent reads these (os.Getenv) to pick the backend and shape worker pods.
 {{- end }}{{/* end with .defaults */}}
 {{- end }}{{/* end with .Values.worker */}}
 {{- end -}}
+
+{{- define "agent.maxReplicas" -}}
+{{- if .Values.autoscaling.enabled -}}
+{{- int .Values.autoscaling.maxReplicas -}}
+{{- else -}}
+{{- int .Values.replicaCount -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "agent.topologySpreadConstraints" -}}
+{{- $config := .Values.topologySpreadConstraints | default dict -}}
+{{- if not (kindIs "map" $config) -}}
+{{- fail "topologySpreadConstraints must be a map with enabled and, optionally, constraints (the list of topology spread constraints)" -}}
+{{- end -}}
+{{- if $config.enabled -}}
+{{- $replicas := int (include "agent.maxReplicas" .) -}}
+{{- if le $replicas 1 -}}
+{{- fail (printf "topologySpreadConstraints.enabled needs more than one agent replica, but the agent runs at most %d: raise replicaCount (or autoscaling.maxReplicas), or disable topologySpreadConstraints" $replicas) -}}
+{{- end -}}
+{{- $custom := $config.constraints | default list -}}
+{{- if not (kindIs "slice" $custom) -}}
+{{- fail "topologySpreadConstraints.constraints must be a list of topology spread constraints" -}}
+{{- end -}}
+{{- $default := list (dict "maxSkew" 1 "topologyKey" "kubernetes.io/hostname" "whenUnsatisfiable" "ScheduleAnyway") -}}
+{{- $selector := dict "matchLabels" (include "agent.selectorLabels" . | fromYaml) -}}
+{{- $constraints := list -}}
+{{- range ($custom | default $default) -}}
+{{- $constraint := deepCopy . -}}
+{{- if not (hasKey $constraint "labelSelector") -}}
+{{- $_ := set $constraint "labelSelector" $selector -}}
+{{- end -}}
+{{- $constraints = append $constraints $constraint -}}
+{{- end -}}
+topologySpreadConstraints:
+{{ toYaml $constraints }}
+{{- end -}}
+{{- end -}}
