@@ -1,6 +1,6 @@
 # nullplatform-agent
 
-![Version: 3.5.0](https://img.shields.io/badge/Version-3.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
+![Version: 3.6.0](https://img.shields.io/badge/Version-3.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.32.1](https://img.shields.io/badge/AppVersion-2.32.1-informational?style=flat-square)
 
 Agent used to interact with services, scopes and telemetry inside a cluster
 
@@ -103,6 +103,7 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | tolerations[1].key | string | `"node.kubernetes.io/unreachable"` |  |
 | tolerations[1].operator | string | `"Exists"` |  |
 | tolerations[1].tolerationSeconds | int | `300` |  |
+| topologySpreadConstraints | object | `{"constraints":[],"enabled":false}` | Spread the agent's replicas across nodes. `enabled: true` alone spreads them by kubernetes.io/hostname with ScheduleAnyway; `constraints` replaces that default, and an entry without a labelSelector gets the agent's selector labels. The chart refuses it when the agent never runs more than one replica. |
 | volumeMounts | list | `[]` |  |
 | volumes | list | `[]` |  |
 | worker.allowedRegistries | list | `[]` |  |
