@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.5.0...nullplatform-agent-3.6.0) (2026-11-09)
+
+
+### Features
+
+* **agent:** configurable topology spread constraints ([31b09c8](https://github.com/nullplatform/helm-charts/commit/31b09c898e79cadaf8a0988d51c7d50b86da666a))
+
 ## [3.5.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.4.0...nullplatform-agent-3.5.0) (2026-10-26)
 
 
