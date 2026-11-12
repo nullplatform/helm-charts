@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.6.0...nullplatform-agent-3.6.1) (2026-11-12)
+
+
+### Bug Fixes
+
+* **agent:** point HPA to the agent workload ([03dbe47](https://github.com/nullplatform/helm-charts/commit/03dbe47feed404956f4cfcc21986d86c60923f60))
+
 ## [3.6.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.5.0...nullplatform-agent-3.6.0) (2026-11-09)
 
 
