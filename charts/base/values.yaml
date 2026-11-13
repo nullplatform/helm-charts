@@ -159,6 +159,10 @@ logging:
     mountPath: "/etc/null-logs/streams-dd.conf"
     subPath: "streams-dd.conf"
   streamsConfigMapName: "streams-dd-config"
+  # HTTP logs and metrics for scopes with TRAFFIC_PROXY=istio (no nginx sidecar), built from the
+  # Istio gateway access log. Needs the np-gateway-access-log extensionProvider in istiod's meshConfig.
+  istioAccessLogs:
+    enabled: false
   controller:
     image: "public.ecr.aws/nullplatform/k8s-logs-controller:1.6.0"
     resources:

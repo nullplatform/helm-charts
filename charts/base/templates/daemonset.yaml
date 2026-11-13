@@ -77,6 +77,14 @@ spec:
           env:
             - name: NULL_LOGS_RELOAD_ENABLED
               value: 'true'
+            {{- if (.Values.logging.istioAccessLogs).enabled }}
+            - name: ISTIO_ACCESS_LOGS_ENABLED
+              value: "true"
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            {{- end }}
             {{- if and (kindIs "bool" ((.Values.logging.applicationLogs).enabled)) (not .Values.logging.applicationLogs.enabled) }}
             - name: APPLICATION_LOGS_DISABLED
               value: "true"
