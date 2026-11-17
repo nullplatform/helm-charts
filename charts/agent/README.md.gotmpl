@@ -13,8 +13,13 @@
 ```bash
 helm repo add nullplatform https://nullplatform.github.io/helm-charts
 helm repo update
-helm install nullplatform-agent nullplatform/{{ .ChartDocumentationInfo.ChartMeta.Name }}
+helm install nullplatform-agent nullplatform/{{ .ChartDocumentationInfo.ChartMeta.Name }} \
+  --set image.tag=<agent-version>
 ```
+
+`image.tag` is required: the chart does not pick an agent version. The published versions are
+listed at https://gallery.ecr.aws/nullplatform/controlplane-agent. Set it to `latest` to keep
+following the newest release, which is what the chart did by default up to 3.x.
 
 {{ template "chart.maintainersSection" . }}
 

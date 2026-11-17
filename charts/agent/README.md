@@ -11,8 +11,13 @@ Agent used to interact with services, scopes and telemetry inside a cluster
 ```bash
 helm repo add nullplatform https://nullplatform.github.io/helm-charts
 helm repo update
-helm install nullplatform-agent nullplatform/nullplatform-agent
+helm install nullplatform-agent nullplatform/nullplatform-agent \
+  --set image.tag=<agent-version>
 ```
+
+`image.tag` is required: the chart does not pick an agent version. The published versions are
+listed at https://gallery.ecr.aws/nullplatform/controlplane-agent. Set it to `latest` to keep
+following the newest release, which is what the chart did by default up to 3.x.
 
 ## Maintainers
 
@@ -56,7 +61,7 @@ helm install nullplatform-agent nullplatform/nullplatform-agent
 | github.secret.name | string | `""` | Existing Secret holding one PEM per org. Required when `create` is false and any org reads its key from a file. Defaults to "nullplatform-agent-github-apps-<release>" when `create` is true. |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"public.ecr.aws/nullplatform/controlplane-agent"` |  |
-| image.tag | string | `"latest"` |  |
+| image.tag | string | `""` | Agent version to run, from https://gallery.ecr.aws/nullplatform/controlplane-agent. Required: the chart does not pick one. `latest` follows the newest release |
 | imagePullSecret.create | bool | `false` |  |
 | initContainers | list | `[]` |  |
 | initScripts | list | `[]` |  |

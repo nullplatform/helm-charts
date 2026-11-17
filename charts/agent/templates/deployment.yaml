@@ -51,7 +51,7 @@ spec:
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ required "image.tag is required: set it to an agent version (listed at https://gallery.ecr.aws/nullplatform/controlplane-agent), or to 'latest' to keep following the newest release" .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}

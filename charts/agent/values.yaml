@@ -51,7 +51,8 @@ configuration:
 image:
   repository: public.ecr.aws/nullplatform/controlplane-agent
   pullPolicy: Always
-  tag: latest
+  # -- Agent version to run, from https://gallery.ecr.aws/nullplatform/controlplane-agent. Required: the chart does not pick one. `latest` follows the newest release
+  tag: ""
 
 nameOverride: ""
 fullnameOverride: ""
