@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.6.1...nullplatform-agent-4.0.0) (2026-11-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* **agent:** image.tag is required. Set it to an agent version, or to latest to keep the previous behavior. Installations that relied on the default fail to render until they set it.
+
+### Features
+
+* **agent:** require image.tag instead of defaulting to latest ([538fd45](https://github.com/nullplatform/helm-charts/commit/538fd456a1cd739bc3b206486a90a056d1c1e1c2))
+
 ## [3.6.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-agent-3.6.0...nullplatform-agent-3.6.1) (2026-11-12)
 
 
