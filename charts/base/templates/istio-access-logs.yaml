@@ -1,0 +1,22 @@
+{{- if and (.Values.logging.istioAccessLogs).enabled .Values.gateways.enabled }}
+{{- range $gw := list .Values.gateway.public .Values.gateway.internal }}
+{{- if $gw.enabled }}
+---
+# Turns on the np-gateway-access-log provider for this gateway only; the logs-controller
+# turns those lines into the scope HTTP metrics. targetRefs avoids depending on pod labels.
+apiVersion: telemetry.istio.io/v1
+kind: Telemetry
+metadata:
+  name: np-gateway-access-log-{{ $gw.name }}
+  namespace: {{ $.Values.namespaces.gateway }}
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: {{ $gw.name }}
+  accessLogging:
+    - providers:
+        - name: np-gateway-access-log
+{{- end }}
+{{- end }}
+{{- end }}
