@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.45.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.8...nullplatform-base-2.45.0) (2026-11-24)
+
+
+### Features
+
+* **base:** opt-in istio gateway access logs for the logs controller ([6786c9e](https://github.com/nullplatform/helm-charts/commit/6786c9e14211a4644c1175b795707640575d8c3b))
+
 ## [2.44.8](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.7...nullplatform-base-2.44.8) (2026-11-04)
 
 
