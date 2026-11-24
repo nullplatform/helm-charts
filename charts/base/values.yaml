@@ -164,7 +164,7 @@ logging:
   istioAccessLogs:
     enabled: false
   controller:
-    image: "public.ecr.aws/nullplatform/k8s-logs-controller:1.8.0"
+    image: "public.ecr.aws/nullplatform/k8s-logs-controller:v1.8.0"
     resources:
       requests:
         cpu: 100m
