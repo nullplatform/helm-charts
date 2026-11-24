@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.45.1](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.45.0...nullplatform-base-2.45.1) (2026-11-24)
+
+
+### Bug Fixes
+
+* **base:** default the logs controller to 1.8.0, which reads the istio gateway access log ([db8dc38](https://github.com/nullplatform/helm-charts/commit/db8dc3810c8b23a16a85d1ebb299f4df8183e97b))
+* **base:** use the v-prefixed logs controller tag ([87c0866](https://github.com/nullplatform/helm-charts/commit/87c0866f22aad26f56400b072ff42251d80a0820))
+
 ## [2.45.0](https://github.com/nullplatform/helm-charts/compare/nullplatform-base-2.44.8...nullplatform-base-2.45.0) (2026-11-24)
 
 
