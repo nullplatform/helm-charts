@@ -134,6 +134,25 @@ gateway:
       minReplicas: 2
       maxReplicas: 10
     loadBalancerType: "external"  # Load balancer type (options: "internal", "external")
+  # In-cluster service-to-service traffic: HTTP listeners named in-cluster-<port> that scopes'
+  # stable ExternalName Services point to. Ports 443 and Istio's 150xx ports are rejected.
+  inCluster:
+    enabled: false
+    # "shared" adds the listeners to gateway.internal; "dedicated" creates its own ClusterIP Gateway
+    mode: "shared"
+    ports:
+      - 80
+    # Listener hostname in shared mode (required, so real domains are never served over plain HTTP)
+    hostname: "*.svc.cluster.local"
+    dedicated:
+      name: "gateway-in-cluster"
+      # Optional listener hostname; leave empty to also accept short names (svc, svc.ns)
+      hostname: ""
+      autoscaling:
+        minReplicas: 2
+        maxReplicas: 10
+      # istio-proxy container resources, applied through the Gateway's parametersRef ConfigMap
+      resources: {}
 # Logging configurations
 logging:
   enabled: true

@@ -1,5 +1,10 @@
 {{- if and (.Values.logging.istioAccessLogs).enabled .Values.gateways.enabled }}
-{{- range $gw := list .Values.gateway.public .Values.gateway.internal }}
+{{- $gateways := list .Values.gateway.public .Values.gateway.internal }}
+{{- $inCluster := .Values.gateway.inCluster | default dict }}
+{{- if and $inCluster.enabled (eq $inCluster.mode "dedicated") }}
+{{- $gateways = append $gateways (dict "enabled" true "name" $inCluster.dedicated.name) }}
+{{- end }}
+{{- range $gw := $gateways }}
 {{- if $gw.enabled }}
 ---
 # Turns on the np-gateway-access-log provider for this gateway only; the logs-controller

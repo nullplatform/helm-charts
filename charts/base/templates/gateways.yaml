@@ -8,6 +8,34 @@
 {{- $secretName = .Values.tls.secretName | default "" }}
 {{- $secretPrivateName = .Values.tls.secretPrivateName | default "" }}
 {{- end }}
+{{- $inCluster := .Values.gateway.inCluster | default dict }}
+{{- if $inCluster.enabled }}
+{{- if not (has $inCluster.mode (list "shared" "dedicated")) }}
+{{- fail (printf "gateway.inCluster.mode must be \"shared\" or \"dedicated\", got %q" (toString $inCluster.mode)) }}
+{{- end }}
+{{- if not $inCluster.ports }}
+{{- fail "gateway.inCluster.ports must list at least one port" }}
+{{- end }}
+{{- $reservedPorts := list 443 15000 15001 15004 15006 15008 15009 15020 15021 15090 }}
+{{- $ports := list }}
+{{- range $inCluster.ports }}
+{{- if or (has (int .) $reservedPorts) (lt (int .) 1) (gt (int .) 65535) }}
+{{- fail (printf "gateway.inCluster.ports: %v is reserved or invalid (443 and %s are reserved)" . "15000,15001,15004,15006,15008,15009,15020,15021,15090") }}
+{{- end }}
+{{- $ports = append $ports (int .) }}
+{{- end }}
+{{- if ne (len $ports) (len (uniq $ports)) }}
+{{- fail "gateway.inCluster.ports has duplicates" }}
+{{- end }}
+{{- if eq $inCluster.mode "shared" }}
+{{- if not $inCluster.hostname }}
+{{- fail "gateway.inCluster.hostname is required in shared mode" }}
+{{- end }}
+{{- if not .Values.gateway.internal.enabled }}
+{{- fail "gateway.inCluster.mode shared needs gateway.internal.enabled" }}
+{{- end }}
+{{- end }}
+{{- end }}
 {{- if not (lookup "v1" "Namespace" "" .Values.namespaces.gateway) }}
 apiVersion: v1
 kind: Namespace
@@ -131,6 +159,9 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+  {{- end }}
+  {{- if and $inCluster.enabled (eq $inCluster.mode "shared") }}
+    {{- include "inClusterListeners" (dict "ports" $inCluster.ports "hostname" $inCluster.hostname) | trim | nindent 4 }}
   {{- end }}
 {{- if and .Values.gateway.http.enabled .Values.tls.required }}
 ---
@@ -358,6 +389,76 @@ spec:
     # Match the generated Deployment by label
     matchLabels:
       gateway.networking.k8s.io/gateway-name: {{ .Values.gateway.public.name }}
+---
+{{- end }}
+{{- if and .Values.gateways.enabled $inCluster.enabled (eq $inCluster.mode "dedicated") }}
+{{- $dedicated := $inCluster.dedicated }}
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ $dedicated.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+  annotations:
+    networking.istio.io/service-type: ClusterIP
+spec:
+  gatewayClassName: istio
+  {{- if $dedicated.resources }}
+  infrastructure:
+    parametersRef:
+      group: ""
+      kind: ConfigMap
+      name: {{ $dedicated.name }}-params
+  {{- end }}
+  listeners:
+    {{- include "inClusterListeners" (dict "ports" $inCluster.ports "hostname" $dedicated.hostname) | trim | nindent 4 }}
+{{- with $dedicated.resources }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $dedicated.name }}-params
+  namespace: {{ $.Values.namespaces.gateway }}
+data:
+  deployment: |
+    spec:
+      template:
+        spec:
+          containers:
+            - name: istio-proxy
+              resources:
+                {{- toYaml . | nindent 16 }}
+{{- end }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ $dedicated.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ $dedicated.name }}-istio
+  minReplicas: {{ $dedicated.autoscaling.minReplicas }}
+  maxReplicas: {{ $dedicated.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $dedicated.name }}
+  namespace: {{ .Values.namespaces.gateway }}
+spec:
+  maxUnavailable: 50%
+  selector:
+    matchLabels:
+      gateway.networking.k8s.io/gateway-name: {{ $dedicated.name }}
 ---
 {{- end }}
 {{- end }}
